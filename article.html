@@ -3,8 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Title will be set dynamically -->
-    <title>The Daily Origin</title>
+
+    <!-- 
+      ======================================================================
+      GAME-CHANGING SEO (DYNAMICALLY POPULATED)
+      ======================================================================
+      These tags are placeholders. They will be filled by JavaScript
+      as soon as the article data is loaded from Firestore.
+    -->
+
+    <!-- 1. Primary Metadata -->
+    <title>Loading Article... | The Daily Origin</title>
+    <meta
+      id="meta-description"
+      name="description"
+      content="Loading the latest news from The Daily Origin..."
+    />
+    <link
+      id="canonical-link"
+      rel="canonical"
+      href="https://www.thedailyorigin.com/home"
+    />
+
+    <!-- 2. Open Graph (Facebook, LinkedIn, etc.) -->
+    <meta property="og:site_name" content="The Daily Origin" />
+    <meta property="og:type" content="article" />
+    <meta
+      id="og-url"
+      property="og:url"
+      content="https://www.thedailyorigin.com/home"
+    />
+    <meta
+      id="og-title"
+      property="og:title"
+      content="Loading Article... | The Daily Origin"
+    />
+    <meta
+      id="og-description"
+      property="og:description"
+      content="Loading the latest news from The Daily Origin..."
+    />
+    <meta
+      id="og-image"
+      property="og:image"
+      content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
+    />
+
+    <!-- 3. Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      id="twitter-title"
+      name="twitter:title"
+      content="Loading Article... | The Daily Origin"
+    />
+    <meta
+      id="twitter-description"
+      name="twitter:description"
+      content="Loading the latest news from The Daily Origin..."
+    />
+    <meta
+      id="twitter-image"
+      name="twitter:image"
+      content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
+    />
+
+    <!-- 4. JSON-LD Schema (The "Game-Changer") -->
+    <!-- This script tag will be filled with a dynamic schema for NewsArticle, BreadcrumbList, and Organization -->
+    <script type="application/ld+json" id="dynamic-schema-json"></script>
+
+    <!-- 
+      ======================================================================
+      END OF DYNAMIC SEO SECTION
+      ======================================================================
+    -->
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Font: Inter -->
@@ -15,7 +87,7 @@
       rel="stylesheet"
     />
 
-    <!-- NEW: Google Fonts for Logo -->
+    <!-- Google Fonts for Logo -->
     <link
       href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
       rel="stylesheet"
@@ -56,7 +128,6 @@
         background: #22d3ee;
       }
 
-      /* NEW: Logo Font Styles */
       .logo-artisan {
         font-family: "Caveat", cursive;
       }
@@ -65,7 +136,6 @@
         font-weight: 700;
       }
 
-      /* Loading Spinner */
       #loading-spinner {
         border: 4px solid #1e293b;
         border-top: 4px solid #22d3ee;
@@ -83,7 +153,6 @@
         }
       }
 
-      /* Gradient text */
       .text-gradient {
         background: linear-gradient(to right, #22d3ee, #60a5fa);
         -webkit-background-clip: text;
@@ -92,7 +161,6 @@
         text-fill-color: transparent;
       }
 
-      /* Premium Section Title Style (for related) */
       .section-title {
         position: relative;
         padding-bottom: 0.75rem;
@@ -109,12 +177,10 @@
         background: linear-gradient(to right, #22d3ee, #0891b2);
       }
 
-      /* --- NEW: Smooth scroll behavior --- */
       html {
         scroll-behavior: smooth;
       }
 
-      /* Article content styling */
       .article-content h2 {
         font-size: 1.875rem; /* text-3xl */
         font-weight: 800; /* extra-bold */
@@ -143,7 +209,6 @@
         margin-bottom: 2rem;
         font-size: 1.25rem; /* text-xl */
       }
-      /* --- NEW: Added more styles for full body content --- */
       .article-content ul {
         list-style-type: disc;
         padding-left: 2rem;
@@ -196,52 +261,41 @@
         margin-bottom: 1rem;
       }
 
-      /* --- NEW: Premium Desktop Nav Link Hover Effect --- */
       .desktop-nav-link {
         position: relative;
-        padding-bottom: 4px; /* Give space for the line */
+        padding-bottom: 4px;
       }
 
       .desktop-nav-link::after {
         content: "";
         position: absolute;
-        bottom: 0; /* Align to the bottom of the 4px padding */
+        bottom: 0;
         left: 0;
         width: 100%;
         height: 2px;
-        /* Use the same premium gradient from .text-gradient */
         background: linear-gradient(to right, #22d3ee, #60a5fa);
         transform: scaleX(0);
-        transform-origin: left; /* Grow from left to right */
-        transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* Smoother ease */
+        transform-origin: left;
+        transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
       }
 
       .desktop-nav-link:hover::after {
         transform: scaleX(1);
       }
 
-      /* Make the text slightly brighter on hover, instead of full cyan */
       .desktop-nav-link:hover {
         color: #e5e7eb; /* gray-200 */
       }
-      /* --- End of Premium Effect --- */
 
-      /* --- NEW: Advanced Mobile Menu Animations --- */
-
-      /* Set initial state for nav links */
       #mobile-menu nav a {
         opacity: 0;
         transform: translateX(20px);
         transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
       }
-
-      /* Set "open" state for nav links when menu-open class is added */
       #mobile-menu.menu-open nav a {
         opacity: 1;
         transform: translateX(0);
       }
-
-      /* Staggered delay for links */
       #mobile-menu.menu-open nav a:nth-child(1) {
         transition-delay: 0.1s;
       }
@@ -263,21 +317,23 @@
       #mobile-menu.menu-open nav a:nth-child(7) {
         transition-delay: 0.4s;
       }
+      /* NEW: Added delay for 'Others' */
+      #mobile-menu.menu-open nav a:nth-child(8) {
+        transition-delay: 0.45s;
+      }
 
-      /* Set initial state for social links */
       #mobile-menu .mobile-social-links {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        transition-delay: 0.5s; /* Fires after the nav links */
+        /* NEW: Delayed to fire after 'Others' */
+        transition-delay: 0.55s;
       }
 
-      /* Set "open" state for social links */
       #mobile-menu.menu-open .mobile-social-links {
         opacity: 1;
         transform: translateY(0);
       }
-      /* --- End of Mobile Menu Animations --- */
     </style>
   </head>
   <body class="antialiased flex flex-col min-h-screen">
@@ -297,13 +353,12 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
           <!-- Logo -->
-          <a href="./home.html" class="flex items-baseline space-x-2">
+          <a href="./home" class="flex items-baseline space-x-2">
             <span class="text-3xl text-white logo-main">The Daily</span>
             <span class="relative">
               <span class="text-4xl font-bold text-cyan-400 logo-artisan"
                 >Origin</span
               >
-              <!-- NEW: Handwritten SVG underline -->
               <svg
                 class="absolute left-0 w-full h-4 -bottom-1 text-cyan-500"
                 viewBox="0 0 100 20"
@@ -318,7 +373,6 @@
                   stroke-linecap="round"
                 ></path>
               </svg>
-              <!-- NEW: Beta Tag -->
               <span
                 class="absolute top-0 -right-5 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
               >
@@ -328,42 +382,47 @@
           </a>
 
           <!-- Desktop Navigation -->
-          <!-- UPDATED: Added 'desktop-nav-link' class and removed hover:text-cyan-400 -->
+          <!-- NEW: Added 'Others' category -->
           <nav class="hidden md:flex space-x-8">
             <a
-              href="./category.html?category=World"
+              href="./category?category=World"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >World</a
             >
             <a
-              href="./category.html?category=Tech"
+              href="./category?category=Tech"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Tech</a
             >
             <a
-              href="./category.html?category=Politics"
+              href="./category?category=Politics"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Politics</a
             >
             <a
-              href="./category.html?category=Culture"
+              href="./category?category=Culture"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Culture</a
             >
             <a
-              href="./category.html?category=Science"
+              href="./category?category=Science"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Science</a
             >
             <a
-              href="./category.html?category=Sports"
+              href="./category?category=Sports"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Sports</a
             >
             <a
-              href="./category.html?category=Education"
+              href="./category?category=Education"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Education</a
+            >
+            <a
+              href="./category?category=Others"
+              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
+              >Others</a
             >
           </nav>
 
@@ -372,7 +431,6 @@
             <button class="text-gray-400 hover:text-cyan-400 transition-colors">
               <i data-lucide="search" class="w-6 h-6"></i>
             </button>
-            <!-- UPDATED: Mobile Menu Button markup for icon switching -->
             <button
               class="md:hidden text-gray-400 hover:text-cyan-400 transition-colors"
               id="mobile-menu-btn"
@@ -391,21 +449,19 @@
           </div>
         </div>
       </div>
-      <!-- REMOVED: Old Mobile Menu (was here) -->
     </header>
 
-    <!-- NEW: Mobile Menu Overlay -->
+    <!-- Mobile Menu Overlay -->
     <div
       id="mobile-menu-overlay"
       class="fixed inset-0 bg-black/70 z-40 opacity-0 invisible transition-opacity duration-300 ease-in-out md:hidden"
     ></div>
 
-    <!-- NEW: Advanced Mobile Menu (Slides from right) -->
+    <!-- Advanced Mobile Menu -->
     <div
       id="mobile-menu"
       class="fixed top-0 right-0 h-full w-80 max-w-full bg-slate-950 z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl shadow-black flex flex-col"
     >
-      <!-- Menu Header (Stays at top) -->
       <div
         class="flex-shrink-0 flex justify-between items-center p-6 border-b border-slate-800"
       >
@@ -418,46 +474,50 @@
         </button>
       </div>
 
-      <!-- Menu Links (Grows to fill space and scrolls if needed) -->
       <nav class="flex-grow flex flex-col p-6 overflow-y-auto">
         <a
-          href="./category.html?category=World"
+          href="./category?category=World"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >World</a
         >
         <a
-          href="./category.html?category=Tech"
+          href="./category?category=Tech"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Tech</a
         >
         <a
-          href="./category.html?category=Politics"
+          href="./category?category=Politics"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Politics</a
         >
         <a
-          href="./category.html?category=Culture"
+          href="./category?category=Culture"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Culture</a
         >
         <a
-          href="./category.html?category=Science"
+          href="./category?category=Science"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Science</a
         >
         <a
-          href="./category.html?category=Sports"
+          href="./category?category=Sports"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Sports</a
         >
         <a
-          href="./category.html?category=Education"
+          href="./category?category=Education"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Education</a
         >
+        <!-- NEW: Added 'Others' category -->
+        <a
+          href="./category?category=Others"
+          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
+          >Others</a
+        >
       </nav>
 
-      <!-- NEW: Social Links (Stays at bottom) -->
       <div
         class="flex-shrink-0 p-6 border-t border-slate-800 mobile-social-links"
       >
@@ -492,11 +552,8 @@
       class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex-grow"
     >
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-        <!-- Article Content (col-span-2) -->
         <article class="lg:col-span-2">
-          <!-- Article Header -->
           <header id="article-header" class="mb-8">
-            <!-- Category -->
             <a
               href="#"
               id="article-category-link"
@@ -505,7 +562,6 @@
               Loading...
             </a>
 
-            <!-- Title -->
             <h1
               id="article-title"
               class="text-4xl md:text-6xl font-black text-white tracking-tight my-4"
@@ -513,19 +569,15 @@
               Loading Article Title...
             </h1>
 
-            <!-- Meta -->
             <div class="flex items-center space-x-4 text-sm text-gray-400">
-              <!-- UPDATED: This is now a container for the dynamic byline -->
               <div id="author-byline-container" class="inline-block">
-                <span id="article-author">By Inflexion Staff</span>
-                <!-- Placeholder author -->
+                <span id="article-author">By The Daily Origin Staff</span>
               </div>
               <span>&bull;</span>
               <span id="article-date">Loading date...</span>
             </div>
           </header>
 
-          <!-- Hero Image -->
           <figure class="mb-8">
             <img
               id="article-image"
@@ -541,41 +593,35 @@
             </figcaption>
           </figure>
 
-          <!-- Article Body -->
           <div id="article-content-body" class="article-content">
-            <!-- Dynamic content will be injected here -->
             <p class="text-2xl font-medium text-gray-200 leading-relaxed">
               Loading content...
             </p>
           </div>
 
-          <!-- Error Message -->
           <div id="article-error" class="hidden text-center py-16">
             <p class="text-2xl font-bold text-gray-400">Article Not Found</p>
             <p class="text-gray-500 mt-2">
               This article may have been moved or deleted.
             </p>
             <a
-              href="./home.html"
+              href="./home"
               class="mt-6 inline-block bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-2 px-6 rounded-lg transition-colors"
             >
               Back to Home
             </a>
           </div>
 
-          <!-- NEW: Author Bio Box -->
           <div
             id="author-bio-box"
             class="hidden mt-12 p-6 bg-slate-900 border border-slate-800 rounded-lg flex items-start sm:items-center space-x-4 sm:space-x-6"
           >
-            <!-- Author Image -->
             <img
               id="author-bio-image"
               src="https://placehold.co/80x80/0f172a/334155?text=Auth"
               alt="Author"
               class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0"
             />
-            <!-- Author Info -->
             <div>
               <h3
                 class="text-xs font-semibold text-gray-400 uppercase tracking-wider"
@@ -595,15 +641,12 @@
           </div>
         </article>
 
-        <!-- Sidebar (col-span-1) -->
         <aside class="space-y-12">
-          <!-- Related Stories Section -->
           <section id="related-section">
             <h2 class="text-2xl font-bold text-white section-title">
               Related Stories
             </h2>
             <div id="related-articles-list" class="space-y-6">
-              <!-- Related articles will be injected by JS -->
               <p class="text-gray-500" id="related-loading">
                 Loading related stories...
               </p>
@@ -613,19 +656,17 @@
       </div>
     </main>
 
-    <!-- Footer (Reused) -->
+    <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 mt-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
-          <!-- Logo & About -->
           <div class="col-span-2 lg:col-span-2">
-            <a href="./home.html" class="flex items-baseline space-x-2 mb-4">
+            <a href="./home" class="flex items-baseline space-x-2 mb-4">
               <span class="text-2xl text-white logo-main">The Daily</span>
               <span class="relative">
                 <span class="text-3xl font-bold text-cyan-400 logo-artisan"
                   >Origin</span
                 >
-                <!-- NEW: Handwritten SVG underline (slightly smaller) -->
                 <svg
                   class="absolute left-0 w-full h-3 -bottom-1 text-cyan-500"
                   viewBox="0 0 100 20"
@@ -640,7 +681,6 @@
                     stroke-linecap="round"
                   ></path>
                 </svg>
-                <!-- NEW: Beta Tag -->
                 <span
                   class="absolute top-0 -right-4 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[9px] font-bold px-1.5 py-0.5 rounded-sm"
                 >
@@ -654,7 +694,6 @@
             </p>
           </div>
 
-          <!-- Quick Links -->
           <div>
             <h3
               class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
@@ -664,59 +703,64 @@
             <ul class="mt-4 space-y-2">
               <li>
                 <a
-                  href="./category.html?category=World"
+                  href="./category?category=World"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >World</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Tech"
+                  href="./category?category=Tech"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Tech</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Politics"
+                  href="./category?category=Politics"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Politics</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Science"
+                  href="./category?category=Science"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Science</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Culture"
+                  href="./category?category=Culture"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Culture</a
                 >
-                <!-- ADDED Sports and Education -->
               </li>
-
               <li>
                 <a
-                  href="./category.html?category=Sports"
+                  href="./category?category=Sports"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Sports</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Education"
+                  href="./category?category=Education"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Education</a
+                >
+              </li>
+              <!-- NEW: Added 'Others' category -->
+              <li>
+                <a
+                  href="./category?category=Others"
+                  class="text-sm text-gray-300 hover:text-cyan-400"
+                  >Others</a
                 >
               </li>
             </ul>
           </div>
 
-          <!-- Company -->
           <div>
             <h3
               class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
@@ -725,7 +769,9 @@
             </h3>
             <ul class="mt-4 space-y-2">
               <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
+                <a
+                  href="about-us"
+                  class="text-sm text-gray-300 hover:text-cyan-400"
                   >About Us</a
                 >
               </li>
@@ -747,7 +793,6 @@
             </ul>
           </div>
 
-          <!-- Legal -->
           <div>
             <h3
               class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
@@ -768,7 +813,6 @@
             </ul>
           </div>
 
-          <!-- App -->
           <div>
             <h3
               class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
@@ -790,7 +834,6 @@
           </div>
         </div>
 
-        <!-- Bottom Bar -->
         <div
           class="mt-8 border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center"
         >
@@ -825,12 +868,12 @@
       import {
         getFirestore,
         doc,
-        getDoc, // <-- NEW: To fetch a single document
+        getDoc,
         collection,
         onSnapshot,
         query,
         where,
-        limit, // <-- NEW: To limit related articles
+        limit,
         Timestamp,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -858,7 +901,6 @@
       const mobileMenuBtn = document.getElementById("mobile-menu-btn");
       const articleError = document.getElementById("article-error");
 
-      // NEW: Mobile Menu Elements
       const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
       const mobileMenuOpenIcon = document.getElementById(
         "mobile-menu-open-icon"
@@ -868,16 +910,13 @@
       );
       const mobileMenuCloseBtn = document.getElementById(
         "mobile-menu-close-btn"
-      ); // Button inside the menu
+      );
 
-      // Article elements
       const articleCategoryLink = document.getElementById(
         "article-category-link"
       );
       const articleTitle = document.getElementById("article-title");
       const articleDate = document.getElementById("article-date");
-      // REMOVED: We now use 'author-byline-container'
-      // const articleAuthor = document.getElementById('article-author');
       const articleImage = document.getElementById("article-image");
       const articleImageCaption = document.getElementById(
         "article-image-caption"
@@ -886,64 +925,52 @@
         "article-content-body"
       );
 
-      // NEW: Author Bio elements
       const authorBioBox = document.getElementById("author-bio-box");
       const authorBioImage = document.getElementById("author-bio-image");
       const authorBioName = document.getElementById("author-bio-name");
       const authorBioText = document.getElementById("author-bio-text");
 
-      // Related articles
       const relatedArticlesList = document.getElementById(
         "related-articles-list"
       );
       const relatedLoading = document.getElementById("related-loading");
 
-      // REMOVED: Old Mobile Menu Toggle
-      /*
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        */
+      // --- NEW: SEO Element References ---
+      const metaDescription = document.getElementById("meta-description");
+      const canonicalLink = document.getElementById("canonical-link");
+      const ogUrl = document.getElementById("og-url");
+      const ogTitle = document.getElementById("og-title");
+      const ogDescription = document.getElementById("og-description");
+      const ogImage = document.getElementById("og-image");
+      const twitterTitle = document.getElementById("twitter-title");
+      const twitterDescription = document.getElementById("twitter-description");
+      const twitterImage = document.getElementById("twitter-image");
+      const dynamicSchema = document.getElementById("dynamic-schema-json");
 
-      // NEW: Advanced Mobile Menu Functions
+      // --- Mobile Menu Functions ---
       function openMenu() {
-        // Show Menu
         mobileMenu.classList.remove("translate-x-full");
-        mobileMenu.classList.add("menu-open"); // NEW: Add class to trigger animations
-
-        // Show Overlay
+        mobileMenu.classList.add("menu-open");
         mobileMenuOverlay.classList.remove("opacity-0", "invisible");
-
-        // Toggle Icons
         mobileMenuOpenIcon.classList.add("hidden");
         mobileMenuCloseIcon.classList.remove("hidden");
-
-        // Prevent Body Scroll
         document.body.style.overflow = "hidden";
       }
 
       function closeMenu() {
-        // Hide Menu
         mobileMenu.classList.add("translate-x-full");
-        mobileMenu.classList.remove("menu-open"); // NEW: Remove class
-
-        // Hide Overlay
+        mobileMenu.classList.remove("menu-open");
         mobileMenuOverlay.classList.add("opacity-0", "invisible");
-
-        // Toggle Icons
         mobileMenuOpenIcon.classList.remove("hidden");
         mobileMenuCloseIcon.classList.add("hidden");
-
-        // Restore Body Scroll
         document.body.style.overflow = "";
       }
 
-      // NEW: Mobile Menu Event Listeners
       mobileMenuBtn.addEventListener("click", openMenu);
       mobileMenuCloseBtn.addEventListener("click", closeMenu);
       mobileMenuOverlay.addEventListener("click", closeMenu);
 
-      // --- Helper Functions (Reused) ---
+      // --- Helper Functions ---
       function formatRelativeTime(date) {
         if (date.toDate) {
           date = date.toDate();
@@ -951,74 +978,50 @@
         const now = new Date();
         const seconds = Math.floor((now - date) / 1000);
 
-        // Helper for pluralization
         const pluralize = (value, unit) => {
           const rounded = Math.floor(value);
           return `${rounded} ${unit}${rounded === 1 ? "" : "s"} ago`;
         };
 
-        let interval = seconds / 31536000; // Years
+        let interval = seconds / 31536000;
         if (interval >= 1) return pluralize(interval, "year");
-
-        interval = seconds / 2592000; // Months
+        interval = seconds / 2592000;
         if (interval >= 1) return pluralize(interval, "month");
-
-        interval = seconds / 86400; // Days
+        interval = seconds / 86400;
         if (interval >= 1) return pluralize(interval, "day");
-
-        interval = seconds / 3600; // Hours
+        interval = seconds / 3600;
         if (interval >= 1) return pluralize(interval, "hour");
-
-        interval = seconds / 60; // Minutes
+        interval = seconds / 60;
         if (interval >= 1) return pluralize(interval, "minute");
-
-        // Handle seconds
         if (seconds < 10) return "Just now";
         return pluralize(seconds, "second");
       }
 
-      /**
-       * Creates fake "lorem ipsum" body content based on the summary.
-       * THIS IS NOW A FALLBACK for articles without a 'body' field.
-       */
       function generateArticleBody(summary) {
         console.warn("No 'body' field found, generating demo content.");
-        // In a real app, you'd have a 'body' field in Firestore.
-        // For this demo, we'll create some rich content.
         return `
                 <p class="text-2xl font-medium text-gray-200 leading-relaxed">${summary}</p>
-                <p>This is a developing story. Inflexion News is actively gathering more information and will provide updates as they become available. The situation remains fluid, and officials are urging the public to rely on verified sources.</p>
-                
+                <p>This is a developing story. The Daily Origin is actively gathering more information and will provide updates as they become available. The situation remains fluid, and officials are urging the public to rely on verified sources.</p>
                 <h2>The Core of the Issue</h2>
                 <p>At the heart of this development lies a complex web of factors that have been culminating for months. Sources close to the matter indicate that the primary catalyst was a decision made in the early hours of Tuesday morning, a decision that has sent ripples across the industry.</p>
-                <blockquote>"We are witnessing a paradigm shift, the likes of which haven't been seen since the dawn of the internet age," one analyst told Inflexion. "The long-term implications are simply staggering."</blockquote>
-                
+                <blockquote>"We are witnessing a paradigm shift, the likes of which haven't been seen since the dawn of the internet age," one analyst told The Daily Origin. "The long-term implications are simply staggering."</blockquote>
                 <h2>What Happens Next?</h2>
-                <p>All eyes are now on the upcoming emergency meeting scheduled for this Friday. The outcome of this meeting will likely set the course for the next quarter and could have ramifications that extend far beyond the immediate stakeholders. <strong>Inflexion News</strong> will have live coverage of the event.</p>
-                <p>For now, the key players remain tight-lipped, offering only prepared statements that shed little light on their next moves. The uncertainty has led to significant volatility in related markets, a trend that is expected to continue until a clearer picture emerges.</p>
+                <p>All eyes are now on the upcoming emergency meeting scheduled for this Friday. The outcome of this meeting will likely set the course for the next quarter and could have ramifications that extend far beyond the immediate stakeholders. <strong>The Daily Origin</strong> will have live coverage of the event.</p>
             `;
       }
 
-      /**
-       * Creates HTML for a related story (compact sidebar card).
-       */
       function createRelatedArticleHTML(article) {
         const timeAgo = article.publishedAt
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
-        const articleLink = `./article.html?id=${article.id}`;
-        // Use a simple <a> tag wrapper for the whole card
+        const articleLink = `./article?id=${article.id}`;
         return `
                 <a href="${articleLink}" class="block group bg-slate-900 rounded-lg overflow-hidden border border-slate-800 flex transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
-                    
-                    <!-- UPDATED: Image Wrapper Div (w-24 to w-32) -->
                     <div class="w-32 flex-shrink-0"> 
                         <img src="${article.imageUrl}" alt="${article.title}" 
                              onerror="this.src='https://source.unsplash.com/600x400/?news,story';"
                              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     </div>
-
-                    <!-- Text Content Div -->
                     <div class="p-5">
                         <h3 class="text-md font-bold text-white mt-1 group-hover:text-cyan-300 transition-colors">
                             ${article.title}
@@ -1029,6 +1032,122 @@
             `;
       }
 
+      // --- NEW: Game-Changing SEO Function ---
+      /**
+       * Injects game-changing dynamic SEO metadata into the document head.
+       */
+      function updateSeoTags(article, author) {
+        const canonicalUrl = `https://www.thedailyorigin.com/article?id=${currentArticleId}`;
+        const pageTitle = `${article.title} | The Daily Origin`;
+        const description = (
+          article.summary || "Read the latest news from The Daily Origin."
+        ).substring(0, 160);
+        const imageUrl =
+          article.imageUrl ||
+          "https://www.thedailyorigin.com/the_daily_origin_social_preview.png";
+        const publishedDate = article.publishedAt?.toDate
+          ? article.publishedAt.toDate().toISOString()
+          : new Date().toISOString();
+
+        // 1. Standard Tags
+        document.title = pageTitle;
+        metaDescription.setAttribute("content", description);
+        canonicalLink.setAttribute("href", canonicalUrl);
+
+        // 2. Open Graph (Facebook, etc.)
+        ogUrl.setAttribute("content", canonicalUrl);
+        ogTitle.setAttribute("content", pageTitle);
+        ogDescription.setAttribute("content", description);
+        ogImage.setAttribute("content", imageUrl);
+
+        // 3. Twitter Card
+        twitterTitle.setAttribute("content", pageTitle);
+        twitterDescription.setAttribute("content", description);
+        twitterImage.setAttribute("content", imageUrl);
+
+        // 4. JSON-LD Schema (The Game-Changer)
+        const schema = {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "NewsArticle", // Specific for news sites
+              mainEntityOfPage: {
+                "@type": "WebPage",
+                "@id": canonicalUrl,
+              },
+              headline: article.title,
+              description: description,
+              image: [imageUrl],
+              datePublished: publishedDate,
+              dateModified: publishedDate, // Use a real modified date if you store it
+              author: {
+                "@type": "Person",
+                name: author
+                  ? author.name
+                  : article.authorName || "The Daily Origin Staff",
+                // Provides author page URL for E-A-T signals
+                url: author
+                  ? `https://www.thedailyorigin.com/author?id=${article.authorId}`
+                  : "https://www.thedailyorigin.com",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "The Daily Origin",
+                url: "https://www.thedailyorigin.com/",
+                logo: {
+                  "@type": "ImageObject",
+                  // IMPORTANT: You must create and host this logo
+                  url:
+                    "https://www.thedailyorigin.com/the_daily_origin_logo.png",
+                },
+              },
+            },
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://www.thedailyorigin.com/home",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: article.category, // Use the dynamic category
+                  item: `https://www.thedailyorigin.com/category?category=${article.category}`,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: article.title, // The current page
+                  item: canonicalUrl,
+                },
+              ],
+            },
+          ],
+        };
+
+        // Inject the schema into the DOM
+        dynamicSchema.textContent = JSON.stringify(schema, null, 2);
+        console.log("Dynamic SEO Tags and Schema Injected.");
+      }
+
+      // --- NEW: SEO for 404 Not Found ---
+      function setNotFoundSeo() {
+        document.title = "Article Not Found | The Daily Origin";
+        metaDescription.setAttribute(
+          "content",
+          "This article could not be found or may have been moved."
+        );
+
+        // Add noindex tag to prevent Google from indexing the error page
+        const noIndexTag = document.createElement("meta");
+        noIndexTag.name = "robots";
+        noIndexTag.content = "noindex";
+        document.head.appendChild(noIndexTag);
+      }
+
       /**
        * Renders the main article content to the page.
        */
@@ -1037,30 +1156,22 @@
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
 
-        // Set document title
-        document.title = `${article.title} | The Daily Origin`;
-
         // Populate header
         articleCategoryLink.innerText = article.category;
-        articleCategoryLink.href = `./category.html?category=${article.category}`;
+        articleCategoryLink.href = `./category?category=${article.category}`;
         articleTitle.innerText = article.title;
         articleDate.innerText = timeAgo;
 
-        // --- NEW: Set author byline dynamically ---
-        // If we have an authorId, make the byline a link to the bio box.
-        // Otherwise, just display the text.
         const articleAuthorContainer = document.getElementById(
           "author-byline-container"
         );
         if (article.authorId && article.authorName) {
-          // Author EXISTS: Make it a link
           articleAuthorContainer.innerHTML = `
                     <a href="#author-bio-box" class="hover:text-cyan-400 transition-colors" title="Read more about ${article.authorName}">
                         By ${article.authorName}
                     </a>
                 `;
         } else {
-          // NO Author or Old Article: Just plain text
           articleAuthorContainer.innerHTML = `
                     <span>By ${
                       article.authorName || "The Daily Origin Staff"
@@ -1068,76 +1179,43 @@
                 `;
         }
 
-        // Populate image
         articleImage.src =
           article.imageUrl ||
           "https://placehold.co/1200x700/0f172a/1e293b?text=Image+Not+Available";
         articleImage.alt = article.title;
         articleImageCaption.innerText = article.summary || article.title;
 
-        // Populate body
-        // --- NEW: Check for a real 'body' field first ---
         if (article.body) {
           articleContentBody.innerHTML = article.body;
         } else {
-          // Fallback to generating demo content
           articleContentBody.innerHTML = generateArticleBody(article.summary);
         }
 
-        // Hide loading overlay AFTER content is ready
         loadingOverlay.style.display = "none";
       }
 
-      /**
-         * Creates fake "lorem ipsum" body content based on the summary.
-        function generateArticleBody(summary) {
-            console.warn("No 'body' field found, generating demo content.");
-            // In a real app, you'd have a 'body' field in Firestore.
-            // For this demo, we'll create some rich content.
-            return `
-                <p class="text-2xl font-medium text-gray-200 leading-relaxed">${summary}</p>
-                <p>This is a developing story. The Daily Origin is actively gathering more information and will provide updates as they become available. The situation remains fluid, and officials are urging the public to rely on verified sources.</p>
-                
-                <h2>The Core of the Issue</h2>
-                <p>At the heart of this development lies a complex web of factors that have been culminating for months. Sources close to the matter indicate that the primary catalyst was a decision made in the early hours of Tuesday morning, a decision that has sent ripples across the industry.</p>
-                <blockquote>"We are witnessing a paradigm shift, the likes of which haven't been seen since the dawn of the internet age," one analyst told The Daily Origin. "The long-term implications are simply staggering."</blockquote>
-                
-                <h2>What Happens Next?</h2>
-                <p>All eyes are now on the upcoming emergency meeting scheduled for this Friday. The outcome of this meeting will likely set the course for the next quarter and could have ramifications that extend far beyond the immediate stakeholders. <strong>The Daily Origin</strong> will have live coverage of the event.</p>
-                <p>For now, the key players remain tight-lipped, offering only prepared statements that shed little light on their next moves. The uncertainty has led to significant volatility in related markets, a trend that is expected to continue until a clearer picture emerges.</p>
-            `;
-        }
-        
-        /**
-         * Renders the related articles list.
-         */
       function renderRelatedArticles(articles) {
-        relatedArticlesList.innerHTML = ""; // Clear loading text
-
+        relatedArticlesList.innerHTML = "";
         if (articles.length === 0) {
           relatedArticlesList.innerHTML =
             '<p class="text-gray-500">No related stories found.</p>';
           return;
         }
-
         articles.forEach((article) => {
           relatedArticlesList.innerHTML += createRelatedArticleHTML(article);
         });
       }
 
-      /**
-       * Gets article ID from URL.
-       */
       function getArticleIdFromURL() {
         const params = new URLSearchParams(window.location.search);
-        return params.get("id"); // e.g., "article.html?id=DOCUMENT_ID"
+        return params.get("id");
       }
 
-      // NEW: Fetches and renders the author bio box
+      // MODIFIED: Now returns author data for the SEO function
       async function loadAuthorInfo(authorId) {
         if (!authorId) {
           console.log("No authorId, skipping bio box.");
-          return;
+          return null; // Return null if no author
         }
 
         const authorsCollectionPath = `artifacts/${appId}/public/data/authors`;
@@ -1153,27 +1231,23 @@
               authorBioImage.src = author.imageUrl;
             }
             authorBioBox.classList.remove("hidden");
+            return author; // Return author data
           } else {
             console.warn("Author document not found.");
+            return null; // Return null if not found
           }
         } catch (error) {
           console.error("Error fetching author info:", error);
+          return null; // Return null on error
         }
       }
 
-      /**
-       * Fetches and renders related articles.
-       */
       async function fetchRelatedArticles(category) {
         const articlesCollectionPath = `artifacts/${appId}/public/data/articles`;
-
-        // Query for 4 other articles in the same category,
-        // excluding the current one (though hard to do without !=)
-        // So we fetch 5, and filter out the current one.
         const q = query(
           collection(db, articlesCollectionPath),
           where("category", "==", category),
-          limit(5) // Fetch 5, just in case one is the current article
+          limit(5)
         );
 
         onSnapshot(
@@ -1181,13 +1255,10 @@
           (snapshot) => {
             const articles = [];
             snapshot.forEach((doc) => {
-              // Filter out the article we are currently viewing
               if (doc.id !== currentArticleId) {
                 articles.push({ id: doc.id, ...doc.data() });
               }
             });
-
-            // We only want 4, so slice
             renderRelatedArticles(articles.slice(0, 4));
           },
           (error) => {
@@ -1201,8 +1272,6 @@
       // --- Main App Initialization ---
       async function initApp() {
         console.log("Initializing Article Page...");
-
-        // Render icons
         lucide.createIcons();
 
         currentArticleId = getArticleIdFromURL();
@@ -1212,34 +1281,40 @@
           loadingText.innerText = "Article not found. Redirecting...";
           articleError.classList.remove("hidden");
           loadingOverlay.style.display = "none";
+          setNotFoundSeo(); // NEW: Set 404 SEO Tags
           return;
         }
 
         loadingText.innerText = `Loading article...`;
 
         try {
-          // Initialize Firebase (no auth needed for public read)
           app = initializeApp(firebaseConfig);
           db = getFirestore(app);
 
-          // 1. Get the specific article document
           const articlesCollectionPath = `artifacts/${appId}/public/data/articles`;
           const docRef = doc(db, articlesCollectionPath, currentArticleId);
           const docSnap = await getDoc(docRef);
 
           if (docSnap.exists()) {
             const article = docSnap.data();
-            // 2. Render the main article
+
+            // 1. Render the visual content
             renderArticle(article);
-            // 3. Fetch related articles from the same category
+
+            // 2. Fetch related stories
             await fetchRelatedArticles(article.category);
-            // 4. NEW: Load author bio box
-            await loadAuthorInfo(article.authorId);
+
+            // 3. Load author bio (and get author data back)
+            const author = await loadAuthorInfo(article.authorId);
+
+            // 4. NEW: Inject all dynamic SEO tags
+            updateSeoTags(article, author);
           } else {
             console.error("No such document!");
             loadingText.innerText = "Article not found.";
             articleError.classList.remove("hidden");
             loadingOverlay.style.display = "none";
+            setNotFoundSeo(); // NEW: Set 404 SEO Tags
           }
         } catch (error) {
           console.error("Error initializing Firebase:", error);
@@ -1248,7 +1323,6 @@
         }
       }
 
-      // Start the application on window load
       window.onload = initApp;
     </script>
   </body>

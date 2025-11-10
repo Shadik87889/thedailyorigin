@@ -11,12 +11,12 @@
     <!-- Load html2canvas library for downloading the poster -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <!-- Load Google Fonts: Inter (UI), Oswald (Headlines), Caveat (Logo), and Playfair Display (Editorial) -->
+    <!-- Load Google Fonts: Inter (UI), Oswald (Headlines), Caveat (Logo), Playfair Display (Editorial), and Bebas Neue (Sport) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- MODIFIED: Replaced Share Tech Mono with Playfair Display -->
+    <!-- MODIFIED: Added Bebas Neue -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&family=Caveat:wght@700&family=Playfair+Display:wght@700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&family=Caveat:wght@700&family=Playfair+Display:wght@700;900&family=Bebas+Neue&display=swap"
       rel="stylesheet"
     />
 
@@ -97,6 +97,41 @@
 
       #template-editorial .poster-brand-container {
         justify-content: center; /* Center the brand */
+      }
+
+      /* --- NEW: Football Template Specific Styles --- */
+      #template-football {
+        /* Posh premium look: Dark with Gold */
+        background-color: #0a0a0a; /* Near black */
+      }
+
+      #template-football .poster-headline-text {
+        font-family: "Bebas Neue", sans-serif;
+        font-weight: 400; /* Bebas Neue is often just 400 */
+        text-transform: uppercase;
+        font-size: clamp(3rem, 10vw, 6.5rem); /* Make it very big */
+        line-height: 0.9;
+        color: #ffffff;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      }
+
+      #template-football .poster-attribution-text {
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        text-align: center;
+        letter-spacing: 0.1em;
+        color: #d4af37; /* Gold color */
+      }
+
+      #template-football .poster-brand-container {
+        justify-content: center; /* Center the brand */
+      }
+
+      /* Use the accent color for the logo, default to gold */
+      #template-football .poster-logo-artisan {
+        color: #d4af37;
       }
     </style>
   </head>
@@ -236,6 +271,46 @@
                     Editorial
                   </div>
                   <div class="text-[8px] font-bold mt-2">BRAND</div>
+                </div>
+              </div>
+
+              <!-- *** NEW: Template 6: Football *** -->
+              <div
+                id="select-football"
+                class="template-selector rounded-lg bg-gray-900 p-2 aspect-square flex flex-col items-center justify-center text-center text-white relative overflow-hidden"
+                data-template="football"
+              >
+                <canvas
+                  id="thumb-canvas-football"
+                  class="absolute inset-0 w-full h-full"
+                ></canvas>
+                <div class="absolute inset-0 bg-black/50 z-10"></div>
+                <div
+                  class="relative z-20 flex flex-col items-center justify-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                    class="w-6 h-6 mb-1 text-white"
+                    fill="currentColor"
+                  >
+                    <!-- Simple Football Icon -->
+                    <path
+                      d="M480.1 190.4C447.8 141.4 402.1 100.8 351.1 69.3C300 37.8 245.5 15.6 189.3 4.2C133.2-7.2 76.5 2.1 23.3 32.5C14.3 38.5 7.1 47.1 3.2 57.1C-0.7 67.1-0.9 77.9 2.5 88.2L31.8 178.1C34.4 186.2 40.1 193 47.4 197.6C54.8 202.2 63.5 204.3 72.2 203.6L166.3 195.9C173.8 195.3 181.1 192.5 187.3 187.9C193.6 183.2 198.6 176.9 201.7 169.6L216.6 130.4C220.1 122 227.1 115.8 235.6 112.9C244.1 110 253.2 110.6 261.3 114.6C291.6 129.5 319.4 148.6 344.4 171.4C369.4 194.2 391.2 220.4 409.2 249.4C412.3 254.3 416.3 258.7 420.9 262.5C425.5 266.3 430.6 269.4 436.1 271.7C442.2 274.2 448.6 275.6 455.1 275.7C461.6 275.9 468 274.7 474.1 272.3L502.9 261.7C510.6 258.8 516.9 252.8 520.6 245C524.3 237.2 525.1 228.1 522.9 219.5L496.2 201.8C493.6 199.9 490.8 198.3 487.9 197.1C485 195.9 481.9 194.9 478.8 194.3L480.1 190.4zM283.3 203.4L268.4 242.6C265.3 249.9 258.3 256.1 249.8 259C241.3 261.9 232.2 261.3 224.1 257.3C193.8 242.4 166 223.3 141 200.5C116 177.7 94.2 151.5 76.2 122.5C73.1 117.6 69.1 113.2 64.5 109.4C59.9 105.6 54.8 102.5 49.3 100.2C43.2 97.7 36.8 96.3 30.3 96.2C23.8 96 17.4 97.2 11.3 99.6L-17.5 110.2C-25.2 113.1 -31.5 119.1 -35.2 126.9C-38.9 134.7 -39.7 143.8 -37.5 152.4L-10.8 170.1C-8.2 172 -5.4 173.6 -2.5 174.8C0.4 176 3.5 177 6.6 177.6L5.3 181.5C8.6 230.5 24.2 278.2 51.5 321.8C78.8 365.4 117.3 404 164.1 435.5C210.9 467 265 490.6 322.2 505.2C379.5 519.8 438.3 525.1 495.8 520.6L507.2 519.6C515.1 519.1 522.6 515.9 528.6 510.6C534.6 505.3 538.8 498.2 540.6 490.3L560.6 420.7C562.9 411.6 562.3 402.1 558.9 393.4C555.5 384.7 549.5 377.3 541.9 372.4L447.8 316.3C440.3 311.9 431.6 309.9 422.9 310.6C414.2 311.3 406 314.7 399.6 320.2L370.1 345.2C366 348.6 360.7 350.7 355.2 351.2C349.7 351.7 344.2 350.5 339.3 347.8C305.8 331 275.6 310.2 249.3 286C223 261.8 200.8 234.3 183.4 204.3C182.2 202.3 181.3 200.2 180.8 198.1L283.3 203.4z"
+                    />
+                  </svg>
+                  <div
+                    class="text-sm font-bold"
+                    style="font-family: 'Bebas Neue', sans-serif;"
+                  >
+                    FOOTBALL
+                  </div>
+                  <div
+                    class="text-[8px] font-bold mt-1"
+                    style="color: #d4af37;"
+                  >
+                    PREMIUM
+                  </div>
                 </div>
               </div>
             </div>
@@ -516,7 +591,7 @@
                   <input
                     type="color"
                     id="accent-color-input"
-                    value="#06b6d4"
+                    value="#d4af37"
                     class="w-full h-10 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
                   />
                 </div>
@@ -912,6 +987,85 @@
                 </div>
               </div>
             </div>
+
+            <!-- *** NEW: TEMPLATE 6: Football *** -->
+            <div
+              id="template-football"
+              class="w-full h-full bg-gray-900 text-white hidden relative"
+            >
+              <!-- Canvas is the background -->
+              <canvas
+                class="poster-image-canvas absolute inset-0 w-full h-full"
+              ></canvas>
+
+              <!-- Vignette overlay for premium feel -->
+              <div
+                class="absolute inset-0"
+                style="
+                  background: radial-gradient(
+                    circle,
+                    rgba(0, 0, 0, 0.1) 0%,
+                    rgba(0, 0, 0, 0.8) 100%
+                  );
+                "
+              ></div>
+
+              <!-- Content container -->
+              <div
+                class="relative z-10 flex flex-col h-full p-8 md:p-10 text-center justify-between"
+              >
+                <!-- Top content block -->
+                <div class="flex-shrink-0">
+                  <!-- Headline (with new font) -->
+                  <h1 class="poster-headline-text text-white">
+                    TYPE YOUR HEADLINE
+                  </h1>
+                </div>
+
+                <!-- Spacer -->
+                <div class="flex-grow"></div>
+
+                <!-- Bottom content block -->
+                <div class="flex-shrink-0">
+                  <!-- Attribution Text (as match/event) -->
+                  <p
+                    class="poster-attribution-text text-white/80 mb-6 hidden"
+                  ></p>
+
+                  <!-- Brand (at bottom center) -->
+                  <div
+                    class="poster-brand-container flex justify-center flex-shrink-0"
+                  >
+                    <!-- Default Logo (from site) -->
+                    <div
+                      class="poster-brand-logo flex items-end space-x-1"
+                      style="display: flex;"
+                    >
+                      <span class="text-2xl text-white/90 poster-logo-main"
+                        >The Daily</Lspan
+                      >
+                      <span class="relative">
+                        <span
+                          class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
+                          >Origin</span
+                        >
+                        <canvas
+                          id="underline-canvas-6"
+                          class="absolute left-0 w-full h-3 -bottom-1"
+                          width="100"
+                          height="20"
+                        ></canvas>
+                      </span>
+                    </div>
+                    <!-- Custom User Text (hidden by default) -->
+                    <span
+                      class="poster-brand-text text-white/80 shadow-lg hidden"
+                      >BRAND</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -934,12 +1088,14 @@
       const templateCard = document.getElementById("template-card");
       const templateQuote = document.getElementById("template-quote");
       const templateEditorial = document.getElementById("template-editorial"); // *** MODIFIED ***
+      const templateFootball = document.getElementById("template-football"); // *** NEW ***
       const allTemplates = [
         templateHeadline,
         templateOverlay,
         templateCard,
         templateQuote,
         templateEditorial,
+        templateFootball, // *** NEW ***
       ]; // *** MODIFIED ***
 
       // --- Get Content Elements (from ALL templates) ---
@@ -968,12 +1124,16 @@
       const thumbCanvasEditorial = document.getElementById(
         "thumb-canvas-editorial"
       ); // *** MODIFIED ***
+      const thumbCanvasFootball = document.getElementById(
+        "thumb-canvas-football"
+      ); // *** NEW ***
       const allThumbCanvases = [
         thumbCanvasHeadline,
         thumbCanvasOverlay,
         thumbCanvasCard,
         thumbCanvasQuote,
         thumbCanvasEditorial,
+        thumbCanvasFootball, // *** NEW ***
       ]; // *** MODIFIED ***
 
       // --- Get Brand Logo Elements ---
@@ -1036,7 +1196,7 @@
       // --- Initial State ---
       let selectedTemplate = "headline"; // Default template
       let currentImage = null; // Will store the loaded Image object
-      let currentAccentColor = "#06b6d4"; // Default accent color
+      let currentAccentColor = "#d4af37"; // Default accent color (now gold)
       // --- Image Adjustment State ---
       let currentImageZoom = 1;
       let currentImagePosX = 0;
@@ -1049,7 +1209,7 @@
         brand: "",
         bgColor: "#111827",
         textColor: "#FFFFFF",
-        accentColor: "#06b6d4",
+        accentColor: "#d4af37", // Default to gold
         highlightWords: "",
         highlightColor: "#FFFF00",
         underlineWords: "",
@@ -1087,6 +1247,9 @@
             } else if (el.closest("#template-editorial")) {
               // *** MODIFIED ***
               el.innerText = `~ ${text} ~`; // Elegant prefix
+            } else if (el.closest("#template-football")) {
+              // *** NEW ***
+              el.innerText = `${text}`; // No prefix for football
             } else {
               el.innerText = `— ${text}`;
             }
@@ -1183,6 +1346,7 @@
         templateOverlay.style.backgroundColor = color;
         templateCard.style.backgroundColor = color;
         templateEditorial.style.backgroundColor = color; // *** MODIFIED ***
+        templateFootball.style.backgroundColor = color; // *** NEW ***
       });
 
       // 6. Update Text Color
@@ -1233,8 +1397,11 @@
         const value = lineHeightInput.value;
         lineHeightValue.innerText = value; // Update the label
         headlineTextElements.forEach((el) => {
-          // Don't apply custom line height to editorial template
-          if (!el.closest("#template-editorial")) {
+          // Don't apply custom line height to editorial or football template
+          if (
+            !el.closest("#template-editorial") &&
+            !el.closest("#template-football")
+          ) {
             el.style.lineHeight = value;
           }
         });
@@ -1408,6 +1575,7 @@
       templateCard.style.display = "none";
       templateQuote.style.display = "none";
       templateEditorial.style.display = "none"; // *** MODIFIED ***
+      templateFootball.style.display = "none"; // *** NEW ***
 
       // --- Canvas Drawing Functions ---
 
@@ -1432,13 +1600,14 @@
        */
       function drawUnderlines() {
         try {
-          // Get all 5 canvases
+          // Get all 6 canvases
           const canvases = [
             document.getElementById("underline-canvas-1"),
             document.getElementById("underline-canvas-2"),
             document.getElementById("underline-canvas-3"),
             document.getElementById("underline-canvas-4"),
             document.getElementById("underline-canvas-5"), // *** MODIFIED: This is for Editorial's logo now ***
+            document.getElementById("underline-canvas-6"), // *** NEW ***
           ];
 
           canvases.forEach((canvas, index) => {
@@ -1491,6 +1660,23 @@
           // *** MODIFIED: Special handling for Template 5 (Editorial) ***
           if (canvas.parentElement.id === "template-editorial") {
             ctx.fillStyle = "rgba(17, 24, 39, 0.5)"; // gray-900 at 50%
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+
+          // *** NEW: Special handling for Template 6 (Football) ***
+          if (canvas.parentElement.id === "template-football") {
+            // Add a vignette effect
+            const gradient = ctx.createRadialGradient(
+              canvas.width / 2,
+              canvas.height / 2,
+              canvas.height / 4, // Inner radius
+              canvas.width / 2,
+              canvas.height / 2,
+              canvas.height * 0.8 // Outer radius
+            );
+            gradient.addColorStop(0, "rgba(0,0,0,0.1)");
+            gradient.addColorStop(1, "rgba(0,0,0,0.8)");
+            ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
         });
@@ -1619,6 +1805,12 @@
             ctx.fillStyle = "rgba(17, 24, 39, 0.5)"; // gray-900 at 50%
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
+
+          // *** NEW: Special handling for Football thumbnail ***
+          if (canvas.id === "thumb-canvas-football") {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.6)"; // Dark overlay
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
         });
       }
 
@@ -1635,6 +1827,7 @@
         templateOverlay.style.backgroundColor = initialBG;
         templateCard.style.backgroundColor = initialBG;
         templateEditorial.style.backgroundColor = initialBG; // *** MODIFIED ***
+        templateFootball.style.backgroundColor = initialBG; // *** NEW ***
 
         // 3. Apply initial Text color
         const initialText = textColorInput.value;

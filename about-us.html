@@ -3,8 +3,120 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- UPDATED: Title for this page -->
+
+    <!-- 
+      ======================================================================
+      NEW: "WORLD-BEST" SEO FOR E-E-A-T (TRUSTWORTHINESS)
+      ======================================================================
+    -->
+
+    <!-- 1. Primary Metadata -->
     <title>About Us | The Daily Origin</title>
+    <meta
+      name="description"
+      content="Learn about The Daily Origin's mission to rebuild trust in media. Meet our founder, Shadik Hossain Shakib, and discover our core principles: Unbiased, Unfiltered, Uncompromising."
+    />
+    <!-- The canonical URL tells Google this is the one true "About Us" page -->
+    <link rel="canonical" href="https://www.thedailyorigin.com/about-us.html" />
+
+    <!-- 2. Open Graph (Facebook, LinkedIn, etc.) -->
+    <meta property="og:title" content="About Us | The Daily Origin" />
+    <meta
+      property="og:description"
+      content="Learn about our mission to rebuild trust in media and meet our founder."
+    />
+    <meta
+      property="og:url"
+      content="https://www.thedailyorigin.com/about-us.html"
+    />
+    <meta property="og:site_name" content="The Daily Origin" />
+    <meta property="og:type" content="website" />
+    <!-- This image will be used when sharing the link. TODO: Replace placeholder. -->
+    <meta
+      property="og:image"
+      content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="The Daily Origin - Unbiased, Unfiltered, Uncompromising."
+    />
+
+    <!-- 3. Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- <meta name="twitter:site" content="@YourTwitterHandle"> -->
+    <!-- TODO: Add your Twitter handle -->
+    <meta name="twitter:title" content="About Us | The Daily Origin" />
+    <meta
+      name="twitter:description"
+      content="Learn about our mission to rebuild trust in media and meet our founder."
+    />
+    <!-- TODO: Replace placeholder. -->
+    <meta
+      name="twitter:image"
+      content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="The Daily Origin - Unbiased, Unfiltered, Uncompromising."
+    />
+
+    <!-- 4. GAME-CHANGING: Linked JSON-LD Schema for E-E-A-T -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "The Daily Origin",
+            "url": "https://www.thedailyorigin.com",
+            /* TODO: Upload your logo and use the absolute URL here */
+            "logo": "https://www.thedailyorigin.com/the_daily_origin_logo.png",
+            "description": "The future of information, delivered today. Unbiased, unfiltered, and uncompromising.",
+            /* This 'founder' property links to the 'Person' schema below */
+            "founder": {
+              "@type": "Person",
+              "@id": "#founder-shakib" /* Internal page ID */
+            },
+            /* TODO: Add your real social media URLs */
+            "sameAs": [
+              "https://www.facebook.com/YourFacebookPage",
+              "https://www.twitter.com/YourTwitterHandle",
+              "https://www.instagram.com/YourInstagramHandle"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "#founder-shakib",
+            "name": "Shadik Hossain Shakib",
+            "jobTitle": "Founder, Chief Editor & Lead Developer",
+            /* TODO: Upload your founder's photo (absolute URL) */
+            "image": "https://www.thedailyorigin.com/the_daily_origin_founder.jpg",
+            "description": "Professional web and software developer, founder of Rural Peace Non-Profit Org and CashShilpo POS Software. Creator of The Daily Origin, a platform built on technological excellence and human integrity.",
+            /* This links the person back to the organization */
+            "worksFor": {
+              "@type": "Organization",
+              "name": "The Daily Origin"
+            }
+          },
+          {
+            "@type": "AboutPage" /* Explicitly state this is an About Page */,
+            "url": "https://www.thedailyorigin.com/about-us.html",
+            "name": "About The Daily Origin",
+            /* This links the page itself to the main organization */
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "The Daily Origin"
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- 
+      ======================================================================
+      END OF NEW SEO SECTION
+      ======================================================================
+    -->
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -185,11 +297,16 @@
       #mobile-menu.menu-open nav a:nth-child(7) {
         transition-delay: 0.4s;
       }
+      /* NEW: Added delay for 'Others' */
+      #mobile-menu.menu-open nav a:nth-child(8) {
+        transition-delay: 0.45s;
+      }
       #mobile-menu .mobile-social-links {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        transition-delay: 0.5s;
+        /* NEW: Delayed to fire after 'Others' */
+        transition-delay: 0.55s;
       }
       #mobile-menu.menu-open .mobile-social-links {
         opacity: 1;
@@ -214,8 +331,8 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
           <!-- Logo -->
-          <a href="./index.html" class="flex items-baseline space-x-2">
-            <!-- UPDATED: Link to index.html -->
+          <!-- UPDATED: Link to home.html -->
+          <a href="./home.html" class="flex items-baseline space-x-2">
             <span class="text-3xl text-white logo-main">The Daily</span>
             <span class="relative">
               <span class="text-4xl font-bold text-cyan-400 logo-artisan"
@@ -244,6 +361,7 @@
           </a>
 
           <!-- Desktop Navigation -->
+          <!-- NEW: Added 'Others' category -->
           <nav class="hidden md:flex space-x-8">
             <a
               href="./category.html?category=World"
@@ -279,6 +397,11 @@
               href="./category.html?category=Education"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Education</a
+            >
+            <a
+              href="./category.html?category=Others"
+              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
+              >Others</a
             >
           </nav>
 
@@ -335,6 +458,7 @@
       </div>
 
       <!-- Menu Links -->
+      <!-- NEW: Added 'Others' category -->
       <nav class="flex-grow flex flex-col p-6 overflow-y-auto">
         <a
           href="./category.html?category=World"
@@ -370,6 +494,11 @@
           href="./category.html?category=Education"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Education</a
+        >
+        <a
+          href="./category.html?category=Others"
+          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
+          >Others</a
         >
       </nav>
 
@@ -552,10 +681,12 @@
             <!-- Founder Image -->
             <div class="md:col-span-1">
               <!-- UPDATED: Replaced placeholder with your image -->
+              <!-- NEW: Added fallback image -->
               <img
                 src="./the_daily_origin_founder.jpg"
                 alt="Portrait of Shadik Hossain Shakib, Founder of The Daily Origin"
                 class="w-full h-full object-cover object-center"
+                onerror="this.src='https://placehold.co/600x800/0f172a/334155?text=Shadik+Hossain+Shakib'; this.onerror=null;"
               />
             </div>
 
@@ -686,8 +817,8 @@
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           <!-- Logo & About -->
           <div class="col-span-2 lg:col-span-2">
-            <a href="./index.html" class="flex items-baseline space-x-2 mb-4">
-              <!-- UPDATED: Link to index.html -->
+            <!-- UPDATED: Link to home.html -->
+            <a href="./home.html" class="flex items-baseline space-x-2 mb-4">
               <span class="text-2xl text-white logo-main">The Daily</span>
               <span class="relative">
                 <span class="text-3xl font-bold text-cyan-400 logo-artisan"
@@ -721,6 +852,7 @@
           </div>
 
           <!-- Quick Links -->
+          <!-- NEW: Added 'Others' category -->
           <div>
             <h3
               class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
@@ -775,6 +907,13 @@
                   href="./category.html?category=Education"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Education</a
+                >
+              </li>
+              <li>
+                <a
+                  href="./category.html?category=Others"
+                  class="text-sm text-gray-300 hover:text-cyan-400"
+                  >Others</a
                 >
               </li>
             </ul>

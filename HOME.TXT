@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Origin | The Future of Information</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="the_daily_origin_favicon.png" type="image/x-icon">
+    <!-- NEW: Google Font for Logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <!-- ADDED Oswald -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet"> 
+    
+    <!-- --- NEW: SEO & Metadata --- -->
+    
+    <!-- 1. Primary Metadata -->
+    <meta name="description" content="Get unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, science, and more. The Daily Origin is the future of information.">
+    <meta name="keywords" content="breaking news, tech news, politics, culture, science, sports, education, unbiased news, future of information">
+    <meta name="robots" content="index, follow"> <!-- Tell crawlers to index this page -->
+    
+    <!-- 2. Canonical URL (VERY Important) -->
+    <!-- This tells Google that https://www.thedailyorigin.com/ is the ONE true homepage -->
+    <link rel="canonical" href="https://www.thedailyorigin.com/">
+
+    <!-- 3. Open Graph (for Facebook, LinkedIn, etc.) -->
+    <meta property="og:title" content="The Daily Origin | The Future of Information">
+    <meta property="og:description" content="Unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, and more.">
+    <meta property="og:url" content="https://www.thedailyorigin.com/">
+    <meta property="og:site_name" content="The Daily Origin">
+    <meta property="og:type" content="website">
+    <!-- IMPORTANT: You MUST create this image (1200x630px recommended) and upload it to this exact path -->
+    <meta property="og:image" content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png">
+    <meta property="og:image:alt" content="The Daily Origin Logo">
+
+    <!-- 4. Twitter Card (for Twitter) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- <meta name="twitter:site" content="@TheDailyOrigin"> --> <!-- Optional: Add your Twitter handle here -->
+    <meta name="twitter:title" content="The Daily Origin | The Future of Information">
+    <meta name="twitter:description" content="Unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, and more.">
+    <!-- Use the same 1200x630px image -->
+    <meta name="twitter:image" content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png">
+    
+    <!-- --- End SEO & Metadata --- -->
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles for Futuristic Look -->
+        <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617; /* slate-950 */
+            color: #d1d5db; /* gray-300 */
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism effect for header */
+        .header-glass {
+            background-color: rgba(2, 6, 23, 0.6); /* slate-950 with 60% opacity */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1e293b; /* slate-800 */
+        }
+        
+        /* NEW: Logo Font Style for "The Daily" */
+        .logo-main {
+            font-family: 'Oswald', sans-serif; /* UPDATED: Raleway to Oswald */
+            font-weight: 700;
+        }
+
+        .logo-artisan {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Breaking News Ticker Animation */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+        }
+        .ticker-move {
+            /* --- ULTIMATE FIX --- */
+            display: flex;            /* 1. Use flexbox for the container */
+            width: fit-content;     /* 2. Force width to be sum of children, not parent */
+            /* --- End Fix --- */
+            
+            animation: ticker 25s linear infinite; 
+            will-change: transform;
+        }
+        .ticker-content {
+            /* --- ULTIMATE FIX --- */
+            flex-shrink: 0;         /* 3. CRITICAL: Prevent children from shrinking */
+            white-space: nowrap;    /* 4. Keep all ticker items on one line */
+            /* --- End Fix --- */
+        }
+        .ticker-move:hover {
+            animation-play-state: paused;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* MODIFIED: For seamless 2-block loop */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; /* slate-900 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0891b2; /* cyan-700 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22d3ee; /* cyan-400 */
+        }
+
+        /* Loading Spinner */
+        #loading-spinner {
+            border: 4px solid #1e293b; /* slate-800 */
+            border-top: 4px solid #22d3ee; /* cyan-400 */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* NEW: Premium Section Title Style */
+        .section-title {
+            position: relative;
+            padding-bottom: 0.75rem; /* 12px */
+            margin-bottom: 2rem; /* 32px */
+            border-bottom: 1px solid #1e293b; /* slate-800 */
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; /* sits on top of the border */
+            left: 0;
+            width: 100px; /* fixed width for the gradient line */
+            height: 2px;
+            background: linear-gradient(to right, #22d3ee, #0891b2); /* cyan-400 to cyan-700 */
+        }
+
+        /* NEW: Gradient text */
+        .text-gradient {
+            background: linear-gradient(to right, #22d3ee, #60a5fa); /* cyan-400 to blue-400 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        /* NEW: Text ellipsis utility classes */
+        .text-ellipsis-lines-2 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* NEW: Search Modal Styles */
+        .search-modal-hidden {
+            visibility: hidden;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s;
+        }
+        .search-modal-visible {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- NEW: Premium Desktop Nav Link Hover Effect --- */
+        .desktop-nav-link {
+            position: relative;
+            padding-bottom: 4px; /* Give space for the line */
+        }
+        
+        .desktop-nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; /* Align to the bottom of the 4px padding */
+            left: 0;
+            width: 100%;
+            height: 2px;
+            /* Use the same premium gradient from .text-gradient */
+            background: linear-gradient(to right, #22d3ee, #60a5fa);
+            transform: scaleX(0);
+            transform-origin: left; /* Grow from left to right */
+            transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1); /* Smoother ease */
+        }
+        
+        .desktop-nav-link:hover::after {
+            transform: scaleX(1);
+        }
+        
+        /* Make the text slightly brighter on hover, instead of full cyan */
+        .desktop-nav-link:hover {
+            color: #e5e7eb; /* gray-200 */
+        }
+        /* --- End of Premium Effect --- */
+
+        /* --- NEW: Advanced Mobile Menu Animations --- */
+        
+        /* Set initial state for nav links */
+        #mobile-menu nav a {
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        /* Set "open" state for nav links when menu-open class is added */
+        #mobile-menu.menu-open nav a {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Staggered delay for links */
+        #mobile-menu.menu-open nav a:nth-child(1) { transition-delay: 0.1s; }
+        #mobile-menu.menu-open nav a:nth-child(2) { transition-delay: 0.15s; }
+        #mobile-menu.menu-open nav a:nth-child(3) { transition-delay: 0.2s; }
+        #mobile-menu.menu-open nav a:nth-child(4) { transition-delay: 0.25s; }
+        #mobile-menu.menu-open nav a:nth-child(5) { transition-delay: 0.3s; }
+        #mobile-menu.menu-open nav a:nth-child(6) { transition-delay: 0.35s; }
+        #mobile-menu.menu-open nav a:nth-child(7) { transition-delay: 0.4s; }
+        /* NEW: Staggered delay for Others */
+        #mobile-menu.menu-open nav a:nth-child(8) { transition-delay: 0.45s; } 
+
+        /* Set initial state for social links */
+        #mobile-menu .mobile-social-links {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transition-delay: 0.5s; /* Fires after the nav links */
+        }
+        
+        /* Set "open" state for social links */
+        #mobile-menu.menu-open .mobile-social-links {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* --- End of Mobile Menu Animations --- */
+
+        /* --- NEW: Ticker Font Style --- */
+        .ticker-font {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700; /* This font is designed to be bold */
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* A little spacing for readability */
+            font-size: 0.95rem; /* A good, punchy size */
+        }
+        /* --- End of Ticker Font Style --- */
+
+    </style>
+    
+    <!-- --- NEW: Schema.org Structured Data (JSON-LD) --- -->
+    <!-- This is the "world-best" part. It helps Google understand WHAT your site is. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "NewsMediaOrganization",
+          "name": "The Daily Origin",
+          "url": "https://www.thedailyorigin.com/",
+          "logo": "https://www.thedailyorigin.com/the_daily_origin_logo.png",
+          "sameAs": [
+            "https://www.facebook.com/YourFacebookPage",
+            "https://twitter.com/YourTwitterHandle",
+            "https://www.instagram.com/YourInstagramHandle"
+          ]
+        },
+        {
+          "@type": "WebPage",
+          "url": "https://www.thedailyorigin.com/",
+          "name": "The Daily Origin | The Future of Information",
+          "description": "Get unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, science, and more. The Daily Origin is the future of information.",
+          "isPartOf": {
+            "@type": "WebSite",
+            "url": "https://www.thedailyorigin.com/",
+            "name": "The Daily Origin",
+            "publisher": {
+              "@type": "NewsMediaOrganization",
+              "name": "The Daily Origin",
+              "url": "https://www.thedailyorigin.com/"
+            }
+          }
+        }
+      ]
+    }
+    </script>
+    <!-- --- End Structured Data --- -->
+    
+</head>
+<body class="antialiased">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-950 z-50 flex flex-col justify-center items-center">
+        <div id="loading-spinner"></div>
+        <p class="text-cyan-400 mt-4 text-lg">Initializing Feed...</p>
+    </div>
+
+    <!-- Header -->
+    <header class="header-glass sticky top-0 z-40 w-full">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="./home" class="flex items-baseline space-x-2">
+                    <span class="text-3xl text-white logo-main">The Daily</span> 
+                    <!-- MODIFIED: Wrapped "Origin" in a relative span to position the SVG underline -->
+                    <span class="relative">
+                        <span class="text-4xl font-bold text-cyan-400 logo-artisan">Origin</span>
+                        <!-- NEW: Handwritten SVG underline -->
+                        <svg class="absolute left-0 w-full h-4 -bottom-1 text-cyan-500" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                            <path d="M2 12 C 30 22 70 22 98 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        </svg>
+                        <!-- NEW: Beta Tag -->
+                        <span class="absolute top-0 -right-5 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
+                            BETA
+                        </span>
+                    </span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <!-- UPDATED: Added 'Others' link -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="./category?category=World" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">World</a>
+                    <a href="./category?category=Tech" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Tech</a>
+                    <a href="./category?category=Politics" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Politics</a>
+                    <a href="./category?category=Culture" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Culture</a>
+                    <a href="./category?category=Science" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Science</a>
+                    <a href="./category?category=Sports" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Sports</a>
+                    <a href="./category?category=Education" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Education</a>
+                    <a href="./category?category=Others" class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link">Others</a> <!-- NEW CATEGORY -->
+                </nav>
+
+                <!-- Search and Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <button id="search-open-btn" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </button>
+                    <!-- UPDATED: Mobile Menu Button markup for icon switching -->
+                    <button class="md:hidden text-gray-400 hover:text-cyan-400 transition-colors" id="mobile-menu-btn">
+                        <i data-lucide="menu" class="w-6 h-6" id="mobile-menu-open-icon"></i>
+                        <i data-lucide="x" class="w-6 h-6 hidden" id="mobile-menu-close-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NEW: Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/70 z-40 opacity-0 invisible transition-opacity duration-300 ease-in-out md:hidden"></div>
+
+    <!-- NEW: Advanced Mobile Menu (Slides from right) -->
+    <!-- UPDATED: Added flex flex-col to make a header, content, footer layout -->
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-80 max-w-full bg-slate-950 z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl shadow-black flex flex-col">
+        <!-- Menu Header (Stays at top) -->
+        <div class="flex-shrink-0 flex justify-between items-center p-6 border-b border-slate-800">
+            <span class="text-xl font-bold text-white">Menu</span>
+            <button class="text-gray-400 hover:text-cyan-400" id="mobile-menu-close-btn">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        
+        <!-- Menu Links (Grows to fill space and scrolls if needed) -->
+        <nav class="flex-grow flex flex-col p-6 overflow-y-auto">
+            <a href="./category?category=World" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">World</a>
+            <a href="./category?category=Tech" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Tech</a>
+            <a href="./category?category=Politics" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Politics</a>
+            <a href="./category?category=Culture" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Culture</a>
+            <a href="./category?category=Science" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Science</a>
+            <a href="./category?category=Sports" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Sports</a>
+            <a href="./category?category=Education" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Education</a>
+            <a href="./category?category=Others" class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800">Others</a> <!-- NEW CATEGORY -->
+        </nav>
+
+        <!-- NEW: Social Links (Stays at bottom) -->
+        <div class="flex-shrink-0 p-6 border-t border-slate-800 mobile-social-links">
+            <div class="flex space-x-6 justify-center">
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors" aria-label="Twitter">
+                    <i data-lucide="twitter" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors" aria-label="Facebook">
+                    <i data-lucide="facebook" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors" aria-label="Instagram">
+                    <i data-lucide="instagram" class="w-6 h-6"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breaking News Ticker -->
+    <div class="bg-slate-900 border-b-2 border-cyan-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-12">
+            <span class="bg-cyan-500 text-slate-900 text-xs font-extrabold uppercase px-3 py-1 rounded-sm flex-shrink-0">
+                Breaking
+            </span>
+            <!-- MODIFIED: Added flex-1 and min-w-0 to ensure the wrapper fills space and clips correctly -->
+            <div class="ticker-wrap ml-4 flex-1 min-w-0">
+                <div class="ticker-move" id="breaking-news-ticker">
+                    <!-- Ticker items will be injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        
+        <!-- Hero Section -->
+        <section id="hero-story" class="mb-12">
+            <!-- Hero article will be injected by JS -->
+        </section>
+
+        <!-- Top Stories -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-white section-title">Top Stories</h2>
+            <div id="top-stories-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Top stories will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- Category Sections -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+            
+            <!-- Main Feed (col-span-2) -->
+            <div class="lg:col-span-2 space-y-12">
+                <!-- Tech Section -->
+                <section id="tech-section">
+                    <h2 class="text-3xl font-bold text-white section-title">Tech</h2>
+                    <div id="tech-news-list" class="space-y-6 md:space-y-8">
+                        <!-- Tech articles will be injected by JS -->
+                    </div>
+                </section>
+                
+                <!-- World Section -->
+                <section id="world-section">
+                    <h2 class="text-3xl font-bold text-white section-title">World</h2>
+                    <div id="world-news-list" class="space-y-6 md:space-y-8">
+                        <!-- World articles will be injected by JS -->
+                    </div>
+                </section>
+
+                <!-- Sports Section -->
+                <section id="sports-section">
+                    <h2 class="text-3xl font-bold text-white section-title">Sports</h2>
+                    <div id="sports-news-list" class="space-y-6 md:space-y-8">
+                        <!-- Sports articles will be injected by JS -->
+                    </div>
+                </section>
+
+                <!-- NEW: Others Section -->
+                <section id="others-section">
+                    <h2 class="text-3xl font-bold text-white section-title">Others</h2>
+                    <div id="others-news-list" class="space-y-6 md:space-y-8">
+                        <!-- Others articles will be injected by JS -->
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Sidebar (col-span-1) -->
+            <aside class="space-y-12">
+                <!-- Politics Section -->
+                <section id="politics-section">
+                    <h2 class="text-3xl font-bold text-white section-title">Politics</h2>
+                    <div id="politics-news-list" class="space-y-6">
+                        <!-- Politics articles will be injected by JS -->
+                    </div>
+                </section>
+
+                <!-- Education Section -->
+                <section id="education-section">
+                    <h3 class="text-3xl font-bold text-white section-title">Education</h3>
+                    <div id="education-news-list" class="space-y-6">
+                        <!-- Education articles will be injected by JS -->
+                    </div>
+                </section>
+            </aside>
+            
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                <!-- Logo & About -->
+                <div class="col-span-2 lg:col-span-2">
+                    <a href="./home" class="flex items-baseline space-x-2 mb-4">
+                        <span class="text-2xl text-white logo-main">The Daily</span> 
+                        <!-- MODIFIED: Wrapped "Origin" in a relative span to position the SVG underline -->
+                        <span class="relative">
+                            <span class="text-3xl font-bold text-cyan-400 logo-artisan">Origin</span>
+                            <!-- NEW: Handwritten SVG underline (slightly smaller) -->
+                            <svg class="absolute left-0 w-full h-3 -bottom-1 text-cyan-500" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                <path d="M2 12 C 30 22 70 22 98 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                            </svg>
+                            <!-- NEW: Beta Tag -->
+                            <span class="absolute top-0 -right-4 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[9px] font-bold px-1.5 py-0.5 rounded-sm">
+                                BETA
+                            </span>
+                        </span>
+                    </a>
+                    <p class="text-sm text-gray-400 max-w-xs">The future of information, delivered today. Unbiased, unfiltered, and uncompromising.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Categories</h3>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="./category?category=World" class="text-sm text-gray-300 hover:text-cyan-400">World</a></li>
+                        <li><a href="./category?category=Tech" class="text-sm text-gray-300 hover:text-cyan-400">Tech</a></li>
+                        <li><a href="./category?category=Politics" class="text-sm text-gray-300 hover:text-cyan-400">Politics</a></li>
+                        <li><a href="./category?category=Science" class="text-sm text-gray-300 hover:text-cyan-400">Science</a></li>
+                        <li><a href="./category?category=Culture" class="text-sm text-gray-300 hover:text-cyan-400">Culture</a></li>
+                        <li><a href="./category?category=Sports" class="text-sm text-gray-300 hover:text-cyan-400">Sports</a></li>
+                        <li><a href="./category?category=Education" class="text-sm text-gray-300 hover:text-cyan-400">Education</a></li>
+                        <li><a href="./category?category=Others" class="text-sm text-gray-300 hover:text-cyan-400">Others</a></li> <!-- NEW CATEGORY -->
+                    </ul>
+                </div>
+                
+                <!-- Company -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Company</h3>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="./about-us" class="text-sm text-gray-300 hover:text-cyan-400">About Us</a></li>
+                        <li><a href="#" class="text-sm text-gray-300 hover:text-cyan-400">Careers</a></li>
+                        <li><a href="#" class="text-sm text-gray-300 hover:text-cyan-400">Ethics Policy</a></li>
+                        <li><a href="#" class="text-sm text-gray-300 hover:text-cyan-400">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Legal</h3>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="#" class="text-sm text-gray-300 hover:text-cyan-400">Privacy Policy</a></li>
+                        <li><a href="#" class="text-sm text-gray-300 hover:text-cyan-400">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- App -->
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Get the App</h3>
+                    <!-- Placeholder app store buttons -->
+                    <div class="mt-4 space-y-3">
+                         <a href="#" class="flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white py-2 px-3 rounded-lg text-sm">
+                            <span>App Store</span>
+                         </a>
+                         <a href="#" class="flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white py-2 px-3 rounded-lg text-sm">
+                            <span>Google Play</span>
+                         </a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="mt-8 border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-400">&copy; 2025 The Daily Origin. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <!-- Social media icons -->
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                        <i data-lucide="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                        <i data-lucide="facebook" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- NEW: Search Modal -->
+    <div id="search-overlay" class="search-modal-hidden fixed inset-0 bg-black/80 z-40 transition-opacity" aria-hidden="true"></div>
+    <div id="search-modal" class="search-modal-hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg shadow-2xl shadow-cyan-900/50 flex flex-col">
+            <!-- Search Input -->
+            <div class="flex items-center p-4 border-b border-slate-800">
+                <i data-lucide="search" class="w-6 h-6 text-cyan-400 flex-shrink-0 mr-4"></i>
+                <input type="text" id="search-input" placeholder="Search articles by title, summary, or category..." class="w-full bg-transparent text-white text-lg placeholder-gray-500 focus:outline-none">
+                <button id="search-close-btn" class="text-gray-400 hover:text-white transition-colors ml-4">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <!-- Search Results -->
+            <div id="search-results-list" class="max-h-[60vh] overflow-y-auto p-4 space-y-3">
+                <!-- Search results will be injected here -->
+                <p class="text-gray-500 text-center">Start typing to see results.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Firebase and App Logic -->
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc,
+            addDoc,
+            getDocs,
+            collection, 
+            onSnapshot, 
+            query,
+            serverTimestamp,
+            Timestamp,
+            limit,
+            writeBatch
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Removed the problematic firebase-util.js import
+
+        // --- Your Provided Firebase Config ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyCFVD4Ts03OXJ14aJ5h_HGAAuiIg5nme7A",
+          authDomain: "edu-env.firebaseapp.com",
+          projectId: "edu-env",
+          storageBucket: "edu-env.firebasestorage.app",
+          messagingSenderId: "259668089849",
+          appId: "1:259668089849:web:70a92e04ce3331ed533b28",
+          measurementId: "G-VK9WTY47JB"
+        };
+
+        // --- Global Variables ---
+        let app, db, auth;
+        let userId = null;
+        let allArticles = []; // NEW: To store all articles for search
+        
+        // Get App ID from canvas environment, or use a default
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-news-app';
+        
+        // Get initial auth token from canvas environment
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- UI Element References ---
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const heroStoryContainer = document.getElementById('hero-story');
+        const topStoriesGrid = document.getElementById('top-stories-grid');
+        const breakingNewsTicker = document.getElementById('breaking-news-ticker');
+        const techNewsList = document.getElementById('tech-news-list');
+        const worldNewsList = document.getElementById('world-news-list');
+        const politicsNewsList = document.getElementById('politics-news-list');
+        const sportsNewsList = document.getElementById('sports-news-list');
+        const educationNewsList = document.getElementById('education-news-list');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        
+        // NEW CATEGORY: Others List
+        const othersNewsList = document.getElementById('others-news-list');
+
+        // NEW: Mobile Menu Elements
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const mobileMenuOpenIcon = document.getElementById('mobile-menu-open-icon');
+        const mobileMenuCloseIcon = document.getElementById('mobile-menu-close-icon');
+        const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-btn'); // Button inside the menu
+
+        // NEW: Search Modal UI Elements
+        const searchIconBtn = document.getElementById('search-open-btn'); 
+        const searchOverlay = document.getElementById('search-overlay');
+        const searchModal = document.getElementById('search-modal');
+        const searchInput = document.getElementById('search-input');
+        const searchResultsList = document.getElementById('search-results-list');
+        const searchCloseBtn = document.getElementById('search-close-btn');
+
+
+        // NEW: Advanced Mobile Menu Functions
+        function openMenu() {
+            // Show Menu
+            mobileMenu.classList.remove('translate-x-full');
+            mobileMenu.classList.add('menu-open'); // NEW: Add class to trigger animations
+            
+            // Show Overlay
+            mobileMenuOverlay.classList.remove('opacity-0', 'invisible');
+            
+            // Toggle Icons
+            mobileMenuOpenIcon.classList.add('hidden');
+            mobileMenuCloseIcon.classList.remove('hidden');
+            
+            // Prevent Body Scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            // Hide Menu
+            mobileMenu.classList.add('translate-x-full');
+            mobileMenu.classList.remove('menu-open'); // NEW: Remove class
+            
+            // Hide Overlay
+            mobileMenuOverlay.classList.add('opacity-0', 'invisible');
+            
+            // Toggle Icons
+            mobileMenuOpenIcon.classList.remove('hidden');
+            mobileMenuCloseIcon.classList.add('hidden');
+            
+            // Restore Body Scroll
+            document.body.style.overflow = '';
+        }
+
+        // NEW: Mobile Menu Event Listeners
+        mobileMenuBtn.addEventListener('click', openMenu);
+        mobileMenuCloseBtn.addEventListener('click', closeMenu);
+        mobileMenuOverlay.addEventListener('click', closeMenu);
+
+
+        // NEW: Search Modal Toggle Functions
+        function showSearchModal() {
+            searchOverlay.classList.remove('search-modal-hidden');
+            searchOverlay.classList.add('search-modal-visible');
+            searchModal.classList.remove('search-modal-hidden');
+            searchModal.classList.add('search-modal-visible');
+            searchInput.focus();
+        }
+
+        function hideSearchModal() {
+            searchOverlay.classList.remove('search-modal-visible');
+            searchOverlay.classList.add('search-modal-hidden');
+            searchModal.classList.remove('search-modal-hidden');
+            searchModal.classList.add('search-modal-visible');
+            searchInput.value = ''; // Clear input
+            searchResultsList.innerHTML = '<p class="text-gray-500 text-center">Start typing to see results.</p>'; // Reset
+        }
+
+        // NEW: Search Event Listeners
+        searchIconBtn.addEventListener('click', showSearchModal);
+        searchCloseBtn.addEventListener('click', hideSearchModal);
+        searchOverlay.addEventListener('click', hideSearchModal);
+
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+
+        // --- Helper Functions ---
+        
+        /**
+         * Formats a Firebase Timestamp or JS Date into a relative time string
+         * e.g., "2 hours ago", "5 minutes ago"
+         */
+        function formatRelativeTime(date) {
+            if (date.toDate) {
+                date = date.toDate(); // Convert Firebase Timestamp to JS Date
+            }
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            // Handle "just now" for very recent posts
+            if (seconds < 5) return "just now";
+
+            let interval = seconds / 31536000;
+            if (interval >= 1) { 
+                const count = Math.floor(interval);
+                return count === 1 ? "1 year ago" : `${count} years ago`; 
+            }
+            interval = seconds / 2592000;
+            if (interval >= 1) { 
+                const count = Math.floor(interval);
+                return count === 1 ? "1 month ago" : `${count} months ago`; 
+            }
+            interval = seconds / 86400;
+            if (interval >= 1) { 
+                const count = Math.floor(interval);
+                return count === 1 ? "1 day ago" : `${count} days ago`; 
+            }
+            interval = seconds / 3600;
+            if (interval >= 1) { 
+                const count = Math.floor(interval);
+                return count === 1 ? "1 hour ago" : `${count} hours ago`; 
+            }
+            interval = seconds / 60;
+            if (interval >= 1) { 
+                const count = Math.floor(interval);
+                return count === 1 ? "1 minute ago" : `${count} minutes ago`; 
+            }
+            // MODIFIED: Handle singular 'second'
+            const count = Math.floor(seconds);
+            return count === 1 ? "1 second ago" : `${count} seconds ago`;
+        }
+
+        // --- NEW: Search Functions ---
+
+        /**
+         * Performs a client-side search on all loaded articles.
+         */
+        function performSearch(query) {
+            const normalizedQuery = query.toLowerCase().trim();
+
+            if (normalizedQuery.length < 2) {
+                searchResultsList.innerHTML = '<p class="text-gray-500 text-center">Start typing to see results (min 2 chars).</p>';
+                return;
+            }
+
+            const results = allArticles.filter(article => {
+                const title = article.title?.toLowerCase() || '';
+                const summary = article.summary?.toLowerCase() || '';
+                const category = article.category?.toLowerCase() || '';
+                
+                return title.includes(normalizedQuery) || 
+                       summary.includes(normalizedQuery) || 
+                       category.includes(normalizedQuery);
+            });
+
+            if (results.length === 0) {
+                searchResultsList.innerHTML = '<p class="text-gray-500 text-center">No results found.</p>';
+            } else {
+                searchResultsList.innerHTML = results.map(createSearchResultHTML).join('');
+                // Note: If icons were used in results, you'd call lucide.createIcons() here
+            }
+        }
+
+        /**
+         * Creates HTML for a single search result item.
+         */
+        function createSearchResultHTML(article) {
+            const articleLink = `./article?id=${article.id}`;
+            const timeAgo = article.publishedAt ? formatRelativeTime(article.publishedAt) : 'Just now';
+            return `
+                <a href="${articleLink}" class="block group p-4 bg-slate-800 rounded-lg flex items-start space-x-4 transition-colors hover:bg-slate-700" aria-label="Read article: ${article.title}">
+                    <img src="${article.imageUrl}" alt="${article.title}" 
+                         onerror="this.src='https://source.unsplash.com/100x100/?news,abstract';"
+                         class="w-20 h-20 object-cover rounded-md flex-shrink-0">
+                    <div class="min-w-0">
+                        <span class="text-gradient text-xs font-bold uppercase tracking-wider">${article.category}</span>
+                        <h4 class="text-md font-bold text-white mt-1 group-hover:text-cyan-300 transition-colors text-ellipsis-lines-2">
+                            ${article.title}
+                        </h4>
+                        <span class="text-xs font-medium text-gray-400 mt-1 block">${timeAgo}</span>
+                    </div>
+                </a>
+            `;
+        }
+
+
+        /**
+         * Adds initial demo news articles to Firestore if the collection is empty.
+         * Uses a public path so all users see the same news.
+         */
+        async function addInitialDemoData() {
+            const articlesCollectionPath = `artifacts/${appId}/public/data/articles`;
+            const articlesRef = collection(db, articlesCollectionPath);
+            
+            // Check if data already exists to avoid duplication
+            const existingData = await getDocs(query(articlesRef, limit(1)));
+            if (!existingData.empty) {
+                console.log("Demo data already exists.");
+                return;
+            }
+
+            console.log("Adding initial demo data... attempting anonymous sign-in for write access.");
+
+            // --- FIX: Only sign in if we actually need to write demo data ---
+            try {
+                await signInAnonymously(auth);
+                console.log("Signed in anonymously for demo data setup.");
+            } catch (authError) {
+                console.error("Error signing in anonymously: ", authError);
+                console.error("Please enable Anonymous Sign-In in your Firebase console to add demo data.");
+                // We can't write, so we must exit.
+                return;
+            }
+            
+            // --- NEW: Get the anonymous user's ID to use as author ---
+            const demoAuthorId = auth.currentUser.uid;
+            
+            // Use a batch write for efficiency
+            const batch = writeBatch(db);
+            
+            const demoArticles = [
+                {
+                    title: "Quantum Leap: New Supercomputer Shatters AI Processing Records",
+                    summary: "Researchers at NeoDynamics Labs have unveiled 'Prometheus,' a quantum-hybrid supercomputer capable of computations previously thought impossible, accelerating drug discovery and climate modeling.",
+                    category: "Tech",
+                    imageUrl: `https://source.unsplash.com/1200x700/?quantum,computer`,
+                    publishedAt: serverTimestamp(),
+                    isHero: true,
+                    isTopStory: false,
+                    isBreaking: true,
+                    authorId: demoAuthorId, // <-- NEW
+                    authorName: "Inflexion Demo" // <-- NEW
+                },
+                {
+                    title: "Zero-G Football World Cup Announced for 2040",
+                    summary: "The newly formed 'Orbital Sports Federation' has announced the first-ever zero-gravity football tournament, to be held aboard the 'Odyssey' space station.",
+                    category: "Sports",
+                    imageUrl: `https://source.unsplash.com/600x400/?sports,zero,gravity`,
+                    publishedAt: serverTimestamp(),
+                    isHero: false,
+                    isTopStory: false,
+                    isBreaking: false,
+                    authorId: demoAuthorId,
+                    authorName: "Inflexion Demo"
+                },
+                {
+                    title: "AI Tutors Now Outperform Human Educators in Standardized Testing",
+                    summary: "A landmark study has shown that students mentored by the 'Athena' AI platform score 15% higher on average, prompting a global review of education policies.",
+                    category: "Education",
+                    imageUrl: `https://source.unsplash.com/600x400/?education,ai,learning`,
+                    publishedAt: serverTimestamp(),
+                    isHero: false,
+                    isTopStory: false,
+                    isBreaking: false,
+                    authorId: demoAuthorId,
+                    authorName: "Inflexion Demo"
+                },
+                // --- NEW ARTICLE FOR 'OTHERS' CATEGORY ---
+                {
+                    title: "Ancient City Discovered Under Antarctic Ice Sheet",
+                    summary: "A team of glaciologists and archaeologists has detected compelling evidence of a vast, complex urban settlement buried beneath kilometers of ice in East Antarctica.",
+                    category: "Others",
+                    imageUrl: `https://source.unsplash.com/600x400/?antarctica,city,mystery`,
+                    publishedAt: serverTimestamp(),
+                    isHero: false,
+                    isTopStory: false,
+                    isBreaking: false,
+                    authorId: demoAuthorId,
+                    authorName: "Inflexion Demo"
+                }
+            ];
+
+            demoArticles.forEach(article => {
+                const newDocRef = doc(collection(db, articlesCollectionPath));
+                batch.set(newDocRef, article);
+            });
+            
+            try {
+                await batch.commit();
+                console.log("Demo data successfully added.");
+            } catch (error) {
+                console.error("Error adding demo data: ", error);
+            }
+        }
+
+
+        // --- UI Rendering Functions ---
+        
+        /**
+         * Renders all articles to their respective sections on the page.
+         */
+        function renderAllArticles(articles) {
+            // Clear all containers
+            heroStoryContainer.innerHTML = '';
+            topStoriesGrid.innerHTML = '';
+            breakingNewsTicker.innerHTML = '';
+            techNewsList.innerHTML = '';
+            worldNewsList.innerHTML = '';
+            politicsNewsList.innerHTML = '';
+            sportsNewsList.innerHTML = '';
+            educationNewsList.innerHTML = '';
+            othersNewsList.innerHTML = ''; // NEW: Clear Others container
+            
+            // Separate articles
+            const heroArticle = articles.find(a => a.isHero);
+            const topStories = articles.filter(a => a.isTopStory);
+            const breakingNews = articles.filter(a => a.isBreaking);
+            const techArticles = articles.filter(a => a.category === 'Tech' && !a.isHero && !a.isTopStory);
+            const worldArticles = articles.filter(a => a.category === 'World' && !a.isHero && !a.isTopStory);
+            const politicsArticles = articles.filter(a => a.category === 'Politics' && !a.isHero && !a.isTopStory);
+            const sportsArticles = articles.filter(a => a.category === 'Sports' && !a.isHero && !a.isTopStory);
+            const educationArticles = articles.filter(a => a.category === 'Education' && !a.isHero && !a.isTopStory);
+            const othersArticles = articles.filter(a => a.category === 'Others' && !a.isHero && !a.isTopStory); // NEW: Filter Others
+
+            // Render Hero
+            if (heroArticle) {
+                heroStoryContainer.innerHTML = createHeroArticleHTML(heroArticle);
+            } else {
+                 heroStoryContainer.innerHTML = '<p class="text-gray-500">No featured story available.</p>';
+            }
+
+            // Render Top Stories
+            if (topStories.length > 0) {
+                topStories.forEach(article => {
+                    topStoriesGrid.innerHTML += createTopStoryCardHTML(article);
+                });
+            } else {
+                topStoriesGrid.innerHTML = '<p class="text-gray-500 col-span-3">No top stories available.</p>';
+            }
+
+            // Render Breaking News Ticker
+            if (breakingNews.length > 0) {
+                let tickerHTML = '';
+                breakingNews.forEach(article => {
+                    tickerHTML += createTickerItemHTML(article);
+                });
+                // MODIFIED: Create two identical blocks for seamless looping
+                breakingNewsTicker.innerHTML = 
+                    `<div class="ticker-content">${tickerHTML}</div>
+                     <div class="ticker-content">${tickerHTML}</div>`;
+            } else {
+                breakingNewsTicker.innerHTML = `<span class="text-gray-400 px-4">All quiet on the feeds...</span>`;
+            }
+            
+            // Render Category Lists
+            renderList(techNewsList, techArticles);
+            renderList(worldNewsList, worldArticles);
+            renderList(politicsNewsList, politicsArticles, true); // Use smaller cards for sidebar
+            renderList(sportsNewsList, sportsArticles); // Main feed list
+            renderList(educationNewsList, educationArticles, true); // Sidebar list
+            renderList(othersNewsList, othersArticles); // NEW: Render Others list (main feed style)
+            
+            // Hide loading overlay
+            loadingOverlay.style.display = 'none';
+        }
+
+        /**
+         * Helper to render a list of articles to a container.
+         */
+        function renderList(container, articles, isSidebar = false) {
+            if (articles.length > 0) {
+                articles.forEach(article => {
+                    container.innerHTML += isSidebar ? 
+                        createSidebarArticleHTML(article) : 
+                        createListArticleHTML(article);
+                });
+            } else {
+                container.innerHTML = '<p class="text-gray-500">No articles in this category right now.</p>';
+            }
+        }
+
+        /**
+         * Creates HTML for the main Hero article.
+         */
+        function createHeroArticleHTML(article) {
+            const timeAgo = article.publishedAt ? formatRelativeTime(article.publishedAt) : 'Just now';
+            const categoryLink = `./category?category=${article.category}`;
+            // --- UPDATE: Changed href from # to article ---
+            const articleLink = `./article?id=${article.id}`;
+            
+            return `
+                <a href="${articleLink}" class="block group rounded-lg overflow-hidden border border-slate-800 transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
+                    <div class="relative">
+                        <img src="${article.imageUrl}" alt="${article.title}" 
+                             onerror="this.src='https://source.unsplash.com/1200x700/?news,breaking';"
+                             class="w-full h-[300px] md:h-[500px] object-cover transition-transform duration-300 group-hover:scale-105">
+                        
+                        <!-- MODIFIED: Replaced the simple gradient with a more dramatic radial gradient -->
+                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-black/90 via-black/40 to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-6 md:p-10 z-20">
+                            <!-- MODIFIED: Changed <a> to <span> to avoid nested links -->
+                            <span class="relative inline-block bg-cyan-500 text-slate-900 text-xs font-extrabold uppercase px-3 py-1 rounded-sm mb-2 z-20 transition-colors">${article.category}</span>
+                            <!-- MODIFIED: Removed nested <a> tag AND added a text shadow for pop -->
+                            <h1 class="text-2xl md:text-4xl lg:text-5xl font-black tracking-tight text-white mb-3 group-hover:text-cyan-300 transition-colors [text-shadow:_0_2px_4px_rgb(0_0_0_/_0.5)]">
+                                ${article.title}
+                            </h1>
+                            <!-- MODIFIED: Added text-ellipsis-lines-2 AND a text shadow for pop -->
+                            <p class="text-sm md:text-lg text-gray-300 hidden md:block max-w-3xl mb-4 text-ellipsis-lines-2 [text-shadow:_0_1px_3px_rgb(0_0_0_/_0.5)]">${article.summary}</p>
+                            <span class="text-xs font-medium text-gray-400">${timeAgo}</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
+        /**
+         * --- NEW: RE-ADDING MISSING FUNCTION ---
+         * Creates HTML for a card in the Top Stories grid.
+         */
+        function createTopStoryCardHTML(article) {
+            // FIX: Define missing variables
+            const timeAgo = article.publishedAt ? formatRelativeTime(article.publishedAt) : 'Just now';
+            const articleLink = `./article?id=${article.id}`;
+            
+            // FIX: Added the missing 'return `' statement
+            return `
+                 <a href="${articleLink}" class="block group bg-slate-900 rounded-lg overflow-hidden border border-slate-800 transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20 flex flex-col" aria-label="Read article: ${article.title}">
+                    <!-- REMOVED: Invisible <a> overlay -->
+                    <img src="${article.imageUrl}" alt="${article.title}" 
+                         onerror="this.src='https://source.unsplash.com/800x500/?news,story';"
+                         class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <!-- NEW: Added a wrapper div for the main content -->
+                        <div class="flex-grow">
+                            <!-- MODIFIED: Changed <a> to <span> to avoid nested links -->
+                            <span class="text-gradient text-xs font-bold uppercase tracking-wider relative z-20">${article.category}</span>
+                            <!-- MODIFIED: Changed to 2 lines (from 3) and removed mb-3 -->
+                            <h3 class="text-xl font-bold text-white mt-2 group-hover:text-cyan-300 transition-colors text-ellipsis-lines-2">
+                                 ${article.title}
+                            </h3>
+                            <!-- NEW: Added summary with 2-line ellipsis -->
+                            <p class="text-sm text-gray-400 mt-2 text-ellipsis-lines-2">${article.summary}</p>
+                        </div>
+                        <!-- MODIFIED: Added mt-4 to space it from the summary -->
+                        <span class="text-xs font-medium text-gray-400 mt-4">${timeAgo}</span>
+                    </div>
+                </a>
+            `;
+        }
+        
+        /**
+         * --- NEW: RE-ADDING MISSING FUNCTION ---
+         * Creates HTML for a main feed list article.
+         */
+        function createListArticleHTML(article) {
+            const timeAgo = article.publishedAt ? formatRelativeTime(article.publishedAt) : 'Just now';
+            const categoryLink = `./category?category=${article.category}`;
+            // --- UPDATE: Changed href from # to article ---
+            const articleLink = `./article?id=${article.id}`;
+            return `
+                <!-- MODIFIED: Changed <div> to <a> and removed relative class -->
+                <a href="${articleLink}" class="block group bg-slate-900 rounded-lg overflow-hidden border border-slate-800 md:flex transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
+                    <!-- REMOVED: Invisible <a> overlay -->
+                    
+                    <!-- FIX: Wrapped image in a div with defined width to prevent flex distortion -->
+                    <div class="w-full md:w-1/3 flex-shrink-0">
+                        <img src="${article.imageUrl}" alt="${article.title}" 
+                             onerror="this.src='https://source.unsplash.com/600x400/?news,article';"
+                             class="w-full h-full aspect-video object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    
+                    <!-- FIX: Added min-w-0 to the text container to allow ellipsis truncation to work correctly -->
+                    <div class="p-6 flex flex-col justify-between min-w-0">
+                        <!-- FIX: Added overflow-hidden to constrain height and force child text to truncate -->
+                        <div class="overflow-hidden"> 
+                            <!-- MODIFIED: Changed <a> to <span> to avoid nested links -->
+                            <span class="text-gradient text-xs font-bold uppercase tracking-wider relative z-20">${article.category}</span>
+                            <!-- MODIFIED: Added text-ellipsis-lines-2 for truncation -->
+                            <h3 class="text-xl font-bold text-white mt-2 mb-3 group-hover:text-cyan-300 transition-colors text-ellipsis-lines-2">
+                                ${article.title}
+                            </h3>
+                            <!-- MODIFIED: Added text-ellipsis-lines-2 for truncation -->
+                            <p class="text-sm text-gray-400 mb-3 hidden sm:block text-ellipsis-lines-2">${article.summary}</p>
+                        </div>
+                        <span class="text-xs font-medium text-gray-400">${timeAgo}</span>
+                    </div>
+                </a>
+            `;
+        }
+        
+        /**
+         * --- NEW: RE-ADDING MISSING FUNCTION ---
+         * Creates HTML for a sidebar list article (more compact).
+         */
+        function createSidebarArticleHTML(article) {
+            const timeAgo = article.publishedAt ? formatRelativeTime(article.publishedAt) : 'Just now';
+            const categoryLink = `./category?category=${article.category}`;
+            // --- UPDATE: Changed href from # to article ---
+            const articleLink = `./article?id=${article.id}`;
+            return `
+                <!-- MODIFIED: Changed <div> to <a> and removed relative class -->
+                <a href="${articleLink}" class="block group bg-slate-900 rounded-lg overflow-hidden border border-slate-800 flex transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
+                    <!-- REMOVED: Invisible <a> overlay -->
+                    
+                    <!-- FIX: Wrapped image in a div with defined width and used aspect-square -->
+                    <!-- UPDATED: w-24 to w-32 -->
+                    <div class="w-32 flex-shrink-0">
+                        <img src="${article.imageUrl}" alt="${article.title}" 
+                             onerror="this.src='https://source.unsplash.com/400x400/?news,topic';"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"> <!-- UPDATED: Removed aspect-square -->
+                    </div>
+                    
+                    <!-- FIX: Added min-w-0 to the text container to allow title truncation -->
+                    <div class="p-5 min-w-0">
+                        <!-- MODIFIED: Changed <a> to <span> to avoid nested links -->
+                        <span class="text-gradient text-xs font-bold uppercase tracking-wider relative z-20">${article.category}</span>
+                        <!-- MODIFIED: Added text-ellipsis-lines-2 for truncation -->
+                        <h3 class="text-md font-bold text-white mt-1 group-hover:text-cyan-300 transition-colors text-ellipsis-lines-2">
+                            ${article.title}
+                        </h3>
+                         <span class="text-xs font-medium text-gray-400 mt-2 block">${timeAgo}</span>
+                    </div>
+                </a>
+            `;
+        }
+
+        /**
+         * Creates HTML for a single item in the breaking news ticker.
+         */
+        function createTickerItemHTML(article) {
+            // --- UPDATE: Changed href from # to article ---
+            const articleLink = `./article?id=${article.id}`;
+            return `
+                <a href="${articleLink}" class="ticker-font text-gray-300 hover:text-cyan-400 transition-colors mx-6" aria-label="Read breaking article: ${article.title}">
+                    <span class="text-white/80">${article.category}:</span> ${article.title}
+                </a>
+                <span class="text-cyan-700 font-light text-2xl" aria-hidden="true">&bull;</span>
+            `;
+        }
+
+
+        // --- Firebase Initialization and Main Logic ---
+        
+        /**
+         * Initializes Firebase and sets up authentication.
+         */
+        async function initializeFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                // Listen for auth state changes
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        console.log("User is signed in:", user.uid);
+                        userId = user.uid;
+                        // User is authenticated, now we can set up data listeners
+                        setupDataListeners();
+                    } else {
+                        console.log("User is signed out. Attempting to sign in...");
+                        // No user, try to sign in
+                        try {
+                            if (initialAuthToken) {
+                                console.log("Signing in with custom token...");
+                                await signInWithCustomToken(auth, initialAuthToken);
+                                // onAuthStateChanged will be triggered again
+                            } else {
+                                console.log("No custom token, signing in anonymously...");
+                                await signInAnonymously(auth);
+                                // onAuthStateChanged will be triggered again
+                            }
+                        } catch (authError) {
+                            console.error("Error during sign-in:", authError);
+                            // Even if sign-in fails, try to load public data
+                            console.warn("Sign-in failed. Attempting to load public data anyway.");
+                            setupDataListeners(); 
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                loadingOverlay.innerHTML = '<p class="text-red-500">Error connecting to data feed.</p>';
+            }
+        }
+
+        /**
+         * Sets up the real-time data listener (onSnapshot).
+         */
+        function setupDataListeners() {
+            const articlesCollectionPath = `artifacts/${appId}/public/data/articles`;
+            const articlesQuery = query(collection(db, articlesCollectionPath));
+
+            try {
+                onSnapshot(articlesQuery, (snapshot) => {
+                    if (snapshot.empty) {
+                        console.log("No articles found in collection. Attempting to add demo data.");
+                        // Only add demo data if the collection is truly empty
+                        addInitialDemoData().then(() => {
+                            console.log("Demo data check complete.");
+                            // At this point, if data was added, this listener *should*
+                            // fire again. If not, we might still have no articles.
+                            if (snapshot.empty) { // Re-check, though it might be stale
+                                renderAllArticles([]); // Render an empty state
+                            }
+                        });
+                    } else {
+                        const articles = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        
+                        // Sort articles by published date, newest first
+                        articles.sort((a, b) => {
+                            const dateA = a.publishedAt?.toDate ? a.publishedAt.toDate() : new Date(0);
+                            const dateB = b.publishedAt?.toDate ? b.publishedAt.toDate() : new Date(0);
+                            return dateB - dateA;
+                        });
+                        
+                        allArticles = articles; // <-- STORE ALL ARTICLES FOR SEARCH
+                        renderAllArticles(articles);
+                    }
+                }, (error) => {
+                    console.error("Error with onSnapshot listener:", error);
+                    loadingOverlay.innerHTML = '<p class="text-red-500">Error fetching live data.</p>';
+                });
+            } catch (error) {
+        
+                console.error("Error setting up data listeners:", error);
+                loadingOverlay.innerHTML = '<p class="text-red-500">Failed to set up data listeners.</p>';
+            }
+        }
+
+        // --- App Entry Point ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // Initialize Firebase
+            initializeFirebase();
+        });
+
+    </script>
+</body>
+</html>

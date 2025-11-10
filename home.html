@@ -23,15 +23,68 @@
       href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
       rel="stylesheet"
     />
-    <!-- NEW: Elegant Sans-Serif Font -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet"> -->
-    <!-- REMOVED Raleway -->
+    <!-- ADDED Oswald -->
     <link
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
       rel="stylesheet"
     />
-    <!-- ADDED Oswald -->
-    <!-- REMOVED: Classy Font for Main Logo -->
+
+    <!-- --- NEW: SEO & Metadata --- -->
+
+    <!-- 1. Primary Metadata -->
+    <meta
+      name="description"
+      content="Get unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, science, and more. The Daily Origin is the future of information."
+    />
+    <meta
+      name="keywords"
+      content="breaking news, tech news, politics, culture, science, sports, education, unbiased news, future of information"
+    />
+    <meta name="robots" content="index, follow" />
+    <!-- Tell crawlers to index this page -->
+
+    <!-- 2. Canonical URL (VERY Important) -->
+    <!-- This tells Google that https://www.thedailyorigin.com/ is the ONE true homepage -->
+    <link rel="canonical" href="https://www.thedailyorigin.com/" />
+
+    <!-- 3. Open Graph (for Facebook, LinkedIn, etc.) -->
+    <meta
+      property="og:title"
+      content="The Daily Origin | The Future of Information"
+    />
+    <meta
+      property="og:description"
+      content="Unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, and more."
+    />
+    <meta property="og:url" content="https://www.thedailyorigin.com/" />
+    <meta property="og:site_name" content="The Daily Origin" />
+    <meta property="og:type" content="website" />
+    <!-- IMPORTANT: You MUST create this image (1200x630px recommended) and upload it to this exact path -->
+    <meta
+      property="og:image"
+      content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
+    />
+    <meta property="og:image:alt" content="The Daily Origin Logo" />
+
+    <!-- 4. Twitter Card (for Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- <meta name="twitter:site" content="@TheDailyOrigin"> -->
+    <!-- Optional: Add your Twitter handle here -->
+    <meta
+      name="twitter:title"
+      content="The Daily Origin | The Future of Information"
+    />
+    <meta
+      name="twitter:description"
+      content="Unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, and more."
+    />
+    <!-- Use the same 1200x630px image -->
+    <meta
+      name="twitter:image"
+      content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
+    />
+
+    <!-- --- End SEO & Metadata --- -->
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -45,11 +98,6 @@
         overflow-x: hidden;
       }
 
-      /* Card hover effect - REMOVED */
-      /* .card-hover-effect { ... } */
-      /* .card-hover-effect:hover { ... } */
-      /* We are removing these styles as requested */
-
       /* Glassmorphism effect for header */
       .header-glass {
         background-color: rgba(2, 6, 23, 0.6); /* slate-950 with 60% opacity */
@@ -58,20 +106,16 @@
         border-bottom: 1px solid #1e293b; /* slate-800 */
       }
 
-      /* REMOVED: Logo Font Style for .logo-main */
-      .logo-artisan {
-        font-family: "Caveat", cursive;
-      }
-
       /* NEW: Logo Font Style for "The Daily" */
       .logo-main {
         font-family: "Oswald", sans-serif; /* UPDATED: Raleway to Oswald */
         font-weight: 700;
-        /* letter-spacing: 0.5px; */ /* REMOVED: Oswald doesn't need this */
       }
 
-      /* Card hover effect - REMOVED */
-      /* .card-hover-effect { ... } */
+      .logo-artisan {
+        font-family: "Caveat", cursive;
+      }
+
       /* Breaking News Ticker Animation */
       .ticker-wrap {
         width: 100%;
@@ -261,6 +305,10 @@
       #mobile-menu.menu-open nav a:nth-child(7) {
         transition-delay: 0.4s;
       }
+      /* NEW: Staggered delay for Others */
+      #mobile-menu.menu-open nav a:nth-child(8) {
+        transition-delay: 0.45s;
+      }
 
       /* Set initial state for social links */
       #mobile-menu .mobile-social-links {
@@ -287,6 +335,44 @@
       }
       /* --- End of Ticker Font Style --- */
     </style>
+
+    <!-- --- NEW: Schema.org Structured Data (JSON-LD) --- -->
+    <!-- This is the "world-best" part. It helps Google understand WHAT your site is. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "NewsMediaOrganization",
+            "name": "The Daily Origin",
+            "url": "https://www.thedailyorigin.com/",
+            "logo": "https://www.thedailyorigin.com/the_daily_origin_logo.png",
+            "sameAs": [
+              "https://www.facebook.com/YourFacebookPage",
+              "https://twitter.com/YourTwitterHandle",
+              "https://www.instagram.com/YourInstagramHandle"
+            ]
+          },
+          {
+            "@type": "WebPage",
+            "url": "https://www.thedailyorigin.com/",
+            "name": "The Daily Origin | The Future of Information",
+            "description": "Get unbiased, unfiltered, and uncompromising breaking news on tech, politics, culture, science, and more. The Daily Origin is the future of information.",
+            "isPartOf": {
+              "@type": "WebSite",
+              "url": "https://www.thedailyorigin.com/",
+              "name": "The Daily Origin",
+              "publisher": {
+                "@type": "NewsMediaOrganization",
+                "name": "The Daily Origin",
+                "url": "https://www.thedailyorigin.com/"
+              }
+            }
+          }
+        ]
+      }
+    </script>
+    <!-- --- End Structured Data --- -->
   </head>
   <body class="antialiased">
     <!-- Loading Overlay -->
@@ -303,9 +389,8 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
           <!-- Logo -->
-          <a href="./home.html" class="flex items-baseline space-x-2">
+          <a href="./home" class="flex items-baseline space-x-2">
             <span class="text-3xl text-white logo-main">The Daily</span>
-            <!-- UPDATED: text-4xl to text-3xl -->
             <!-- MODIFIED: Wrapped "Origin" in a relative span to position the SVG underline -->
             <span class="relative">
               <span class="text-4xl font-bold text-cyan-400 logo-artisan"
@@ -336,43 +421,49 @@
           </a>
 
           <!-- Desktop Navigation -->
-          <!-- UPDATED: Added 'desktop-nav-link' class and removed hover:text-cyan-400 -->
+          <!-- UPDATED: Added 'Others' link -->
           <nav class="hidden md:flex space-x-8">
             <a
-              href="./category.html?category=World"
+              href="./category?category=World"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >World</a
             >
             <a
-              href="./category.html?category=Tech"
+              href="./category?category=Tech"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Tech</a
             >
             <a
-              href="./category.html?category=Politics"
+              href="./category?category=Politics"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Politics</a
             >
             <a
-              href="./category.html?category=Culture"
+              href="./category?category=Culture"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Culture</a
             >
             <a
-              href="./category.html?category=Science"
+              href="./category?category=Science"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Science</a
             >
             <a
-              href="./category.html?category=Sports"
+              href="./category?category=Sports"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Sports</a
             >
             <a
-              href="./category.html?category=Education"
+              href="./category?category=Education"
               class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
               >Education</a
             >
+            <a
+              href="./category?category=Others"
+              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
+              >Others</a
+            >
+            <!-- NEW CATEGORY -->
           </nav>
 
           <!-- Search and Mobile Menu Button -->
@@ -381,7 +472,6 @@
               id="search-open-btn"
               class="text-gray-400 hover:text-cyan-400 transition-colors"
             >
-              <!-- UPDATED: Added id="search-open-btn" -->
               <i data-lucide="search" class="w-6 h-6"></i>
             </button>
             <!-- UPDATED: Mobile Menu Button markup for icon switching -->
@@ -403,7 +493,6 @@
           </div>
         </div>
       </div>
-      <!-- REMOVED: Old Mobile Menu (was here) -->
     </header>
 
     <!-- NEW: Mobile Menu Overlay -->
@@ -432,44 +521,48 @@
       </div>
 
       <!-- Menu Links (Grows to fill space and scrolls if needed) -->
-      <!-- UPDATED: Removed space-y-2 -->
       <nav class="flex-grow flex flex-col p-6 overflow-y-auto">
-        <!-- UPDATED: Removed rounded-md, added border-b -->
         <a
-          href="./category.html?category=World"
+          href="./category?category=World"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >World</a
         >
         <a
-          href="./category.html?category=Tech"
+          href="./category?category=Tech"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Tech</a
         >
         <a
-          href="./category.html?category=Politics"
+          href="./category?category=Politics"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Politics</a
         >
         <a
-          href="./category.html?category=Culture"
+          href="./category?category=Culture"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Culture</a
         >
         <a
-          href="./category.html?category=Science"
+          href="./category?category=Science"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Science</a
         >
         <a
-          href="./category.html?category=Sports"
+          href="./category?category=Sports"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Sports</a
         >
         <a
-          href="./category.html?category=Education"
+          href="./category?category=Education"
           class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
           >Education</a
         >
+        <a
+          href="./category?category=Others"
+          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
+          >Others</a
+        >
+        <!-- NEW CATEGORY -->
       </nav>
 
       <!-- NEW: Social Links (Stays at bottom) -->
@@ -566,6 +659,14 @@
               <!-- Sports articles will be injected by JS -->
             </div>
           </section>
+
+          <!-- NEW: Others Section -->
+          <section id="others-section">
+            <h2 class="text-3xl font-bold text-white section-title">Others</h2>
+            <div id="others-news-list" class="space-y-6 md:space-y-8">
+              <!-- Others articles will be injected by JS -->
+            </div>
+          </section>
         </div>
 
         <!-- Sidebar (col-span-1) -->
@@ -599,9 +700,8 @@
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           <!-- Logo & About -->
           <div class="col-span-2 lg:col-span-2">
-            <a href="./home.html" class="flex items-baseline space-x-2 mb-4">
+            <a href="./home" class="flex items-baseline space-x-2 mb-4">
               <span class="text-2xl text-white logo-main">The Daily</span>
-              <!-- UPDATED: text-3xl to text-2xl -->
               <!-- MODIFIED: Wrapped "Origin" in a relative span to position the SVG underline -->
               <span class="relative">
                 <span class="text-3xl font-bold text-cyan-400 logo-artisan"
@@ -646,53 +746,61 @@
             <ul class="mt-4 space-y-2">
               <li>
                 <a
-                  href="./category.html?category=World"
+                  href="./category?category=World"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >World</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Tech"
+                  href="./category?category=Tech"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Tech</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Politics"
+                  href="./category?category=Politics"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Politics</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Science"
+                  href="./category?category=Science"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Science</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Culture"
+                  href="./category?category=Culture"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Culture</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Sports"
+                  href="./category?category=Sports"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Sports</a
                 >
               </li>
               <li>
                 <a
-                  href="./category.html?category=Education"
+                  href="./category?category=Education"
                   class="text-sm text-gray-300 hover:text-cyan-400"
                   >Education</a
                 >
               </li>
+              <li>
+                <a
+                  href="./category?category=Others"
+                  class="text-sm text-gray-300 hover:text-cyan-400"
+                  >Others</a
+                >
+              </li>
+              <!-- NEW CATEGORY -->
             </ul>
           </div>
 
@@ -705,7 +813,9 @@
             </h3>
             <ul class="mt-4 space-y-2">
               <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
+                <a
+                  href="./about-us"
+                  class="text-sm text-gray-300 hover:text-cyan-400"
                   >About Us</a
                 >
               </li>
@@ -915,6 +1025,9 @@
       const mobileMenu = document.getElementById("mobile-menu");
       const mobileMenuBtn = document.getElementById("mobile-menu-btn");
 
+      // NEW CATEGORY: Others List
+      const othersNewsList = document.getElementById("others-news-list");
+
       // NEW: Mobile Menu Elements
       const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
       const mobileMenuOpenIcon = document.getElementById(
@@ -928,19 +1041,12 @@
       ); // Button inside the menu
 
       // NEW: Search Modal UI Elements
-      const searchIconBtn = document.getElementById("search-open-btn"); // FIXED: Changed selector to use the new ID
+      const searchIconBtn = document.getElementById("search-open-btn");
       const searchOverlay = document.getElementById("search-overlay");
       const searchModal = document.getElementById("search-modal");
       const searchInput = document.getElementById("search-input");
       const searchResultsList = document.getElementById("search-results-list");
       const searchCloseBtn = document.getElementById("search-close-btn");
-
-      // REMOVED: Old Mobile Menu Toggle
-      /*
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        */
 
       // NEW: Advanced Mobile Menu Functions
       function openMenu() {
@@ -992,8 +1098,8 @@
       function hideSearchModal() {
         searchOverlay.classList.remove("search-modal-visible");
         searchOverlay.classList.add("search-modal-hidden");
-        searchModal.classList.remove("search-modal-visible");
-        searchModal.classList.add("search-modal-hidden");
+        searchModal.classList.remove("search-modal-hidden");
+        searchModal.classList.add("search-modal-visible");
         searchInput.value = ""; // Clear input
         searchResultsList.innerHTML =
           '<p class="text-gray-500 text-center">Start typing to see results.</p>'; // Reset
@@ -1026,33 +1132,28 @@
 
         let interval = seconds / 31536000;
         if (interval >= 1) {
-          // MODIFIED: > 1 to >= 1
           const count = Math.floor(interval);
-          return count === 1 ? "1 year ago" : `${count} years ago`; // MODIFIED: Added singular check
+          return count === 1 ? "1 year ago" : `${count} years ago`;
         }
         interval = seconds / 2592000;
         if (interval >= 1) {
-          // MODIFIED: > 1 to >= 1
           const count = Math.floor(interval);
-          return count === 1 ? "1 month ago" : `${count} months ago`; // MODIFIED: Added singular check
+          return count === 1 ? "1 month ago" : `${count} months ago`;
         }
         interval = seconds / 86400;
         if (interval >= 1) {
-          // MODIFIED: > 1 to >= 1
           const count = Math.floor(interval);
-          return count === 1 ? "1 day ago" : `${count} days ago`; // MODIFIED: Added singular check
+          return count === 1 ? "1 day ago" : `${count} days ago`;
         }
         interval = seconds / 3600;
         if (interval >= 1) {
-          // MODIFIED: > 1 to >= 1
           const count = Math.floor(interval);
-          return count === 1 ? "1 hour ago" : `${count} hours ago`; // MODIFIED: Added singular check
+          return count === 1 ? "1 hour ago" : `${count} hours ago`;
         }
         interval = seconds / 60;
         if (interval >= 1) {
-          // MODIFIED: > 1 to >= 1
           const count = Math.floor(interval);
-          return count === 1 ? "1 minute ago" : `${count} minutes ago`; // MODIFIED: Added singular check
+          return count === 1 ? "1 minute ago" : `${count} minutes ago`;
         }
         // MODIFIED: Handle singular 'second'
         const count = Math.floor(seconds);
@@ -1100,7 +1201,7 @@
        * Creates HTML for a single search result item.
        */
       function createSearchResultHTML(article) {
-        const articleLink = `./article.html?id=${article.id}`;
+        const articleLink = `./article?id=${article.id}`;
         const timeAgo = article.publishedAt
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
@@ -1200,6 +1301,20 @@
             authorId: demoAuthorId,
             authorName: "Inflexion Demo",
           },
+          // --- NEW ARTICLE FOR 'OTHERS' CATEGORY ---
+          {
+            title: "Ancient City Discovered Under Antarctic Ice Sheet",
+            summary:
+              "A team of glaciologists and archaeologists has detected compelling evidence of a vast, complex urban settlement buried beneath kilometers of ice in East Antarctica.",
+            category: "Others",
+            imageUrl: `https://source.unsplash.com/600x400/?antarctica,city,mystery`,
+            publishedAt: serverTimestamp(),
+            isHero: false,
+            isTopStory: false,
+            isBreaking: false,
+            authorId: demoAuthorId,
+            authorName: "Inflexion Demo",
+          },
         ];
 
         demoArticles.forEach((article) => {
@@ -1230,6 +1345,7 @@
         politicsNewsList.innerHTML = "";
         sportsNewsList.innerHTML = "";
         educationNewsList.innerHTML = "";
+        othersNewsList.innerHTML = ""; // NEW: Clear Others container
 
         // Separate articles
         const heroArticle = articles.find((a) => a.isHero);
@@ -1250,6 +1366,9 @@
         const educationArticles = articles.filter(
           (a) => a.category === "Education" && !a.isHero && !a.isTopStory
         );
+        const othersArticles = articles.filter(
+          (a) => a.category === "Others" && !a.isHero && !a.isTopStory
+        ); // NEW: Filter Others
 
         // Render Hero
         if (heroArticle) {
@@ -1288,6 +1407,7 @@
         renderList(politicsNewsList, politicsArticles, true); // Use smaller cards for sidebar
         renderList(sportsNewsList, sportsArticles); // Main feed list
         renderList(educationNewsList, educationArticles, true); // Sidebar list
+        renderList(othersNewsList, othersArticles); // NEW: Render Others list (main feed style)
 
         // Hide loading overlay
         loadingOverlay.style.display = "none";
@@ -1316,9 +1436,9 @@
         const timeAgo = article.publishedAt
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
-        const categoryLink = `./category.html?category=${article.category}`;
-        // --- UPDATE: Changed href from # to article.html ---
-        const articleLink = `./article.html?id=${article.id}`;
+        const categoryLink = `./category?category=${article.category}`;
+        // --- UPDATE: Changed href from # to article ---
+        const articleLink = `./article?id=${article.id}`;
 
         return `
                 <a href="${articleLink}" class="block group rounded-lg overflow-hidden border border-slate-800 transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
@@ -1355,7 +1475,7 @@
         const timeAgo = article.publishedAt
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
-        const articleLink = `./article.html?id=${article.id}`;
+        const articleLink = `./article?id=${article.id}`;
 
         // FIX: Added the missing 'return `' statement
         return `
@@ -1391,9 +1511,9 @@
         const timeAgo = article.publishedAt
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
-        const categoryLink = `./category.html?category=${article.category}`;
-        // --- UPDATE: Changed href from # to article.html ---
-        const articleLink = `./article.html?id=${article.id}`;
+        const categoryLink = `./category?category=${article.category}`;
+        // --- UPDATE: Changed href from # to article ---
+        const articleLink = `./article?id=${article.id}`;
         return `
                 <!-- MODIFIED: Changed <div> to <a> and removed relative class -->
                 <a href="${articleLink}" class="block group bg-slate-900 rounded-lg overflow-hidden border border-slate-800 md:flex transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
@@ -1433,9 +1553,9 @@
         const timeAgo = article.publishedAt
           ? formatRelativeTime(article.publishedAt)
           : "Just now";
-        const categoryLink = `./category.html?category=${article.category}`;
-        // --- UPDATE: Changed href from # to article.html ---
-        const articleLink = `./article.html?id=${article.id}`;
+        const categoryLink = `./category?category=${article.category}`;
+        // --- UPDATE: Changed href from # to article ---
+        const articleLink = `./article?id=${article.id}`;
         return `
                 <!-- MODIFIED: Changed <div> to <a> and removed relative class -->
                 <a href="${articleLink}" class="block group bg-slate-900 rounded-lg overflow-hidden border border-slate-800 flex transition-all duration-300 shadow-lg shadow-slate-950/50 hover:border-cyan-600 hover:shadow-2xl hover:shadow-cyan-800/20" aria-label="Read article: ${article.title}">
@@ -1467,8 +1587,8 @@
        * Creates HTML for a single item in the breaking news ticker.
        */
       function createTickerItemHTML(article) {
-        // --- UPDATE: Changed href from # to article.html ---
-        const articleLink = `./article.html?id=${article.id}`;
+        // --- UPDATE: Changed href from # to article ---
+        const articleLink = `./article?id=${article.id}`;
         return `
                 <a href="${articleLink}" class="ticker-font text-gray-300 hover:text-cyan-400 transition-colors mx-6" aria-label="Read breaking article: ${article.title}">
                     <span class="text-white/80">${article.category}:</span> ${article.title}
