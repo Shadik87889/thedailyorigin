@@ -535,7 +535,9 @@
           category.
         </p>
         <!-- User ID Display (for collaborative context) -->
-        <p id="user-id-display" class="text-xs text-slate-600 mt-4">User ID:</p>
+        <p id="user-id-display" class="text-xs text-slate-600 mt-4 hidden">
+          User ID:
+        </p>
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
@@ -1009,7 +1011,7 @@
 
       // --- Firebase Initialization and Main Logic ---
 
-      async function initializeFirebase() {
+      function initializeFirebase() {
         currentCategory = getCategoryFromUrl();
         updateDynamicSEO(currentCategory); // Apply dynamic SEO immediately
 
@@ -1022,7 +1024,7 @@
             if (user) {
               console.log("User is signed in:", user.uid);
               userId = user.uid;
-              userIdDisplay.textContent = `User ID: ${userId}`;
+              // userIdDisplay.textContent = `User ID: ${userId}`; // REMOVED
               setupDataListeners();
             } else {
               console.log(
