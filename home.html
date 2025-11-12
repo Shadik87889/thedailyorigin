@@ -1236,22 +1236,11 @@
           return;
         }
 
-        console.log(
-          "Adding initial demo data... attempting anonymous sign-in for write access."
-        );
+        console.log("Adding initial demo data..."); // MODIFIED: Simplified log
 
-        // --- FIX: Only sign in if we actually need to write demo data ---
-        try {
-          await signInAnonymously(auth);
-          console.log("Signed in anonymously for demo data setup.");
-        } catch (authError) {
-          console.error("Error signing in anonymously: ", authError);
-          console.error(
-            "Please enable Anonymous Sign-In in your Firebase console to add demo data."
-          );
-          // We can't write, so we must exit.
-          return;
-        }
+        // --- FIX: Removed redundant anonymous sign-in. ---
+        // Authentication is already handled by initializeFirebase()
+        // before this function is ever called.
 
         // --- NEW: Get the anonymous user's ID to use as author ---
         const demoAuthorId = auth.currentUser.uid;
@@ -1351,24 +1340,18 @@
         const heroArticle = articles.find((a) => a.isHero);
         const topStories = articles.filter((a) => a.isTopStory);
         const breakingNews = articles.filter((a) => a.isBreaking);
-        const techArticles = articles.filter(
-          (a) => a.category === "Tech" && !a.isHero && !a.isTopStory
-        );
-        const worldArticles = articles.filter(
-          (a) => a.category === "World" && !a.isHero && !a.isTopStory
-        );
+
+        /* --- FIX: Removed !a.isHero and !a.isTopStory to allow articles to appear in both sections --- */
+        const techArticles = articles.filter((a) => a.category === "Tech");
+        const worldArticles = articles.filter((a) => a.category === "World");
         const politicsArticles = articles.filter(
-          (a) => a.category === "Politics" && !a.isHero && !a.isTopStory
+          (a) => a.category === "Politics"
         );
-        const sportsArticles = articles.filter(
-          (a) => a.category === "Sports" && !a.isHero && !a.isTopStory
-        );
+        const sportsArticles = articles.filter((a) => a.category === "Sports");
         const educationArticles = articles.filter(
-          (a) => a.category === "Education" && !a.isHero && !a.isTopStory
+          (a) => a.category === "Education"
         );
-        const othersArticles = articles.filter(
-          (a) => a.category === "Others" && !a.isHero && !a.isTopStory
-        ); // NEW: Filter Others
+        const othersArticles = articles.filter((a) => a.category === "Others"); // NEW: Filter Others
 
         // Render Hero
         if (heroArticle) {
@@ -1402,12 +1385,12 @@
         }
 
         // Render Category Lists
-        renderList(techNewsList, techArticles);
-        renderList(worldNewsList, worldArticles);
-        renderList(politicsNewsList, politicsArticles, true); // Use smaller cards for sidebar
-        renderList(sportsNewsList, sportsArticles); // Main feed list
-        renderList(educationNewsList, educationArticles, true); // Sidebar list
-        renderList(othersNewsList, othersArticles); // NEW: Render Others list (main feed style)
+        renderList(techNewsList, techArticles.slice(0, 5)); // MODIFIED: Limit to 5
+        renderList(worldNewsList, worldArticles.slice(0, 5)); // MODIFIED: Limit to 5
+        renderList(politicsNewsList, politicsArticles.slice(0, 3), true); // MODIFIED: Limit to 3
+        renderList(sportsNewsList, sportsArticles.slice(0, 5)); // MODIFIED: Limit to 5
+        renderList(educationNewsList, educationArticles.slice(0, 3), true); // MODIFIED: Limit to 3
+        renderList(othersNewsList, othersArticles.slice(0, 5)); // MODIFIED: Limit to 5
 
         // Hide loading overlay
         loadingOverlay.style.display = "none";
