@@ -1,0 +1,3275 @@
+<!DOCTYPE html>
+<html lang="bn" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mess Manager Pro | Real System v3.7</title>
+
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase Imports are in the module script at the bottom -->
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Noto Sans Bengali"', '"Inter"', "sans-serif"],
+            },
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+              }, // Sky Blue
+              dark: { 800: "#1e293b", 900: "#0f172a", 950: "#020617" },
+            },
+            animation: {
+              "fade-in": "fadeIn 0.4s ease-out forwards",
+              "slide-up": "slideUp 0.4s ease-out forwards",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Premium Defaults */
+      body {
+        font-family: "Noto Sans Bengali", "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #334155;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+
+      /* Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+      }
+      .dark .glass-panel {
+        background: rgba(15, 23, 42, 0.9);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Sidebar Link */
+      .sidebar-link {
+        position: relative;
+        overflow: hidden;
+      }
+      .sidebar-link.active {
+        background: linear-gradient(to right, #e0f2fe, #f0f9ff);
+        color: #0284c7;
+        font-weight: 700;
+        box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1),
+          0 2px 4px -1px rgba(14, 165, 233, 0.06);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+      }
+      .dark .sidebar-link.active {
+        background: linear-gradient(to right, #1e293b, #0f172a);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        box-shadow: none;
+      }
+      .sidebar-link.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: #0ea5e9;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
+      /* Hide native date picker icon but keep functionality */
+      input[type="month"]::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      /* Toast Animation Fix */
+      .toast-hidden {
+        transform: translateX(150%);
+        opacity: 0;
+      }
+      .toast-visible {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      /* --- PRINT STYLES (PROFESSIONAL A4) --- */
+      @media print {
+        /* Hide everything by default */
+        body * {
+          visibility: hidden;
+        }
+
+        /* Hide UI elements */
+        aside,
+        #header-actions,
+        .no-print,
+        #add-new-btn,
+        .filters-panel,
+        .row-actions,
+        .pagination-controls,
+        #hostel-selection-container,
+        #auth-container,
+        header,
+        #modal-container,
+        #toast,
+        #global-loader {
+          display: none !important;
+        }
+
+        /* Show only the Summary View */
+        #main-content,
+        #view-summary,
+        #view-summary * {
+          visibility: visible;
+        }
+
+        /* Reset Main Container */
+        #main-content {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: auto;
+          margin: 0;
+          padding: 0;
+          overflow: visible !important;
+          background: white !important;
+          color: black !important;
+        }
+
+        /* Report Container styling for print */
+        #view-summary {
+          display: block !important;
+          padding: 20px !important;
+          background: white !important;
+        }
+
+        /* Hide buttons inside summary */
+        #view-summary button {
+          display: none !important;
+        }
+
+        /* Card styling for print - remove shadows/bg colors */
+        .bg-white,
+        .dark\:bg-dark-900 {
+          background: white !important;
+          border: 1px solid #ddd !important;
+          box-shadow: none !important;
+          margin-bottom: 20px !important;
+        }
+
+        /* Table Styling for Print */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 10pt;
+        }
+        th,
+        td {
+          border: 1px solid #ccc !important;
+          padding: 6px 8px !important;
+          text-align: center;
+          color: black !important;
+        }
+        th {
+          background-color: #f3f4f6 !important; /* Light gray header */
+          font-weight: bold;
+        }
+
+        /* Align text properly */
+        td.text-right,
+        th.text-right {
+          text-align: right;
+        }
+        td.text-left,
+        th.text-left {
+          text-align: left;
+        }
+
+        /* Add Print Header */
+        #view-summary::before {
+          content: "Monthly Final Report";
+          font-size: 18pt;
+          font-weight: bold;
+          display: block;
+          margin-bottom: 5px;
+          text-align: center;
+        }
+        #view-summary::after {
+          content: "Generated by Mess Manager Pro";
+          font-size: 8pt;
+          color: #666;
+          display: block;
+          margin-top: 20px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-slate-50 text-slate-800 dark:bg-dark-950 dark:text-slate-200 transition-colors duration-300 overflow-x-hidden"
+  >
+    <!-- Global Loader -->
+    <div
+      id="global-loader"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-white dark:bg-dark-950 transition-opacity duration-500"
+    >
+      <div class="flex flex-col items-center gap-4">
+        <div class="relative">
+          <div
+            class="w-16 h-16 border-4 border-slate-100 dark:border-slate-800 rounded-full"
+          ></div>
+          <div
+            class="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"
+          ></div>
+          <i
+            data-lucide="chef-hat"
+            class="w-6 h-6 text-primary-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          ></i>
+        </div>
+        <p
+          class="text-sm font-medium text-slate-500 dark:text-slate-400 tracking-widest uppercase"
+          data-i18n="loading"
+        >
+          Loading App
+        </p>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div
+      id="toast"
+      class="fixed top-6 right-6 z-[110] toast-hidden transition-all duration-300 ease-out pointer-events-none"
+    >
+      <div
+        class="bg-white dark:bg-dark-900 shadow-2xl rounded-2xl p-4 flex items-center gap-4 border border-slate-100 dark:border-slate-800 min-w-[300px] pointer-events-auto"
+      >
+        <div
+          class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0"
+        >
+          <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4
+            class="font-bold text-sm text-slate-800 dark:text-white"
+            id="toast-title"
+          >
+            Success
+          </h4>
+          <p class="text-xs text-slate-500 dark:text-slate-400" id="toast-msg">
+            Operation completed successfully.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTH SECTION -->
+    <div
+      id="auth-container"
+      class="min-h-screen flex items-center justify-center p-4 relative bg-slate-50 dark:bg-dark-950"
+    >
+      <div
+        class="max-w-md w-full bg-white dark:bg-dark-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 animate-slide-up"
+      >
+        <div class="text-center mb-8">
+          <div
+            class="w-14 h-14 bg-primary-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-primary-200 dark:shadow-none transform rotate-3"
+          >
+            <i data-lucide="chef-hat" class="w-8 h-8"></i>
+          </div>
+          <h1
+            class="text-2xl font-bold text-slate-900 dark:text-white"
+            data-i18n="app_name"
+          >
+            Mess Manager Pro
+          </h1>
+          <p class="text-slate-500 text-sm mt-1" data-i18n="app_subtitle">
+            Real System Management
+          </p>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="flex p-1 bg-slate-100 dark:bg-dark-800 rounded-xl mb-6">
+          <button
+            id="tab-login"
+            class="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-white dark:bg-dark-700 shadow-sm text-slate-900 dark:text-white transition-all"
+            data-i18n="login"
+          >
+            Login
+          </button>
+          <button
+            id="tab-signup"
+            class="flex-1 py-2.5 text-sm font-semibold rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all"
+            data-i18n="signup"
+          >
+            Signup
+          </button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-4">
+          <div class="space-y-1.5">
+            <label
+              class="text-xs font-bold text-slate-500 uppercase"
+              data-i18n="email"
+              >Email</label
+            >
+            <div class="relative">
+              <i
+                data-lucide="mail"
+                class="absolute left-3 top-3 w-5 h-5 text-slate-400"
+              ></i>
+              <input
+                type="email"
+                id="login-email"
+                required
+                class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none transition"
+                placeholder="manager@example.com"
+              />
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label
+              class="text-xs font-bold text-slate-500 uppercase"
+              data-i18n="password"
+              >Password</label
+            >
+            <div class="relative">
+              <i
+                data-lucide="lock"
+                class="absolute left-3 top-3 w-5 h-5 text-slate-400"
+              ></i>
+              <input
+                type="password"
+                id="login-password"
+                required
+                class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none transition"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full py-3.5 bg-slate-900 dark:bg-primary-600 hover:bg-slate-800 dark:hover:bg-primary-700 text-white rounded-xl font-bold transition-all active:scale-95 shadow-lg"
+            data-i18n="login_btn"
+          >
+            Login Now
+          </button>
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signup-form" class="hidden space-y-4">
+          <div class="space-y-1.5">
+            <label
+              class="text-xs font-bold text-slate-500 uppercase"
+              data-i18n="new_email"
+              >New Email</label
+            >
+            <input
+              type="email"
+              id="signup-email"
+              required
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none transition"
+              placeholder="manager@example.com"
+            />
+          </div>
+          <div class="space-y-1.5">
+            <label
+              class="text-xs font-bold text-slate-500 uppercase"
+              data-i18n="new_password"
+              >New Password</label
+            >
+            <input
+              type="password"
+              id="signup-password"
+              required
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none transition"
+              placeholder="••••••••"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full py-3.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all active:scale-95 shadow-lg"
+            data-i18n="create_account"
+          >
+            Create Account
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- HOSTEL SELECTION SECTION (New) -->
+    <div
+      id="hostel-selection-container"
+      class="hidden min-h-screen flex items-center justify-center p-4 relative bg-slate-50 dark:bg-dark-950"
+    >
+      <div
+        class="max-w-4xl w-full bg-white dark:bg-dark-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 animate-slide-up flex flex-col md:flex-row gap-8"
+      >
+        <!-- Left: My Hostels -->
+        <div class="flex-1">
+          <h2
+            class="text-xl font-bold text-slate-900 dark:text-white mb-1"
+            data-i18n="my_hostels"
+          >
+            My Mess/Hostels
+          </h2>
+          <p class="text-xs text-slate-500 mb-4">
+            Select a mess to manage. Data is saved per mess.
+          </p>
+          <div
+            id="hostel-list"
+            class="space-y-3 max-h-[300px] overflow-y-auto pr-2"
+          >
+            <!-- Loaded via JS -->
+            <p class="text-sm text-slate-400 italic">No hostels joined yet.</p>
+          </div>
+          <div
+            class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800"
+          >
+            <button
+              onclick="signOutUser()"
+              class="text-red-500 text-sm font-bold hover:underline flex items-center gap-2"
+            >
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              <span data-i18n="logout">Log Out</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Create/Join -->
+        <div
+          class="flex-1 md:border-l md:border-slate-100 md:dark:border-slate-800 md:pl-8"
+        >
+          <!-- Join Existing -->
+          <div
+            class="mb-8 bg-slate-50 dark:bg-dark-800/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-700"
+          >
+            <h3
+              class="font-bold text-slate-800 dark:text-white mb-2 flex items-center gap-2"
+            >
+              <i data-lucide="user-plus" class="w-4 h-4 text-primary-600"></i>
+              Join Existing Mess
+            </h3>
+            <p class="text-[10px] text-slate-500 mb-3">
+              New Manager? Ask previous manager for ID & Code.
+            </p>
+            <!-- Updated Layout for Mobile: Top/Bottom inputs -->
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+              <input
+                type="text"
+                id="join-hostel-id"
+                placeholder="Mess ID (e.g. MESS-1234)"
+                class="w-full flex-1 px-3 py-2.5 bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+              />
+              <input
+                type="password"
+                id="join-hostel-code"
+                placeholder="Access Code"
+                class="w-full sm:w-32 px-3 py-2.5 bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+              />
+            </div>
+            <button
+              onclick="joinHostel()"
+              class="w-full py-2.5 bg-slate-900 dark:bg-slate-700 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition shadow-md"
+            >
+              Join & Restore Data
+            </button>
+          </div>
+
+          <!-- Create New -->
+          <div class="p-5">
+            <h3
+              class="font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4 text-primary-600"></i>
+              Create New Mess System
+            </h3>
+            <div class="space-y-3">
+              <input
+                type="text"
+                id="new-hostel-name"
+                placeholder="Mess Name (e.g. Bachelor Point)"
+                class="w-full px-3 py-2 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm"
+              />
+              <input
+                type="text"
+                id="new-hostel-code"
+                placeholder="Set Access Code (Share this with next manager)"
+                class="w-full px-3 py-2 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm"
+              />
+              <button
+                onclick="createHostel()"
+                class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-200 dark:shadow-none transition"
+              >
+                Create Fresh System
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP LAYOUT -->
+    <div id="app-container" class="hidden flex h-screen overflow-hidden">
+      <!-- SIDEBAR -->
+      <aside
+        id="sidebar"
+        class="w-72 bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300 -translate-x-full md:translate-x-0"
+      >
+        <!-- Sidebar Header -->
+        <div
+          class="h-20 flex items-center px-6 border-b border-slate-100 dark:border-slate-800"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white shadow-md"
+            >
+              <i data-lucide="chef-hat" class="w-5 h-5"></i>
+            </div>
+            <div class="overflow-hidden">
+              <h1
+                class="text-sm font-bold tracking-tight leading-none truncate w-40"
+                id="current-hostel-name"
+              >
+                Loading...
+              </h1>
+              <div class="flex items-center gap-1 mt-1">
+                <span
+                  class="text-[10px] font-bold bg-slate-100 dark:bg-dark-800 px-1.5 py-0.5 rounded text-slate-500 tracking-wide"
+                  >ID: <span id="current-hostel-id-disp">...</span></span
+                >
+                <button
+                  onclick="copyMessId()"
+                  class="text-slate-400 hover:text-primary-500"
+                  title="Copy ID"
+                >
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button id="close-sidebar" class="md:hidden ml-auto text-slate-400">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+          <p
+            class="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"
+            data-i18n="menu_main"
+          >
+            Main Menu
+          </p>
+
+          <a
+            href="#"
+            onclick="navTo('dashboard')"
+            class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group mb-1"
+            id="nav-dashboard"
+          >
+            <i
+              data-lucide="layout-dashboard"
+              class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+            ></i>
+            <span data-i18n="dashboard">Dashboard</span>
+          </a>
+          <a
+            href="#"
+            onclick="navTo('members')"
+            class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group mb-1"
+            id="nav-members"
+          >
+            <i
+              data-lucide="users"
+              class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+            ></i>
+            <span data-i18n="member_list">Member List</span>
+          </a>
+
+          <p
+            class="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 mt-8"
+            data-i18n="menu_finance"
+          >
+            Finance & Meals
+          </p>
+
+          <a
+            href="#"
+            onclick="navTo('meals')"
+            class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group mb-1"
+            id="nav-meals"
+          >
+            <i
+              data-lucide="utensils-crossed"
+              class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+            ></i>
+            <span data-i18n="daily_meals">Daily Meals</span>
+          </a>
+          <a
+            href="#"
+            onclick="navTo('bazaar')"
+            class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group mb-1"
+            id="nav-bazaar"
+          >
+            <i
+              data-lucide="shopping-bag"
+              class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+            ></i>
+            <span data-i18n="bazaar_cost">Bazaar Cost</span>
+          </a>
+          <a
+            href="#"
+            onclick="navTo('fixed-cost')"
+            class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group mb-1"
+            id="nav-fixed-cost"
+          >
+            <i
+              data-lucide="zap"
+              class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+            ></i>
+            <span data-i18n="other_bills">Other Bills</span>
+          </a>
+          <a
+            href="#"
+            onclick="navTo('deposits')"
+            class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group mb-1"
+            id="nav-deposits"
+          >
+            <i
+              data-lucide="wallet"
+              class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+            ></i>
+            <span data-i18n="deposits">Deposits</span>
+          </a>
+
+          <div
+            class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800"
+          >
+            <a
+              href="#"
+              onclick="navTo('summary')"
+              class="sidebar-link flex items-center px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800 transition-all group"
+              id="nav-summary"
+            >
+              <i
+                data-lucide="file-pie-chart"
+                class="w-5 h-5 mr-3 group-hover:text-primary-600 transition-colors"
+              ></i>
+              <span data-i18n="final_report">Final Report</span>
+            </a>
+          </div>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div
+          class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-dark-900/50 backdrop-blur-sm"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <span
+              class="text-xs font-bold text-slate-400 uppercase"
+              data-i18n="settings"
+              >Settings</span
+            >
+            <div class="flex gap-2">
+              <button
+                id="lang-toggle"
+                class="w-8 h-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-primary-100 hover:text-primary-600 transition"
+                title="Switch Language"
+              >
+                <i data-lucide="languages" class="w-4 h-4"></i>
+              </button>
+              <button
+                id="theme-toggle"
+                class="w-10 h-8 bg-slate-200 dark:bg-slate-700 rounded-full relative transition-colors focus:outline-none"
+              >
+                <div
+                  id="theme-dot"
+                  class="w-4 h-4 bg-white rounded-full absolute top-2 left-1 transition-transform shadow-sm dark:translate-x-4"
+                ></div>
+              </button>
+            </div>
+          </div>
+          <button
+            onclick="exitToHostelSelection()"
+            class="w-full py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors mb-2"
+          >
+            <i data-lucide="arrow-left-circle" class="w-4 h-4"></i> Switch Mess
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main
+        id="main-content"
+        class="flex-1 md:ml-72 h-screen overflow-y-auto bg-slate-50 dark:bg-dark-950 scroll-smooth"
+      >
+        <!-- HEADER -->
+        <header
+          class="sticky top-0 z-40 glass-panel px-6 py-3 flex justify-between items-center shadow-sm mb-6"
+        >
+          <div class="flex items-center gap-4">
+            <button
+              id="open-sidebar"
+              class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-800 rounded-lg"
+            >
+              <i data-lucide="menu"></i>
+            </button>
+            <div>
+              <h2
+                id="page-title"
+                class="text-xl font-bold text-slate-800 dark:text-white"
+                data-i18n="dashboard"
+              >
+                Dashboard
+              </h2>
+              <div
+                class="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-mono text-xs font-bold"
+              >
+                <i data-lucide="clock" class="w-3 h-3"></i>
+                <span id="live-clock">00:00:00 AM</span>
+                <span
+                  class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"
+                ></span>
+                <span id="live-date">--/--/----</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4" id="header-actions">
+            <!-- Custom Month Picker -->
+            <div class="relative group hidden sm:block">
+              <div
+                class="flex items-center gap-2 bg-white dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 shadow-sm cursor-pointer hover:border-primary-400 transition-colors"
+              >
+                <i
+                  data-lucide="calendar-days"
+                  class="w-4 h-4 text-primary-500"
+                ></i>
+                <span
+                  id="month-label"
+                  class="text-sm font-bold text-slate-700 dark:text-slate-200 min-w-[100px] text-center"
+                  >...</span
+                >
+                <i
+                  data-lucide="chevron-down"
+                  class="w-4 h-4 text-slate-400"
+                ></i>
+              </div>
+              <input
+                type="month"
+                id="month-picker"
+                class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+              />
+            </div>
+
+            <!-- Admin Profile -->
+            <div
+              class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700"
+            >
+              <div class="text-right hidden sm:block">
+                <p class="text-sm font-bold text-slate-700 dark:text-white">
+                  Manager
+                </p>
+                <p class="text-[10px] text-slate-500 uppercase tracking-wide">
+                  Online
+                </p>
+              </div>
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 p-0.5 shadow-md"
+              >
+                <div
+                  class="w-full h-full bg-white dark:bg-dark-800 rounded-full flex items-center justify-center overflow-hidden"
+                >
+                  <img
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Manager"
+                    alt="Admin"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- DASHBOARD VIEW -->
+        <div
+          id="view-dashboard"
+          class="view-section px-6 md:px-8 pb-24 animate-fade-in"
+        >
+          <!-- Stats Cards -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          >
+            <!-- Hero Card: Meal Rate -->
+            <div
+              class="bg-gradient-to-br from-primary-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg shadow-primary-200 dark:shadow-none relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300"
+            >
+              <div
+                class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full blur-3xl transform translate-x-10 -translate-y-10"
+              ></div>
+              <div class="flex justify-between items-start relative z-10">
+                <div>
+                  <p
+                    class="text-primary-100 text-xs font-bold uppercase tracking-wider mb-2"
+                    data-i18n="card_meal_rate"
+                  >
+                    Current Meal Rate
+                  </p>
+                  <h3 class="text-4xl font-bold mb-1" id="dash-rate">৳ 0.00</h3>
+                </div>
+                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+                </div>
+              </div>
+              <p
+                class="text-primary-100 text-xs mt-4 bg-black/10 inline-block px-2 py-1 rounded"
+              >
+                Updated Live
+              </p>
+            </div>
+
+            <!-- Card: Expenses -->
+            <div
+              class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p
+                    class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase"
+                    data-i18n="card_total_expense"
+                  >
+                    Total Expense
+                  </p>
+                  <h3
+                    class="text-2xl font-bold text-slate-800 dark:text-white mt-1"
+                    id="dash-expense"
+                  >
+                    ৳ 0
+                  </h3>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-900/20 text-rose-500 flex items-center justify-center"
+                >
+                  <i data-lucide="shopping-cart"></i>
+                </div>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-dark-800 h-1.5 rounded-full overflow-hidden"
+              >
+                <div
+                  class="bg-rose-500 h-full rounded-full"
+                  style="width: 45%;"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Card: Deposits -->
+            <div
+              class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p
+                    class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase"
+                    data-i18n="card_total_deposit"
+                  >
+                    Total Deposit
+                  </p>
+                  <h3
+                    class="text-2xl font-bold text-slate-800 dark:text-white mt-1"
+                    id="dash-deposit"
+                  >
+                    ৳ 0
+                  </h3>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 flex items-center justify-center"
+                >
+                  <i data-lucide="wallet"></i>
+                </div>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-dark-800 h-1.5 rounded-full overflow-hidden"
+              >
+                <div
+                  class="bg-emerald-500 h-full rounded-full"
+                  style="width: 70%;"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Card: Balance -->
+            <div
+              class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p
+                    class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase"
+                    data-i18n="card_balance"
+                  >
+                    Cash in Hand
+                  </p>
+                  <h3
+                    class="text-2xl font-bold text-slate-800 dark:text-white mt-1"
+                    id="dash-balance"
+                  >
+                    ৳ 0
+                  </h3>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center"
+                >
+                  <i data-lucide="piggy-bank"></i>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400" data-i18n="available_cash">
+                Total available cash
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="mb-8">
+            <h4
+              class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4"
+              data-i18n="quick_actions"
+            >
+              Quick Actions
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <button
+                onclick="openModal('modal-meal')"
+                class="flex items-center gap-4 px-6 py-5 bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-primary-500 hover:shadow-md transition group"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-600 flex items-center justify-center group-hover:scale-110 transition"
+                >
+                  <i data-lucide="plus"></i>
+                </div>
+                <div class="text-left">
+                  <span
+                    class="font-bold text-slate-700 dark:text-slate-300 block text-lg"
+                    data-i18n="btn_todays_meal"
+                    >Today's Meal</span
+                  >
+                  <span class="text-xs text-slate-400"
+                    >Update member meals</span
+                  >
+                </div>
+              </button>
+              <button
+                onclick="openModal('modal-expense')"
+                class="flex items-center gap-4 px-6 py-5 bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-rose-500 hover:shadow-md transition group"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 flex items-center justify-center group-hover:scale-110 transition"
+                >
+                  <i data-lucide="shopping-bag"></i>
+                </div>
+                <div class="text-left">
+                  <span
+                    class="font-bold text-slate-700 dark:text-slate-300 block text-lg"
+                    data-i18n="btn_bazaar_cost"
+                    >Bazaar Cost</span
+                  >
+                  <span class="text-xs text-slate-400">Add daily shopping</span>
+                </div>
+              </button>
+              <button
+                onclick="openModal('modal-deposit')"
+                class="flex items-center gap-4 px-6 py-5 bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 hover:shadow-md transition group"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition"
+                >
+                  <i data-lucide="banknote"></i>
+                </div>
+                <div class="text-left">
+                  <span
+                    class="font-bold text-slate-700 dark:text-slate-300 block text-lg"
+                    data-i18n="btn_deposit_money"
+                    >Deposit Money</span
+                  >
+                  <span class="text-xs text-slate-400">Add member deposit</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Charts Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div
+              class="lg:col-span-2 bg-white dark:bg-dark-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+            >
+              <div class="flex justify-between items-center mb-6">
+                <h4
+                  class="font-bold text-slate-800 dark:text-white"
+                  data-i18n="chart_meal_trend"
+                >
+                  Daily Meals Trend
+                </h4>
+                <button
+                  class="text-xs bg-slate-100 dark:bg-dark-800 px-3 py-1 rounded-full text-slate-500 font-medium"
+                  data-i18n="current_month"
+                >
+                  Current Month
+                </button>
+              </div>
+              <div class="h-[250px] w-full">
+                <canvas id="mealChart"></canvas>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-dark-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+            >
+              <h4
+                class="font-bold text-slate-800 dark:text-white mb-6"
+                data-i18n="chart_expense_breakdown"
+              >
+                Expense Breakdown
+              </h4>
+              <div class="h-[200px] flex justify-center">
+                <canvas id="expenseChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GENERIC LIST VIEW (Reuse for tables) -->
+        <div
+          id="view-generic-list"
+          class="view-section hidden px-6 md:px-8 pb-24 animate-slide-up"
+        >
+          <!-- Advanced Filters Panel -->
+          <div
+            id="filter-panel"
+            class="hidden bg-slate-100 dark:bg-dark-800 rounded-xl p-4 mb-4 border border-slate-200 dark:border-slate-700 animate-fade-in filters-panel"
+          >
+            <div class="flex justify-between items-center mb-3">
+              <h4
+                class="text-xs font-bold text-slate-500 uppercase"
+                data-i18n="filter_title"
+              >
+                Advanced Filters
+              </h4>
+              <button
+                onclick="toggleFilterPanel()"
+                class="text-slate-400 hover:text-slate-600"
+              >
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label
+                  class="text-xs text-slate-500 font-bold mb-1 block"
+                  data-i18n="filter_by_member"
+                  >Filter by Member</label
+                >
+                <select
+                  id="filter-member"
+                  class="w-full p-2 rounded-lg bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-700 text-sm"
+                >
+                  <option value="all" data-i18n="all_members"
+                    >All Members</option
+                  >
+                </select>
+              </div>
+              <div>
+                <label
+                  class="text-xs text-slate-500 font-bold mb-1 block"
+                  data-i18n="filter_date_range"
+                  >Date Range</label
+                >
+                <div class="flex gap-2">
+                  <input
+                    type="date"
+                    id="filter-start"
+                    class="w-1/2 p-2 rounded-lg bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-700 text-sm"
+                  />
+                  <input
+                    type="date"
+                    id="filter-end"
+                    class="w-1/2 p-2 rounded-lg bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-700 text-sm"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  class="text-xs text-slate-500 font-bold mb-1 block"
+                  data-i18n="filter_sort_by"
+                  >Sort By</label
+                >
+                <select
+                  id="filter-sort"
+                  class="w-full p-2 rounded-lg bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-700 text-sm"
+                >
+                  <option value="date-desc" data-i18n="sort_newest"
+                    >Newest First</option
+                  >
+                  <option value="date-asc" data-i18n="sort_oldest"
+                    >Oldest First</option
+                  >
+                  <option value="amount-desc" data-i18n="sort_high_low"
+                    >Amount (High to Low)</option
+                  >
+                  <option value="amount-asc" data-i18n="sort_low_high"
+                    >Amount (Low to High)</option
+                  >
+                </select>
+              </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <button
+                onclick="applyFilters()"
+                class="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold rounded-lg"
+                data-i18n="apply_filters"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col min-h-[calc(100vh-220px)]"
+          >
+            <!-- Table Header/Actions -->
+            <div
+              class="p-5 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4"
+            >
+              <div class="flex gap-2 w-full md:w-auto flex-1">
+                <div class="relative w-full md:w-64">
+                  <i
+                    data-lucide="search"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+                  ></i>
+                  <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search here..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-dark-800 border-none focus:ring-2 focus:ring-primary-500 placeholder-slate-400 text-sm transition"
+                  />
+                </div>
+                <button
+                  onclick="toggleFilterPanel()"
+                  class="px-3 py-2.5 bg-slate-100 dark:bg-dark-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-dark-700 transition border border-transparent focus:border-primary-500"
+                >
+                  <i data-lucide="filter" class="w-4 h-4"></i>
+                </button>
+              </div>
+              <button
+                id="add-new-btn"
+                class="w-full md:w-auto px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-slate-200 transition shadow-lg"
+              >
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span id="add-btn-text">Add New</span>
+              </button>
+            </div>
+
+            <!-- Table Content -->
+            <div class="flex-1 overflow-auto relative">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 dark:bg-dark-800 sticky top-0 z-10">
+                  <tr
+                    id="table-head"
+                    class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
+                  ></tr>
+                </thead>
+                <tbody
+                  id="table-body"
+                  class="divide-y divide-slate-100 dark:divide-slate-800 text-sm"
+                ></tbody>
+              </table>
+
+              <!-- Empty State -->
+              <div
+                id="empty-state"
+                class="hidden absolute inset-0 flex flex-col items-center justify-center text-center p-8"
+              >
+                <div
+                  class="w-16 h-16 bg-slate-100 dark:bg-dark-800 rounded-full flex items-center justify-center mb-4"
+                >
+                  <i
+                    data-lucide="folder-open"
+                    class="w-8 h-8 text-slate-400"
+                  ></i>
+                </div>
+                <h4
+                  class="font-bold text-slate-700 dark:text-white"
+                  data-i18n="no_records"
+                >
+                  No Records Found
+                </h4>
+                <p class="text-slate-500 text-sm" data-i18n="start_adding">
+                  Start by adding a new item or adjusting filters.
+                </p>
+              </div>
+            </div>
+
+            <!-- Pagination Footer -->
+            <div
+              id="pagination-footer"
+              class="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center pagination-controls bg-slate-50/50 dark:bg-dark-900/50"
+            >
+              <div class="text-xs text-slate-500" id="page-info">
+                Page 1 of 1
+              </div>
+              <div class="flex gap-2">
+                <button
+                  id="btn-prev"
+                  class="px-3 py-1.5 text-xs font-bold bg-white dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-dark-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  Prev
+                </button>
+                <button
+                  id="btn-next"
+                  class="px-3 py-1.5 text-xs font-bold bg-white dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-dark-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUMMARY VIEW -->
+        <div
+          id="view-summary"
+          class="view-section hidden px-6 md:px-8 pb-24 animate-slide-up"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div
+              class="p-5 bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-600 flex items-center justify-center mb-2"
+              >
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+              </div>
+              <p
+                class="text-xs text-slate-500 font-bold uppercase mb-1"
+                data-i18n="sum_meal_rate"
+              >
+                Final Meal Rate
+              </p>
+              <h3 class="text-2xl font-bold text-primary-600" id="sum-rate">
+                0.00
+              </h3>
+              <p
+                class="text-[10px] text-slate-400"
+                data-i18n="sum_per_meal_cost"
+              >
+                Per Meal Cost
+              </p>
+            </div>
+            <div
+              class="p-5 bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/20 text-indigo-600 flex items-center justify-center mb-2"
+              >
+                <i data-lucide="zap" class="w-5 h-5"></i>
+              </div>
+              <p
+                class="text-xs text-slate-500 font-bold uppercase mb-1"
+                data-i18n="sum_fixed_cost"
+              >
+                Fixed Cost / Head
+              </p>
+              <h3
+                class="text-2xl font-bold text-indigo-600"
+                id="sum-fixed-per-head"
+              >
+                0.00
+              </h3>
+              <p class="text-[10px] text-slate-400" data-i18n="sum_utilities">
+                Utilities & Service
+              </p>
+            </div>
+            <div
+              class="p-5 bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/20 text-emerald-600 flex items-center justify-center mb-2"
+              >
+                <i data-lucide="landmark" class="w-5 h-5"></i>
+              </div>
+              <p
+                class="text-xs text-slate-500 font-bold uppercase mb-1"
+                data-i18n="sum_net_balance"
+              >
+                Net Balance
+              </p>
+              <h3
+                class="text-2xl font-bold text-slate-800 dark:text-white"
+                id="sum-net-balance"
+              >
+                0
+              </h3>
+              <p class="text-[10px] text-slate-400" data-i18n="sum_cash_hand">
+                Cash in Hand
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-white dark:bg-dark-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
+          >
+            <div
+              class="p-5 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4"
+            >
+              <div>
+                <h3
+                  class="font-bold text-lg text-slate-800 dark:text-white"
+                  data-i18n="report_title"
+                >
+                  Monthly Final Report
+                </h3>
+                <p class="text-xs text-slate-500" data-i18n="report_subtitle">
+                  Comprehensive breakdown of expenses and meals
+                </p>
+              </div>
+              <button
+                onclick="window.print()"
+                class="text-sm font-bold text-slate-600 hover:text-primary-600 flex items-center gap-2 bg-slate-100 dark:bg-dark-800 px-4 py-2 rounded-lg transition no-print"
+              >
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span data-i18n="print_report">Print Report</span>
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead
+                  class="bg-slate-50 dark:bg-dark-800 text-slate-500 font-bold uppercase text-[10px] tracking-wider"
+                >
+                  <tr>
+                    <th class="p-4 text-left" data-i18n="th_member">Member</th>
+                    <th
+                      class="p-4 text-center border-l border-slate-100 dark:border-slate-700"
+                    >
+                      B
+                    </th>
+                    <th class="p-4 text-center">L</th>
+                    <th class="p-4 text-center">D</th>
+                    <th
+                      class="p-4 text-center font-extrabold text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-700"
+                      data-i18n="th_total"
+                    >
+                      Total
+                    </th>
+                    <th class="p-4 text-right" data-i18n="th_meal_cost">
+                      Meal Cost
+                    </th>
+                    <th class="p-4 text-right" data-i18n="th_individual">
+                      Individual
+                    </th>
+                    <th class="p-4 text-right" data-i18n="th_fixed">Fixed</th>
+                    <th
+                      class="p-4 text-right bg-slate-50/50 dark:bg-slate-800/50"
+                      data-i18n="th_debit"
+                    >
+                      Total Debit
+                    </th>
+                    <th class="p-4 text-right" data-i18n="th_deposit">
+                      Deposit
+                    </th>
+                    <th class="p-4 text-right" data-i18n="th_balance">
+                      Balance
+                    </th>
+                    <th class="p-4 text-center" data-i18n="th_status">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="summary-body"
+                  class="divide-y divide-slate-100 dark:divide-slate-800 font-medium"
+                ></tbody>
+                <tfoot class="bg-slate-50 dark:bg-dark-800 font-bold text-xs">
+                  <tr>
+                    <td class="p-4 text-left" data-i18n="total">TOTAL</td>
+                    <td class="p-4 text-center">-</td>
+                    <!-- B -->
+                    <td class="p-4 text-center">-</td>
+                    <!-- L -->
+                    <td class="p-4 text-center">-</td>
+                    <!-- D -->
+                    <td
+                      class="p-4 text-center font-extrabold text-slate-800 dark:text-white"
+                      id="footer-total-meals"
+                    >
+                      0
+                    </td>
+                    <td class="p-4 text-right" id="footer-meal-cost">0</td>
+                    <td class="p-4 text-right" id="footer-individual">0</td>
+                    <td class="p-4 text-right" id="footer-fixed">0</td>
+                    <td
+                      class="p-4 text-right text-slate-800 dark:text-white"
+                      id="footer-grand-total"
+                    >
+                      0
+                    </td>
+                    <td
+                      class="p-4 text-right text-emerald-600"
+                      id="footer-total-dep"
+                    >
+                      0
+                    </td>
+                    <td class="p-4 text-right" id="footer-balance">0</td>
+                    <td class="p-4"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
+            <div
+              class="bg-white dark:bg-dark-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+            >
+              <h4 class="font-bold text-sm mb-4" data-i18n="cost_distribution">
+                Cost Distribution
+              </h4>
+              <div class="h-[250px] flex justify-center">
+                <canvas id="reportCostChart"></canvas>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-dark-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-center items-center"
+            >
+              <div class="text-center mb-6">
+                <p
+                  class="text-xs font-bold text-slate-400 uppercase mb-2"
+                  data-i18n="top_spender"
+                >
+                  Top Spender (Bazaar)
+                </p>
+                <div
+                  class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 text-xl font-bold"
+                  id="top-shopper-avatar"
+                >
+                  ?
+                </div>
+                <h3 class="text-lg font-bold" id="top-shopper-name">--</h3>
+                <p class="text-sm text-slate-500" id="top-shopper-amount">
+                  ৳ 0
+                </p>
+              </div>
+              <div class="text-center">
+                <p
+                  class="text-xs font-bold text-slate-400 uppercase mb-2"
+                  data-i18n="most_meals"
+                >
+                  Most Meals Consumed
+                </p>
+                <h3
+                  class="text-lg font-bold text-slate-800 dark:text-white"
+                  id="top-eater-name"
+                >
+                  --
+                </h3>
+                <p
+                  class="text-sm text-primary-600 font-bold"
+                  id="top-eater-count"
+                >
+                  0 Meals
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- MODALS -->
+    <div
+      id="modal-overlay"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden transition-opacity duration-300"
+      onclick="window.closeModals()"
+    ></div>
+    <div
+      id="modal-container"
+      class="fixed inset-0 z-[70] flex items-center justify-center hidden p-4"
+      onclick="if(event.target === this) window.closeModals()"
+    >
+      <!-- Standard Modal Wrapper -->
+      <div
+        id="active-modal-content"
+        class="hidden pointer-events-auto w-full max-w-md bg-white dark:bg-dark-900 rounded-3xl shadow-2xl p-6 transform scale-95 opacity-0 transition-all duration-300"
+      >
+        <!-- Content Injected by JS -->
+      </div>
+
+      <!-- Large Modal (Meal Entry) -->
+      <div
+        id="large-modal-content"
+        class="hidden pointer-events-auto w-full max-w-3xl bg-white dark:bg-dark-900 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] transform scale-95 opacity-0 transition-all duration-300"
+      >
+        <div
+          class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center"
+        >
+          <div>
+            <h3
+              class="text-xl font-bold dark:text-white"
+              data-i18n="daily_meal_entry"
+            >
+              Daily Meal Entry
+            </h3>
+            <p class="text-xs text-slate-500" data-i18n="daily_meal_subtitle">
+              Update meals for all members.
+            </p>
+          </div>
+          <button
+            class="close-modal w-8 h-8 rounded-full bg-slate-100 dark:bg-dark-800 flex items-center justify-center text-slate-500 hover:bg-red-50 hover:text-red-500 transition"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div
+          class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-dark-950/50"
+        >
+          <label
+            class="text-xs font-bold text-slate-500 uppercase mb-2 block"
+            data-i18n="select_date"
+            >Select Date</label
+          >
+          <input
+            type="date"
+            id="meal-date-input"
+            class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-dark-900 focus:ring-2 focus:ring-primary-500 outline-none"
+          />
+        </div>
+        <div class="flex-1 overflow-y-auto p-6">
+          <table class="w-full text-sm">
+            <thead class="text-xs text-slate-400 font-bold uppercase">
+              <tr>
+                <th class="pb-4 text-left" data-i18n="th_member_name">
+                  Member Name
+                </th>
+                <th class="pb-4 text-center" data-i18n="th_breakfast">
+                  Breakfast
+                </th>
+                <th class="pb-4 text-center" data-i18n="th_lunch">Lunch</th>
+                <th class="pb-4 text-center" data-i18n="th_dinner">Dinner</th>
+              </tr>
+            </thead>
+            <tbody id="meal-entry-rows" class="space-y-2"></tbody>
+          </table>
+        </div>
+        <div
+          class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-dark-950/50 rounded-b-3xl"
+        >
+          <button
+            id="save-all-meals"
+            class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold shadow-lg transition transform active:scale-95"
+            data-i18n="save_update"
+          >
+            Save Update
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        getDoc,
+        setDoc,
+        addDoc,
+        deleteDoc,
+        updateDoc,
+        onSnapshot,
+        query,
+        where,
+        writeBatch,
+        orderBy,
+        arrayUnion,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // --- CONFIG ---
+      const firebaseConfig = {
+        apiKey: "AIzaSyAaEjSfgW_63Zj9LyIRYSebVx3DOSTErAc",
+        authDomain: "hostel-management-165f2.firebaseapp.com",
+        projectId: "hostel-management-165f2",
+        storageBucket: "hostel-management-165f2.firebasestorage.app",
+        messagingSenderId: "996344170118",
+        appId: "1:996344170118:web:e520ff0e8f731aee09f307",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // --- STATE ---
+      let currentUser = null;
+      let currentHostel = null; // { id: '...', name: '...' }
+      let currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+      const state = {
+        members: [],
+        expenses: [],
+        deposits: [],
+        meals: [],
+        fixedCosts: [],
+      };
+      const charts = { meal: null, expense: null, reportCost: null };
+      let filters = { member: "all", start: "", end: "", sort: "date-desc" };
+      let pagination = { page: 1, limit: 10 };
+      let currentLang = localStorage.getItem("lang") || "bn";
+      let unsubscribers = []; // To clear listeners when switching hostels
+
+      // --- TRANSLATIONS ---
+      const translations = {
+        en: {
+          loading: "Loading App",
+          app_name: "Mess Manager Pro",
+          app_subtitle: "Real System Management",
+          login: "Login",
+          signup: "Signup",
+          email: "Email",
+          password: "Password",
+          login_btn: "Login Now",
+          new_email: "New Email",
+          new_password: "New Password",
+          create_account: "Create Account",
+          menu_main: "Main Menu",
+          dashboard: "Dashboard",
+          member_list: "Member List",
+          menu_finance: "Finance & Meals",
+          daily_meals: "Daily Meals",
+          bazaar_cost: "Bazaar Cost",
+          other_bills: "Other Bills",
+          deposits: "Deposits",
+          final_report: "Final Report",
+          settings: "Settings",
+          logout: "Logout",
+          my_hostels: "My Mess/Hostels",
+          card_meal_rate: "Current Meal Rate",
+          card_total_expense: "Total Expense",
+          card_total_deposit: "Total Deposit",
+          card_balance: "Cash in Hand",
+          available_cash: "Total available cash",
+          chart_meal_trend: "Daily Meals Trend",
+          current_month: "Current Month",
+          chart_expense_breakdown: "Expense Breakdown",
+          quick_actions: "Quick Actions",
+          btn_todays_meal: "Today's Meal",
+          btn_bazaar_cost: "Bazaar Cost",
+          btn_deposit_money: "Deposit Money",
+          filter_title: "Advanced Filters",
+          filter_by_member: "Filter by Member",
+          all_members: "All Members",
+          filter_date_range: "Date Range",
+          filter_sort_by: "Sort By",
+          sort_newest: "Newest First",
+          sort_oldest: "Oldest First",
+          sort_high_low: "Amount (High to Low)",
+          sort_low_high: "Amount (Low to High)",
+          apply_filters: "Apply Filters",
+          no_records: "No Records Found",
+          start_adding: "Start by adding a new item or adjusting filters.",
+          sum_meal_rate: "Final Meal Rate",
+          sum_per_meal_cost: "Per Meal Cost",
+          sum_fixed_cost: "Fixed Cost / Head",
+          sum_utilities: "Utilities & Service",
+          sum_net_balance: "Net Balance",
+          sum_cash_hand: "Cash in Hand",
+          report_title: "Monthly Final Report",
+          report_subtitle: "Comprehensive breakdown of expenses and meals",
+          print_report: "Print Report",
+          th_member: "Member",
+          th_total: "Total",
+          th_meal_cost: "Meal Cost",
+          th_individual: "Individual",
+          th_fixed: "Fixed",
+          th_debit: "Total Debit",
+          th_deposit: "Deposit",
+          th_balance: "Balance",
+          th_status: "Status",
+          total: "TOTAL",
+          cost_distribution: "Cost Distribution",
+          top_spender: "Top Spender (Bazaar)",
+          most_meals: "Most Meals Consumed",
+          daily_meal_entry: "Daily Meal Entry",
+          daily_meal_subtitle: "Update meals for all members.",
+          select_date: "Select Date",
+          th_member_name: "Member Name",
+          th_breakfast: "Breakfast",
+          th_lunch: "Lunch",
+          th_dinner: "Dinner",
+          save_update: "Save Update",
+          th_name: "Name",
+          th_mobile: "Mobile",
+          th_room: "Room",
+          th_actions: "Actions",
+          th_date: "Date",
+          th_shopper: "Shopper",
+          th_item: "Item",
+          th_cost: "Cost",
+          th_amount: "Amount",
+          th_description: "Description",
+          th_act: "Act",
+          add_new: "Add New",
+          edit_item: "Edit Item",
+          delete_item: "Delete Item",
+          modal_add_member: "Add Member",
+          modal_edit_member: "Edit Member",
+          save_member: "Save Member",
+          update_member: "Update Member",
+          modal_add_expense: "Add Expense",
+          modal_edit_expense: "Edit Expense",
+          select_shopper: "Select Shopper",
+          add_expense: "Add Expense",
+          update_expense: "Update Expense",
+          modal_add_deposit: "Add Deposit",
+          modal_edit_deposit: "Edit Deposit",
+          select_member: "Select Member",
+          add_deposit: "Add Deposit",
+          update_deposit: "Update Deposit",
+          modal_add_bill: "Add Other Bill",
+          modal_edit_bill: "Edit Bill",
+          add_bill: "Add Bill",
+          update_bill: "Update Bill",
+          modal_edit_meal: "Edit Daily Meal",
+          update_meal: "Update Meal",
+          confirm_delete: "Are you sure you want to delete this?",
+          toast_success: "Success",
+          toast_deleted: "Deleted",
+          toast_error: "Error",
+          success_add: "Record added successfully",
+          success_update: "Record updated successfully",
+          success_delete: "Item removed successfully",
+        },
+        bn: {
+          loading: "অ্যাপ লোড হচ্ছে",
+          app_name: "মেস ম্যানেজার প্রো",
+          app_subtitle: "অ্যাডভান্সড ম্যানেজমেন্ট সিস্টেম",
+          login: "লগইন",
+          signup: "রেজিস্ট্রেশন",
+          email: "ইমেইল",
+          password: "পাসওয়ার্ড",
+          login_btn: "লগইন করুন",
+          new_email: "নতুন ইমেইল",
+          new_password: "নতুন পাসওয়ার্ড",
+          create_account: "একাউন্ট খুলুন",
+          menu_main: "মেইন মেনু",
+          dashboard: "ড্যাশবোর্ড",
+          member_list: "মেম্বার লিস্ট",
+          menu_finance: "হিসাব ও মিল",
+          daily_meals: "দৈনিক মিল",
+          bazaar_cost: "বাজার খরচ",
+          other_bills: "অন্যান্য বিল",
+          deposits: "টাকা জমা",
+          final_report: "ফাইনাল রিপোর্ট",
+          settings: "সেটিংস",
+          logout: "লগআউট",
+          my_hostels: "আমার মেস/হোস্টেল",
+          card_meal_rate: "বর্তমান মিল রেট",
+          card_total_expense: "মোট খরচ",
+          card_total_deposit: "মোট জমা",
+          card_balance: "হাতে আছে (ব্যালেন্স)",
+          available_cash: "বর্তমান ক্যাশ",
+          chart_meal_trend: "দৈনিক মিল চার্ট",
+          current_month: "বর্তমান মাস",
+          chart_expense_breakdown: "খরচের বিবরণ",
+          quick_actions: "শর্টকাট",
+          btn_todays_meal: "আজকের মিল",
+          btn_bazaar_cost: "বাজার খরচ",
+          btn_deposit_money: "টাকা জমা",
+          filter_title: "অ্যাডভান্সড ফিল্টার",
+          filter_by_member: "মেম্বার সিলেক্ট করুন",
+          all_members: "সব মেম্বার",
+          filter_date_range: "তারিখ",
+          filter_sort_by: "সাজান",
+          sort_newest: "নতুন আগে",
+          sort_oldest: "পুরাতন আগে",
+          sort_high_low: "টাকা (বেশি থেকে কম)",
+          sort_low_high: "টাকা (কম থেকে বেশি)",
+          apply_filters: "ফিল্টার করুন",
+          no_records: "কোনো তথ্য পাওয়া যায়নি",
+          start_adding: "নতুন আইটেম যোগ করুন অথবা ফিল্টার পরিবর্তন করুন",
+          sum_meal_rate: "ফাইনাল মিল রেট",
+          sum_per_meal_cost: "প্রতি মিল খরচ",
+          sum_fixed_cost: "ফিক্সড খরচ / জন",
+          sum_utilities: "অন্যান্য বিল",
+          sum_net_balance: "নেট ব্যালেন্স",
+          sum_cash_hand: "হাতে আছে",
+          report_title: "মাসিক ফাইনাল রিপোর্ট",
+          report_subtitle: "খরচ এবং মিলের বিস্তারিত বিবরণ",
+          print_report: "প্রিন্ট করুন",
+          th_member: "মেম্বার",
+          th_total: "মোট",
+          th_meal_cost: "মিল খরচ",
+          th_individual: "ব্যক্তিগত",
+          th_fixed: "ফিক্সড",
+          th_debit: "মোট খরচ",
+          th_deposit: "জমা",
+          th_balance: "ব্যালেন্স",
+          th_status: "অবস্থা",
+          total: "সর্বমোট",
+          cost_distribution: "খরচের খাত",
+          top_spender: "বাজারকারী (সর্বোচ্চ)",
+          most_meals: "সর্বোচ্চ মিল",
+          daily_meal_entry: "দৈনিক মিল এন্ট্রি",
+          daily_meal_subtitle: "সকল মেম্বারের মিল আপডেট করুন",
+          select_date: "তারিখ নির্বাচন করুন",
+          th_member_name: "মেম্বার নাম",
+          th_breakfast: "সকাল",
+          th_lunch: "দুপুর",
+          th_dinner: "রাত",
+          save_update: "সেভ করুন",
+          th_name: "নাম",
+          th_mobile: "মোবাইল",
+          th_room: "রুম",
+          th_actions: "একশন",
+          th_date: "তারিখ",
+          th_shopper: "বাজারকারী",
+          th_item: "বিবরণ",
+          th_cost: "খরচ",
+          th_amount: "টাকা",
+          th_description: "বিবরণ",
+          th_act: "একশন",
+          add_new: "নতুন যোগ",
+          edit_item: "এডিট",
+          delete_item: "মুছুন",
+          modal_add_member: "মেম্বার যোগ করুন",
+          modal_edit_member: "মেম্বার এডিট করুন",
+          save_member: "সেভ মেম্বার",
+          update_member: "আপডেট মেম্বার",
+          modal_add_expense: "খরচ যোগ করুন",
+          modal_edit_expense: "খরচ এডিট করুন",
+          select_shopper: "বাজারকারী নির্বাচন করুন",
+          add_expense: "খরচ যোগ",
+          update_expense: "খরচ আপডেট",
+          modal_add_deposit: "জমা যোগ করুন",
+          modal_edit_deposit: "জমা এডিট করুন",
+          select_member: "মেম্বার নির্বাচন করুন",
+          add_deposit: "জমা যোগ",
+          update_deposit: "জমা আপডেট",
+          modal_add_bill: "বিল যোগ করুন",
+          modal_edit_bill: "বিল এডিট করুন",
+          add_bill: "বিল যোগ",
+          update_bill: "বিল আপডেট",
+          modal_edit_meal: "মিল এডিট করুন",
+          update_meal: "মিল আপডেট",
+          confirm_delete: "আপনি কি নিশ্চিত আপনি এটি মুছে ফেলতে চান?",
+          toast_success: "সফল",
+          toast_deleted: "মুছে ফেলা হয়েছে",
+          toast_error: "ত্রুটি",
+          success_add: "সফলভাবে যোগ করা হয়েছে",
+          success_update: "সফলভাবে আপডেট করা হয়েছে",
+          success_delete: "সফলভাবে মুছে ফেলা হয়েছে",
+        },
+      };
+
+      // --- UI HELPERS ---
+      const $ = (id) => document.getElementById(id);
+      const formatMoney = (amt) =>
+        `৳ ${parseFloat(amt).toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      const formatDate = (dateStr) => {
+        if (!dateStr) return "-";
+        const d = new Date(dateStr);
+        return d.toLocaleDateString(currentLang === "bn" ? "bn-BD" : "en-GB", {
+          day: "numeric",
+          month: "short",
+        });
+      };
+      const t = (key) => translations[currentLang][key] || key;
+
+      // --- LANGUAGE SYSTEM ---
+      function updateLanguage() {
+        document.documentElement.lang = currentLang;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.dataset.i18n;
+          if (translations[currentLang][key]) {
+            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA")
+              el.placeholder = translations[currentLang][key];
+            else el.innerText = translations[currentLang][key];
+          }
+        });
+        updateMonthLabel();
+        if (!$("view-dashboard").classList.contains("hidden"))
+          updateDashboard();
+        refreshActiveView();
+      }
+
+      $("lang-toggle").onclick = () => {
+        currentLang = currentLang === "en" ? "bn" : "en";
+        localStorage.setItem("lang", currentLang);
+        updateLanguage();
+      };
+
+      // --- REAL TIME CLOCK ---
+      function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString(
+          currentLang === "bn" ? "bn-BD" : "en-US",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          }
+        );
+        const dateStr = now.toLocaleDateString(
+          currentLang === "bn" ? "bn-BD" : "en-GB"
+        );
+        $("live-clock").innerText = timeStr;
+        $("live-date").innerText = dateStr;
+      }
+      setInterval(updateClock, 1000);
+
+      // --- THEME ---
+      const toggleTheme = () => {
+        const isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        if (charts.meal) updateCharts();
+        if (charts.reportCost) updateReportCharts();
+      };
+      $("theme-toggle").onclick = toggleTheme;
+      if (localStorage.getItem("theme") === "dark")
+        document.documentElement.classList.add("dark");
+
+      // --- LOADER & TOAST ---
+      const toggleLoader = (show) => {
+        $("global-loader").style.opacity = show ? "1" : "0";
+        $("global-loader").style.pointerEvents = show ? "auto" : "none";
+      };
+      const showToast = (titleKey, msgKey) => {
+        $("toast-title").innerText = t(titleKey);
+        $("toast-msg").innerText = t(msgKey);
+        $("toast").classList.remove("toast-hidden");
+        $("toast").classList.add("toast-visible");
+        setTimeout(() => {
+          $("toast").classList.remove("toast-visible");
+          $("toast").classList.add("toast-hidden");
+        }, 3000);
+      };
+
+      // --- AUTH ---
+      onAuthStateChanged(auth, async (user) => {
+        toggleLoader(false);
+        if (user) {
+          currentUser = user;
+          $("auth-container").classList.add("hidden");
+          await loadUserHostels();
+          $("hostel-selection-container").classList.remove("hidden");
+          updateLanguage();
+        } else {
+          currentUser = null;
+          currentHostel = null;
+          $("auth-container").classList.remove("hidden");
+          $("app-container").classList.add("hidden");
+          $("hostel-selection-container").classList.add("hidden");
+          updateLanguage();
+        }
+      });
+
+      $("login-form").onsubmit = (e) =>
+        handleAuth(e, signInWithEmailAndPassword);
+      $("signup-form").onsubmit = (e) =>
+        handleAuth(e, createUserWithEmailAndPassword);
+
+      async function handleAuth(e, method) {
+        e.preventDefault();
+        toggleLoader(true);
+        const email = e.target.querySelector('input[type="email"]').value;
+        const pass = e.target.querySelector('input[type="password"]').value;
+        try {
+          await method(auth, email, pass);
+        } catch (err) {
+          toggleLoader(false);
+          showToast("toast_error", err.message);
+        }
+      }
+
+      window.signOutUser = () => signOut(auth);
+
+      // Tabs
+      $("tab-login").onclick = () => switchAuthTab("login");
+      $("tab-signup").onclick = () => switchAuthTab("signup");
+      function switchAuthTab(tab) {
+        if (tab === "login") {
+          $("login-form").classList.remove("hidden");
+          $("signup-form").classList.add("hidden");
+          $("tab-login").classList.add(
+            "bg-white",
+            "dark:bg-dark-700",
+            "text-slate-900",
+            "dark:text-white",
+            "shadow-sm"
+          );
+          $("tab-login").classList.remove("text-slate-500");
+          $("tab-signup").classList.remove(
+            "bg-white",
+            "dark:bg-dark-700",
+            "text-slate-900",
+            "dark:text-white",
+            "shadow-sm"
+          );
+        } else {
+          $("login-form").classList.add("hidden");
+          $("signup-form").classList.remove("hidden");
+          $("tab-signup").classList.add(
+            "bg-white",
+            "dark:bg-dark-700",
+            "text-slate-900",
+            "dark:text-white",
+            "shadow-sm"
+          );
+          $("tab-signup").classList.remove("text-slate-500");
+          $("tab-login").classList.remove(
+            "bg-white",
+            "dark:bg-dark-700",
+            "text-slate-900",
+            "dark:text-white",
+            "shadow-sm"
+          );
+        }
+      }
+
+      // --- HOSTEL MANAGEMENT (Core Feature) ---
+      async function loadUserHostels() {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userDocRef);
+        const listDiv = $("hostel-list");
+        listDiv.innerHTML = "";
+
+        if (userSnap.exists() && userSnap.data().myHostels?.length > 0) {
+          const hostels = userSnap.data().myHostels;
+          hostels.forEach((h) => {
+            const div = document.createElement("div");
+            div.className =
+              "p-4 bg-slate-50 dark:bg-dark-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary-500 cursor-pointer flex justify-between items-center transition group";
+            div.innerHTML = `
+                 <div>
+                   <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-primary-600 transition-colors">${h.name}</h4>
+                   <p class="text-xs text-slate-500">ID: <span class="font-mono select-all">${h.id}</span></p>
+                 </div>
+                 <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i>`;
+            div.onclick = () => enterHostel(h.id, h.name);
+            listDiv.appendChild(div);
+          });
+        } else {
+          listDiv.innerHTML = `<p class="text-sm text-slate-400 italic">No hostels joined yet. Join or create one.</p>`;
+        }
+        lucide.createIcons();
+      }
+
+      window.createHostel = async () => {
+        const name = $("new-hostel-name").value;
+        const code = $("new-hostel-code").value;
+        if (!name || !code)
+          return showToast("toast_error", "Enter name and code");
+
+        const id = "MESS-" + Math.floor(1000 + Math.random() * 9000); // Simple ID
+
+        try {
+          // Create Hostel Doc
+          await setDoc(doc(db, "hostels", id), {
+            name,
+            code,
+            createdBy: currentUser.uid,
+            createdAt: new Date().toISOString(),
+          });
+
+          // Add to User's Profile
+          const userRef = doc(db, "users", currentUser.uid);
+          await setDoc(
+            userRef,
+            {
+              myHostels: arrayUnion({ id, name }),
+            },
+            { merge: true }
+          );
+
+          showToast("toast_success", "Mess created successfully!");
+          loadUserHostels();
+          $("new-hostel-name").value = "";
+          $("new-hostel-code").value = "";
+        } catch (e) {
+          console.error(e);
+          showToast("toast_error", e.message);
+        }
+      };
+
+      window.joinHostel = async () => {
+        const id = $("join-hostel-id").value.trim();
+        const code = $("join-hostel-code").value.trim();
+        if (!id || !code) return showToast("toast_error", "Enter ID and Code");
+
+        try {
+          const ref = doc(db, "hostels", id);
+          const snap = await getDoc(ref);
+
+          if (snap.exists()) {
+            if (snap.data().code === code) {
+              const userRef = doc(db, "users", currentUser.uid);
+              await setDoc(
+                userRef,
+                {
+                  myHostels: arrayUnion({ id, name: snap.data().name }),
+                },
+                { merge: true }
+              );
+              showToast("toast_success", "Joined successfully!");
+              loadUserHostels();
+              $("join-hostel-id").value = "";
+              $("join-hostel-code").value = "";
+              // Redirect immediately
+              enterHostel(id, snap.data().name);
+            } else {
+              showToast("toast_error", "Incorrect Access Code");
+            }
+          } else {
+            showToast("toast_error", "Invalid Mess ID");
+          }
+        } catch (e) {
+          showToast("toast_error", e.message);
+        }
+      };
+
+      window.enterHostel = (id, name) => {
+        currentHostel = { id, name };
+        $("hostel-selection-container").classList.add("hidden");
+        $("app-container").classList.remove("hidden");
+        $("current-hostel-name").innerText = name;
+        $("current-hostel-id-disp").innerText = id;
+
+        $("month-picker").value = currentMonth;
+        updateMonthLabel();
+        initListeners(); // Load Data for this hostel
+        lucide.createIcons();
+
+        // AUTO REDIRECT TO DASHBOARD
+        navTo("dashboard");
+      };
+
+      window.exitToHostelSelection = () => {
+        // Unsubscribe listeners
+        unsubscribers.forEach((unsub) => unsub());
+        unsubscribers = [];
+
+        currentHostel = null;
+        $("app-container").classList.add("hidden");
+        $("hostel-selection-container").classList.remove("hidden");
+        loadUserHostels();
+      };
+
+      window.copyMessId = () => {
+        const id = $("current-hostel-id-disp").innerText;
+        navigator.clipboard.writeText(id);
+        showToast("toast_success", "ID copied to clipboard");
+      };
+
+      // --- DATA SYNC (Hostel Based) ---
+      function initListeners() {
+        if (!currentHostel) return;
+        const hid = currentHostel.id;
+
+        // Clear old listeners
+        unsubscribers.forEach((unsub) => unsub());
+        unsubscribers = [];
+
+        const qMembers = query(
+          collection(db, `hostels/${hid}/members`),
+          orderBy("name")
+        );
+        unsubscribers.push(
+          onSnapshot(qMembers, (snap) => {
+            state.members = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            updateFilterMembers();
+            refreshActiveView();
+          })
+        );
+
+        const qExp = query(
+          collection(db, `hostels/${hid}/expenses`),
+          where("month", "==", currentMonth)
+        );
+        unsubscribers.push(
+          onSnapshot(qExp, (snap) => {
+            state.expenses = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            refreshActiveView();
+            updateDashboard();
+          })
+        );
+
+        const qMeals = query(
+          collection(db, `hostels/${hid}/meals`),
+          where("month", "==", currentMonth)
+        );
+        unsubscribers.push(
+          onSnapshot(qMeals, (snap) => {
+            state.meals = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            refreshActiveView();
+            updateDashboard();
+          })
+        );
+
+        const qDep = query(
+          collection(db, `hostels/${hid}/deposits`),
+          where("month", "==", currentMonth)
+        );
+        unsubscribers.push(
+          onSnapshot(qDep, (snap) => {
+            state.deposits = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            refreshActiveView();
+            updateDashboard();
+          })
+        );
+
+        const qFix = query(
+          collection(db, `hostels/${hid}/fixedCosts`),
+          where("month", "==", currentMonth)
+        );
+        unsubscribers.push(
+          onSnapshot(qFix, (snap) => {
+            state.fixedCosts = snap.docs.map((d) => ({
+              id: d.id,
+              ...d.data(),
+            }));
+            refreshActiveView();
+            updateDashboard();
+          })
+        );
+      }
+
+      $("month-picker").onchange = (e) => {
+        if (e.target.value) {
+          currentMonth = e.target.value;
+          updateMonthLabel();
+          initListeners();
+        }
+      };
+
+      function updateMonthLabel() {
+        const date = new Date(currentMonth + "-01");
+        const formattedDate = date.toLocaleDateString(
+          currentLang === "bn" ? "bn-BD" : "en-US",
+          { month: "short", year: "numeric" }
+        );
+        $("month-label").innerText = formattedDate;
+      }
+
+      // --- FILTERS ---
+      window.toggleFilterPanel = () =>
+        $("filter-panel").classList.toggle("hidden");
+
+      function updateFilterMembers() {
+        const sel = $("filter-member");
+        sel.innerHTML =
+          `<option value="all">${t("all_members")}</option>` +
+          state.members
+            .map((m) => `<option value="${m.id}">${m.name}</option>`)
+            .join("");
+      }
+
+      window.applyFilters = () => {
+        filters.member = $("filter-member").value;
+        filters.start = $("filter-start").value;
+        filters.end = $("filter-end").value;
+        filters.sort = $("filter-sort").value;
+        pagination.page = 1;
+        const type = $("view-generic-list").dataset.type;
+        renderGenericTable(type);
+      };
+
+      function getFilteredData(dataType) {
+        let data = [];
+        if (dataType === "members") data = [...state.members];
+        if (dataType === "bazaar") data = [...state.expenses];
+        if (dataType === "deposits") data = [...state.deposits];
+        if (dataType === "fixed-cost") data = [...state.fixedCosts];
+        if (dataType === "meals") data = [...state.meals];
+
+        if (filters.member !== "all") {
+          if (dataType === "bazaar")
+            data = data.filter((x) => x.shopperId === filters.member);
+          else if (dataType === "meals" || dataType === "deposits")
+            data = data.filter((x) => x.memberId === filters.member);
+        }
+        if (filters.start) data = data.filter((x) => x.date >= filters.start);
+        if (filters.end) data = data.filter((x) => x.date <= filters.end);
+
+        data.sort((a, b) => {
+          if (filters.sort === "date-desc")
+            return b.date ? b.date.localeCompare(a.date) : 0;
+          if (filters.sort === "date-asc")
+            return a.date ? a.date.localeCompare(b.date) : 0;
+          if (filters.sort === "amount-desc" && a.amount)
+            return b.amount - a.amount;
+          if (filters.sort === "amount-asc" && a.amount)
+            return a.amount - b.amount;
+          return 0;
+        });
+        return data;
+      }
+
+      // --- NAVIGATION ---
+      window.navTo = (page) => {
+        document
+          .querySelectorAll(".view-section")
+          .forEach((el) => el.classList.add("hidden"));
+        document
+          .querySelectorAll(".sidebar-link")
+          .forEach((el) => el.classList.remove("active"));
+        $(`nav-${page}`).classList.add("active");
+
+        const isGeneric = [
+          "members",
+          "bazaar",
+          "deposits",
+          "meals",
+          "fixed-cost",
+        ].includes(page);
+
+        if (page === "dashboard") {
+          $("view-dashboard").classList.remove("hidden");
+          $("page-title").innerText = t("dashboard");
+          updateDashboard();
+        } else if (page === "summary") {
+          $("view-summary").classList.remove("hidden");
+          $("page-title").innerText = t("final_report");
+          renderSummary();
+        } else if (isGeneric) {
+          $("view-generic-list").classList.remove("hidden");
+          configureGenericView(page);
+        }
+
+        if (window.innerWidth < 768)
+          $("sidebar").classList.add("-translate-x-full");
+      };
+
+      function configureGenericView(page) {
+        const config = {
+          members: {
+            title: "member_list",
+            btn: "add_new",
+            modal: "modal-member",
+          },
+          bazaar: {
+            title: "bazaar_cost",
+            btn: "add_new",
+            modal: "modal-expense",
+          },
+          deposits: {
+            title: "deposits",
+            btn: "add_new",
+            modal: "modal-deposit",
+          },
+          meals: {
+            title: "daily_meals",
+            btn: "btn_todays_meal",
+            modal: "modal-meal",
+            isMeal: true,
+          },
+          "fixed-cost": {
+            title: "other_bills",
+            btn: "add_new",
+            modal: "modal-fixed",
+          },
+        };
+
+        const c = config[page];
+        $("page-title").innerText = t(c.title);
+        $("add-btn-text").innerText = t(c.btn);
+        $("add-new-btn").onclick = () => openModal(c.modal);
+        if (c.isMeal) $("add-new-btn").onclick = () => openModal("modal-meal");
+
+        $("view-generic-list").dataset.type = page;
+        filters = { member: "all", start: "", end: "", sort: "date-desc" };
+        pagination = { page: 1, limit: 10 };
+        $("filter-panel").classList.add("hidden");
+        $("filter-member").value = "all";
+        renderGenericTable(page);
+      }
+
+      function refreshActiveView() {
+        const type = $("view-generic-list").dataset.type;
+        if (!$("view-generic-list").classList.contains("hidden") && type) {
+          renderGenericTable(type);
+        }
+        if (!$("view-summary").classList.contains("hidden")) renderSummary();
+      }
+
+      // --- RENDERING ---
+      function renderGenericTable(type) {
+        const thead = $("table-head");
+        const tbody = $("table-body");
+        const empty = $("empty-state");
+        tbody.innerHTML = "";
+
+        let data = getFilteredData(type);
+
+        // PAGINATION LOGIC
+        const totalItems = data.length;
+        const totalPages = Math.ceil(totalItems / pagination.limit) || 1;
+        if (pagination.page > totalPages) pagination.page = totalPages;
+        const startIdx = (pagination.page - 1) * pagination.limit;
+        const endIdx = startIdx + pagination.limit;
+        const pagedData = data.slice(startIdx, endIdx);
+
+        // Render Table Header
+        if (type === "members") {
+          thead.innerHTML = `<th class="p-4 text-left">${t(
+            "th_name"
+          )}</th><th class="p-4 text-left">${t(
+            "th_mobile"
+          )}</th><th class="p-4 text-left">${t(
+            "th_room"
+          )}</th><th class="p-4 text-right">${t("th_actions")}</th>`;
+          pagedData.forEach((m) => {
+            tbody.innerHTML += `
+                  <tr class="hover:bg-slate-50 dark:hover:bg-dark-800 transition group row-actions">
+                     <td class="p-4 flex items-center gap-3 text-left">
+                        <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-xs">${m.name.charAt(
+                          0
+                        )}</div>
+                        <span class="font-medium text-slate-700 dark:text-slate-200">${
+                          m.name
+                        }</span>
+                     </td>
+                     <td class="p-4 text-slate-500 text-left">${m.mobile}</td>
+                     <td class="p-4 text-slate-500 text-left">${
+                       m.room || "-"
+                     }</td>
+                     <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick="window.editItem('members', '${
+                          m.id
+                        }')" class="text-indigo-400 hover:text-indigo-600" title="${t(
+              "edit_item"
+            )}"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                        <button onclick="window.delItem('members', '${
+                          m.id
+                        }')" class="text-red-400 hover:text-red-600" title="${t(
+              "delete_item"
+            )}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                     </td>
+                  </tr>`;
+          });
+        } else if (type === "bazaar") {
+          thead.innerHTML = `<th class="p-4 text-left">${t(
+            "th_date"
+          )}</th><th class="p-4 text-left">${t(
+            "th_shopper"
+          )}</th><th class="p-4 text-left">${t(
+            "th_item"
+          )}</th><th class="p-4 text-right">${t(
+            "th_cost"
+          )}</th><th class="p-4 text-right">${t("th_actions")}</th>`;
+          pagedData.forEach((e) => {
+            const shopper =
+              state.members.find((m) => m.id === e.shopperId)?.name ||
+              "Unknown";
+            tbody.innerHTML += `
+                   <tr class="hover:bg-slate-50 dark:hover:bg-dark-800 transition group row-actions">
+                      <td class="p-4 text-slate-500 text-left">${formatDate(
+                        e.date
+                      )}</td>
+                      <td class="p-4 font-medium text-slate-700 dark:text-slate-300 text-left">${shopper}</td>
+                      <td class="p-4 text-slate-500 text-left">${e.desc}</td>
+                      <td class="p-4 text-right font-bold text-slate-800 dark:text-white">${formatMoney(
+                        e.amount
+                      )}</td>
+                      <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick="window.editItem('expenses', '${
+                          e.id
+                        }')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                        <button onclick="window.delItem('expenses', '${
+                          e.id
+                        }')" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                      </td>
+                   </tr>`;
+          });
+        } else if (type === "deposits") {
+          thead.innerHTML = `<th class="p-4 text-left">${t(
+            "th_date"
+          )}</th><th class="p-4 text-left">${t(
+            "th_member"
+          )}</th><th class="p-4 text-right">${t(
+            "th_amount"
+          )}</th><th class="p-4 text-right">${t("th_actions")}</th>`;
+          pagedData.forEach((d) => {
+            const mem =
+              state.members.find((m) => m.id === d.memberId)?.name || "Unknown";
+            tbody.innerHTML += `
+                   <tr class="hover:bg-slate-50 dark:hover:bg-dark-800 transition group row-actions">
+                      <td class="p-4 text-slate-500 text-left">${formatDate(
+                        d.date
+                      )}</td>
+                      <td class="p-4 font-medium text-slate-700 dark:text-slate-300 text-left">${mem}</td>
+                      <td class="p-4 text-right font-bold text-emerald-600">+${formatMoney(
+                        d.amount
+                      )}</td>
+                      <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick="window.editItem('deposits', '${
+                          d.id
+                        }')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                        <button onclick="window.delItem('deposits', '${
+                          d.id
+                        }')" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                      </td>
+                   </tr>`;
+          });
+        } else if (type === "fixed-cost") {
+          thead.innerHTML = `<th class="p-4 text-left">${t(
+            "th_date"
+          )}</th><th class="p-4 text-left">${t(
+            "th_description"
+          )}</th><th class="p-4 text-right">${t(
+            "th_amount"
+          )}</th><th class="p-4 text-right">${t("th_actions")}</th>`;
+          pagedData.forEach((f) => {
+            tbody.innerHTML += `
+                  <tr class="hover:bg-slate-50 dark:hover:bg-dark-800 transition group row-actions">
+                     <td class="p-4 text-slate-500 text-left">${formatDate(
+                       f.date
+                     )}</td>
+                     <td class="p-4 text-slate-700 dark:text-slate-300 text-left">${
+                       f.desc
+                     }</td>
+                     <td class="p-4 text-right font-bold text-indigo-600">${formatMoney(
+                       f.amount
+                     )}</td>
+                     <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick="window.editItem('fixedCosts', '${
+                          f.id
+                        }')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                        <button onclick="window.delItem('fixedCosts', '${
+                          f.id
+                        }')" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                     </td>
+                  </tr>`;
+          });
+        } else if (type === "meals") {
+          thead.innerHTML = `<th class="p-4 text-left">${t(
+            "th_date"
+          )}</th><th class="p-4 text-left">${t(
+            "th_member"
+          )}</th><th class="p-4 text-center">B</th><th class="p-4 text-center">L</th><th class="p-4 text-center">D</th><th class="p-4 text-center">${t(
+            "th_total"
+          )}</th><th class="p-4 text-right">${t("th_act")}</th>`;
+          pagedData.forEach((m) => {
+            const mem =
+              state.members.find((x) => x.id === m.memberId)?.name || "Unknown";
+            const total =
+              (parseFloat(m.bk) || 0) +
+              (parseFloat(m.ln) || 0) +
+              (parseFloat(m.dn) || 0);
+            tbody.innerHTML += `
+                  <tr class="hover:bg-slate-50 dark:hover:bg-dark-800 transition group row-actions">
+                     <td class="p-4 text-slate-500 text-xs text-left">${formatDate(
+                       m.date
+                     )}</td>
+                     <td class="p-4 font-medium text-slate-700 dark:text-slate-300 text-left">${mem}</td>
+                     <td class="p-4 text-center text-slate-500">${m.bk}</td>
+                     <td class="p-4 text-center text-slate-500">${m.ln}</td>
+                     <td class="p-4 text-center text-slate-500">${m.dn}</td>
+                     <td class="p-4 text-center font-bold text-primary-600 bg-primary-50 dark:bg-primary-900/20 rounded">${total}</td>
+                     <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick="window.editItem('meals', '${
+                          m.id
+                        }')" class="text-indigo-400 hover:text-indigo-600"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                        <button onclick="window.delItem('meals', '${
+                          m.id
+                        }')" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                     </td>
+                  </tr>`;
+          });
+        }
+
+        if (data.length === 0) empty.classList.remove("hidden");
+        else empty.classList.add("hidden");
+
+        // UPDATE PAGINATION UI
+        $("page-info").innerText = `Page ${pagination.page} of ${totalPages}`;
+        $("btn-prev").disabled = pagination.page === 1;
+        $("btn-next").disabled = pagination.page === totalPages;
+        $("btn-prev").onclick = () => {
+          pagination.page--;
+          renderGenericTable(type);
+        };
+        $("btn-next").onclick = () => {
+          pagination.page++;
+          renderGenericTable(type);
+        };
+
+        if (data.length > 0) $("pagination-footer").classList.remove("hidden");
+        else $("pagination-footer").classList.add("hidden");
+
+        lucide.createIcons();
+      }
+
+      function renderSummary() {
+        const totalExp = state.expenses.reduce(
+          (a, b) => a + parseFloat(b.amount),
+          0
+        );
+        const totalFixed = state.fixedCosts.reduce(
+          (a, b) => a + parseFloat(b.amount),
+          0
+        );
+        const totalDep = state.deposits.reduce(
+          (a, b) => a + parseFloat(b.amount),
+          0
+        );
+
+        let totalMeals = 0;
+        let maxSpender = { name: "--", amount: 0 };
+        let maxEater = { name: "--", count: 0 };
+
+        const stats = {};
+        state.members.forEach(
+          (m) =>
+            (stats[m.id] = {
+              name: m.name,
+              meals: 0,
+              bk: 0,
+              ln: 0,
+              dn: 0,
+              deposit: 0,
+              shopping: 0,
+            })
+        );
+
+        state.expenses.forEach((e) => {
+          if (stats[e.shopperId])
+            stats[e.shopperId].shopping += parseFloat(e.amount);
+        });
+        state.meals.forEach((m) => {
+          if (stats[m.memberId]) {
+            const t =
+              (parseFloat(m.bk) || 0) +
+              (parseFloat(m.ln) || 0) +
+              (parseFloat(m.dn) || 0);
+            stats[m.memberId].meals += t;
+            stats[m.memberId].bk += parseFloat(m.bk) || 0;
+            stats[m.memberId].ln += parseFloat(m.ln) || 0;
+            stats[m.memberId].dn += parseFloat(m.dn) || 0;
+            totalMeals += t;
+          }
+        });
+        state.deposits.forEach((d) => {
+          if (stats[d.memberId])
+            stats[d.memberId].deposit += parseFloat(d.amount);
+        });
+
+        // Calculations
+        const rate = totalMeals > 0 ? totalExp / totalMeals : 0;
+        const fixedPerHead =
+          state.members.length > 0 ? totalFixed / state.members.length : 0;
+
+        $("sum-rate").innerText = formatMoney(rate);
+        $("sum-fixed-per-head").innerText = formatMoney(fixedPerHead);
+        $("sum-net-balance").innerText = formatMoney(
+          totalDep - (totalExp + totalFixed)
+        );
+
+        const tbody = $("summary-body");
+        tbody.innerHTML = "";
+
+        Object.values(stats).forEach((s) => {
+          const mealCost = s.meals * rate;
+          const totalDebit = mealCost + fixedPerHead;
+          const bal = s.deposit - totalDebit;
+
+          if (s.shopping > maxSpender.amount)
+            maxSpender = { name: s.name, amount: s.shopping };
+          if (s.meals > maxEater.count)
+            maxEater = { name: s.name, count: s.meals };
+
+          const statusBadge =
+            bal >= 0
+              ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Settled</span>`
+              : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Due</span>`;
+          const balClass = bal >= 0 ? "text-emerald-600" : "text-red-500";
+
+          tbody.innerHTML += `
+               <tr class="border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-dark-800 transition">
+                  <td class="p-4 font-medium text-slate-700 dark:text-slate-200 text-left">${
+                    s.name
+                  }</td>
+                  <td class="p-4 text-center text-slate-400 text-xs border-l border-slate-100 dark:border-slate-700">${
+                    s.bk
+                  }</td>
+                  <td class="p-4 text-center text-slate-400 text-xs">${
+                    s.ln
+                  }</td>
+                  <td class="p-4 text-center text-slate-400 text-xs">${
+                    s.dn
+                  }</td>
+                  <td class="p-4 text-center font-bold text-slate-800 dark:text-white border-r border-slate-100 dark:border-slate-700">${
+                    s.meals
+                  }</td>
+                  <td class="p-4 text-right text-slate-500">${formatMoney(
+                    mealCost
+                  )}</td>
+                  <td class="p-4 text-right text-slate-500">${formatMoney(
+                    0
+                  )}</td>
+                  <td class="p-4 text-right text-slate-500">${formatMoney(
+                    fixedPerHead
+                  )}</td>
+                  <td class="p-4 text-right font-bold text-slate-800 dark:text-white bg-slate-50/50 dark:bg-slate-800/50">${formatMoney(
+                    totalDebit
+                  )}</td>
+                  <td class="p-4 text-right text-slate-600 dark:text-slate-300">${formatMoney(
+                    s.deposit
+                  )}</td>
+                  <td class="p-4 text-right font-bold ${balClass}">${
+            bal >= 0 ? "+" : "-"
+          }${formatMoney(Math.abs(bal))}</td>
+                  <td class="p-4 text-center">${statusBadge}</td>
+               </tr>`;
+        });
+
+        $("footer-total-meals").innerText = totalMeals;
+        $("footer-meal-cost").innerText = formatMoney(totalExp);
+        $("footer-individual").innerText = formatMoney(0);
+        $("footer-fixed").innerText = formatMoney(totalFixed);
+        $("footer-grand-total").innerText = formatMoney(totalExp + totalFixed);
+        $("footer-total-dep").innerText = formatMoney(totalDep);
+
+        const totalBalance = totalDep - (totalExp + totalFixed);
+        const balClass =
+          totalBalance >= 0 ? "text-emerald-600" : "text-red-500";
+        $("footer-balance").className = `p-4 text-right font-bold ${balClass}`;
+        $("footer-balance").innerText =
+          (totalBalance >= 0 ? "+" : "-") + formatMoney(Math.abs(totalBalance));
+
+        $("top-shopper-name").innerText = maxSpender.name;
+        $("top-shopper-amount").innerText = formatMoney(maxSpender.amount);
+        $("top-shopper-avatar").innerText = maxSpender.name.charAt(0);
+        $("top-eater-name").innerText = maxEater.name;
+        $("top-eater-count").innerText = maxEater.count + " Meals";
+
+        updateReportCharts(totalExp, totalFixed);
+      }
+
+      function updateDashboard() {
+        if (!$("view-dashboard").classList.contains("hidden")) {
+          renderSummary();
+          const totalExp = state.expenses.reduce(
+            (a, b) => a + parseFloat(b.amount),
+            0
+          );
+          const totalFixed = state.fixedCosts.reduce(
+            (a, b) => a + parseFloat(b.amount),
+            0
+          );
+          const totalDep = state.deposits.reduce(
+            (a, b) => a + parseFloat(b.amount),
+            0
+          );
+          const cash = totalDep - (totalExp + totalFixed);
+          $("dash-expense").innerText = formatMoney(totalExp + totalFixed);
+          $("dash-deposit").innerText = formatMoney(totalDep);
+          $("dash-balance").innerText = formatMoney(cash);
+          updateCharts();
+        }
+      }
+
+      // --- CHART JS ---
+      function updateCharts() {
+        const ctxM = $("mealChart").getContext("2d");
+        const ctxE = $("expenseChart").getContext("2d");
+        if (charts.meal) charts.meal.destroy();
+        if (charts.expense) charts.expense.destroy();
+
+        const dates = {};
+        state.meals.forEach((m) => {
+          const t =
+            (parseFloat(m.bk) || 0) +
+            (parseFloat(m.ln) || 0) +
+            (parseFloat(m.dn) || 0);
+          dates[m.date] = (dates[m.date] || 0) + t;
+        });
+        const labels = Object.keys(dates).sort();
+        const mData = labels.map((d) => dates[d]);
+        const isDark = document.documentElement.classList.contains("dark");
+        const textColor = isDark ? "#94a3b8" : "#64748b";
+        const gridColor = isDark ? "#334155" : "#f1f5f9";
+
+        charts.meal = new Chart(ctxM, {
+          type: "line",
+          data: {
+            labels: labels.map((d) => formatDate(d)),
+            datasets: [
+              {
+                label: "Meals",
+                data: mData,
+                borderColor: "#0ea5e9",
+                backgroundColor: "rgba(14, 165, 233, 0.1)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: "#0ea5e9",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: textColor } },
+              y: { grid: { color: gridColor }, ticks: { color: textColor } },
+            },
+          },
+        });
+
+        const tExp = state.expenses.reduce(
+          (a, b) => a + parseFloat(b.amount),
+          0
+        );
+        const tFix = state.fixedCosts.reduce(
+          (a, b) => a + parseFloat(b.amount),
+          0
+        );
+
+        charts.expense = new Chart(ctxE, {
+          type: "doughnut",
+          data: {
+            labels: ["Bazaar", "Bills"],
+            datasets: [
+              {
+                data: [tExp, tFix],
+                backgroundColor: ["#f43f5e", "#6366f1"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "75%",
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { color: textColor, usePointStyle: true },
+              },
+            },
+          },
+        });
+      }
+
+      function updateReportCharts(bazaar, fixed) {
+        const ctx = $("reportCostChart").getContext("2d");
+        if (charts.reportCost) charts.reportCost.destroy();
+        const isDark = document.documentElement.classList.contains("dark");
+        charts.reportCost = new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: ["Bazaar Cost", "Fixed Utilities"],
+            datasets: [
+              {
+                data: [bazaar, fixed],
+                backgroundColor: ["#f43f5e", "#8b5cf6"],
+                borderWidth: 2,
+                borderColor: isDark ? "#0f172a" : "#ffffff",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "right",
+                labels: {
+                  color: isDark ? "#cbd5e1" : "#475569",
+                  usePointStyle: true,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // --- MODALS & EDIT LOGIC ---
+      window.openModal = (type, mode = "add", data = null) => {
+        $("modal-overlay").classList.remove("hidden");
+        $("modal-container").classList.remove("hidden");
+
+        if (type === "modal-meal" && mode === "add") {
+          const m = $("large-modal-content");
+          m.classList.remove("hidden");
+          setTimeout(() => m.classList.remove("scale-95", "opacity-0"), 10);
+          const d = new Date().toISOString().slice(0, 10);
+          $("meal-date-input").value = d;
+          renderMealRows(d);
+          $("meal-date-input").onchange = (e) => renderMealRows(e.target.value);
+        } else {
+          const m = $("active-modal-content");
+          m.classList.remove("hidden");
+          setTimeout(() => m.classList.remove("scale-95", "opacity-0"), 10);
+
+          // Generate Form Content based on Type and Mode
+          if (type === "modal-member") m.innerHTML = getMemberForm(mode, data);
+          if (type === "modal-expense")
+            m.innerHTML = getExpenseForm(mode, data);
+          if (type === "modal-deposit")
+            m.innerHTML = getDepositForm(mode, data);
+          if (type === "modal-fixed") m.innerHTML = getFixedForm(mode, data);
+          if (type === "modal-meal-single")
+            m.innerHTML = getSingleMealForm(mode, data);
+
+          updateLanguage();
+
+          // Attach listeners
+          m.querySelector("form").onsubmit = handleFormSubmit;
+          m.querySelector(".close-modal-btn").onclick = window.closeModals;
+        }
+      };
+
+      // Edit Trigger
+      window.editItem = (coll, id) => {
+        let data = null;
+        if (coll === "members") data = state.members.find((x) => x.id === id);
+        else if (coll === "expenses")
+          data = state.expenses.find((x) => x.id === id);
+        else if (coll === "deposits")
+          data = state.deposits.find((x) => x.id === id);
+        else if (coll === "fixedCosts")
+          data = state.fixedCosts.find((x) => x.id === id);
+        else if (coll === "meals") data = state.meals.find((x) => x.id === id);
+
+        if (data) {
+          const modalMap = {
+            members: "modal-member",
+            expenses: "modal-expense",
+            deposits: "modal-deposit",
+            fixedCosts: "modal-fixed",
+            meals: "modal-meal-single",
+          };
+          openModal(modalMap[coll], "edit", data);
+        }
+      };
+
+      function renderMealRows(date) {
+        const tbody = $("meal-entry-rows");
+        tbody.innerHTML = state.members
+          .map(
+            (m) => `
+            <tr class="group">
+               <td class="font-medium text-slate-700 dark:text-slate-300">${m.name}</td>
+               <td class="text-center"><input type="number" step="0.5" value="0" class="w-16 p-2 bg-slate-100 dark:bg-dark-800 rounded-lg text-center text-sm focus:ring-2 focus:ring-primary-500 meal-input-bk" data-uid="${m.id}"></td>
+               <td class="text-center"><input type="number" step="0.5" value="1" class="w-16 p-2 bg-slate-100 dark:bg-dark-800 rounded-lg text-center text-sm focus:ring-2 focus:ring-primary-500 meal-input-ln" data-uid="${m.id}"></td>
+               <td class="text-center"><input type="number" step="0.5" value="1" class="w-16 p-2 bg-slate-100 dark:bg-dark-800 rounded-lg text-center text-sm focus:ring-2 focus:ring-primary-500 meal-input-dn" data-uid="${m.id}"></td>
+            </tr>`
+          )
+          .join("");
+      }
+
+      $("save-all-meals").onclick = async () => {
+        const date = $("meal-date-input").value;
+        const batch = writeBatch(db);
+        const rows = document.querySelectorAll("#meal-entry-rows tr");
+        let count = 0;
+        const hid = currentHostel.id;
+
+        rows.forEach((r) => {
+          const uid = r.querySelector(".meal-input-bk").dataset.uid;
+          const bk = r.querySelector(".meal-input-bk").value;
+          const ln = r.querySelector(".meal-input-ln").value;
+          const dn = r.querySelector(".meal-input-dn").value;
+          if (bk > 0 || ln > 0 || dn > 0) {
+            const ref = doc(collection(db, `hostels/${hid}/meals`));
+            batch.set(ref, {
+              date,
+              month: date.slice(0, 7),
+              memberId: uid,
+              bk,
+              ln,
+              dn,
+            });
+            count++;
+          }
+        });
+        if (count > 0) await batch.commit();
+        window.closeModals();
+        showToast("toast_success", "success_update");
+      };
+
+      // Form Template Generators
+      const formHeader = (titleKey) => `
+         <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white" data-i18n="${titleKey}"></h3>
+            <button class="close-modal-btn text-slate-400 hover:text-slate-600"><i data-lucide="x"></i></button>
+         </div>`;
+
+      const getMemberForm = (mode, data) => `
+         ${formHeader(
+           mode === "edit" ? "modal_edit_member" : "modal_add_member"
+         )}
+         <form data-coll="members" data-mode="${mode}" ${
+        mode === "edit" ? `data-id="${data.id}"` : ""
+      } class="space-y-4">
+            <input name="name" value="${
+              data?.name || ""
+            }" data-i18n="th_name" placeholder="Name" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <input name="mobile" value="${
+              data?.mobile || ""
+            }" data-i18n="th_mobile" placeholder="Phone" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <input name="room" value="${
+              data?.room || ""
+            }" data-i18n="th_room" placeholder="Room No" class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <button class="w-full py-3 bg-primary-600 text-white rounded-xl font-bold" data-i18n="${
+              mode === "edit" ? "update_member" : "save_member"
+            }"></button>
+         </form>`;
+
+      const getExpenseForm = (mode, data) => `
+         ${formHeader(
+           mode === "edit" ? "modal_edit_expense" : "modal_add_expense"
+         )}
+         <form data-coll="expenses" data-mode="${mode}" ${
+        mode === "edit" ? `data-id="${data.id}"` : ""
+      } class="space-y-4">
+            <input type="date" name="date" value="${
+              data?.date || ""
+            }" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <select name="shopperId" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+               <option value="" data-i18n="select_shopper">Select Shopper</option>
+               ${state.members
+                 .map(
+                   (m) =>
+                     `<option value="${m.id}" ${
+                       data?.shopperId === m.id ? "selected" : ""
+                     }>${m.name}</option>`
+                 )
+                 .join("")}
+            </select>
+            <input name="desc" value="${
+              data?.desc || ""
+            }" data-i18n="th_description" placeholder="Items" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <input type="number" name="amount" value="${
+              data?.amount || ""
+            }" data-i18n="th_amount" placeholder="Amount" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <button class="w-full py-3 bg-rose-600 text-white rounded-xl font-bold" data-i18n="${
+              mode === "edit" ? "update_expense" : "add_expense"
+            }"></button>
+         </form>`;
+
+      const getDepositForm = (mode, data) => `
+         ${formHeader(
+           mode === "edit" ? "modal_edit_deposit" : "modal_add_deposit"
+         )}
+         <form data-coll="deposits" data-mode="${mode}" ${
+        mode === "edit" ? `data-id="${data.id}"` : ""
+      } class="space-y-4">
+            <input type="date" name="date" value="${
+              data?.date || ""
+            }" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <select name="memberId" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+               <option value="" data-i18n="select_member">Select Member</option>
+               ${state.members
+                 .map(
+                   (m) =>
+                     `<option value="${m.id}" ${
+                       data?.memberId === m.id ? "selected" : ""
+                     }>${m.name}</option>`
+                 )
+                 .join("")}
+            </select>
+            <input type="number" name="amount" value="${
+              data?.amount || ""
+            }" data-i18n="th_amount" placeholder="Amount" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <button class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold" data-i18n="${
+              mode === "edit" ? "update_deposit" : "add_deposit"
+            }"></button>
+         </form>`;
+
+      const getFixedForm = (mode, data) => `
+         ${formHeader(mode === "edit" ? "modal_edit_bill" : "modal_add_bill")}
+         <form data-coll="fixedCosts" data-mode="${mode}" ${
+        mode === "edit" ? `data-id="${data.id}"` : ""
+      } class="space-y-4">
+            <input type="date" name="date" value="${
+              data?.date || ""
+            }" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <input name="desc" value="${
+              data?.desc || ""
+            }" data-i18n="th_description" placeholder="Description" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <input type="number" name="amount" value="${
+              data?.amount || ""
+            }" data-i18n="th_amount" placeholder="Amount" required class="w-full px-4 py-3 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary-500">
+            <button class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold" data-i18n="${
+              mode === "edit" ? "update_bill" : "add_bill"
+            }"></button>
+         </form>`;
+
+      const getSingleMealForm = (mode, data) => {
+        const mem =
+          state.members.find((m) => m.id === data.memberId)?.name || "Unknown";
+        return `
+         ${formHeader("modal_edit_meal")}
+         <form data-coll="meals" data-mode="${mode}" data-id="${
+          data.id
+        }" class="space-y-4">
+            <div class="bg-slate-100 dark:bg-dark-800 p-3 rounded-lg text-sm text-slate-500">
+               Editing <strong>${mem}</strong> on <strong>${formatDate(
+          data.date
+        )}</strong>
+            </div>
+            <input type="hidden" name="date" value="${data.date}">
+            <input type="hidden" name="memberId" value="${data.memberId}">
+            <div class="grid grid-cols-3 gap-4">
+               <div>
+                  <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Breakfast</label>
+                  <input type="number" step="0.5" name="bk" value="${
+                    data?.bk || 0
+                  }" class="w-full p-2 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center font-bold">
+               </div>
+               <div>
+                  <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Lunch</label>
+                  <input type="number" step="0.5" name="ln" value="${
+                    data?.ln || 0
+                  }" class="w-full p-2 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center font-bold">
+               </div>
+               <div>
+                  <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Dinner</label>
+                  <input type="number" step="0.5" name="dn" value="${
+                    data?.dn || 0
+                  }" class="w-full p-2 bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center font-bold">
+               </div>
+            </div>
+            <button class="w-full py-3 bg-primary-600 text-white rounded-xl font-bold" data-i18n="update_meal">Update Meal</button>
+         </form>`;
+      };
+
+      async function handleFormSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const coll = form.dataset.coll;
+        const mode = form.dataset.mode;
+        const fd = new FormData(form);
+        const data = Object.fromEntries(fd.entries());
+        if (data.date) data.month = data.date.slice(0, 7);
+
+        const hid = currentHostel.id; // Use Hostel ID for data storage
+
+        if (mode === "edit") {
+          const docId = form.dataset.id;
+          await updateDoc(doc(db, `hostels/${hid}/${coll}`, docId), data);
+          showToast("toast_success", "success_update");
+        } else {
+          await addDoc(collection(db, `hostels/${hid}/${coll}`), data);
+          showToast("toast_success", "success_add");
+        }
+        window.closeModals();
+      }
+
+      window.closeModals = () => {
+        $("modal-overlay").classList.add("hidden");
+        $("active-modal-content").classList.add("scale-95", "opacity-0");
+        $("large-modal-content").classList.add("scale-95", "opacity-0");
+        setTimeout(() => {
+          $("modal-container").classList.add("hidden");
+          $("active-modal-content").classList.add("hidden");
+          $("large-modal-content").classList.add("hidden");
+        }, 300);
+      };
+
+      document
+        .querySelectorAll(".close-modal")
+        .forEach((b) => (b.onclick = window.closeModals));
+      $("open-sidebar").onclick = () =>
+        $("sidebar").classList.remove("-translate-x-full");
+      $("close-sidebar").onclick = () =>
+        $("sidebar").classList.add("-translate-x-full");
+
+      window.delItem = async (coll, id) => {
+        if (confirm(t("confirm_delete"))) {
+          const hid = currentHostel.id;
+          await deleteDoc(doc(db, `hostels/${hid}/${coll}`, id));
+          showToast("toast_deleted", "success_delete");
+        }
+      };
+
+      $("search-input").onkeyup = (e) => {
+        const val = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll("#table-body tr");
+        rows.forEach((r) => {
+          r.style.display = r.innerText.toLowerCase().includes(val)
+            ? "table-row"
+            : "none";
+        });
+      };
+    </script>
+  </body>
+</html>
