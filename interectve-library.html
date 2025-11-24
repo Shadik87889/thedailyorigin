@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Infinite 3D Library - Exploration Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden; /* Lock scrollbars for game feel */
+        background-color: #050505;
+        color: white;
+        font-family: "Times New Roman", serif;
+        user-select: none;
+      }
+
+      #canvas-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      #ui-layer {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        text-align: center;
+        pointer-events: none;
+        transition: opacity 0.5s;
+      }
+
+      .hud-text {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 15px 30px;
+        border-radius: 30px;
+        backdrop-filter: blur(5px);
+        color: #d4af37;
+        font-size: 14px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .key {
+        display: inline-block;
+        border: 1px solid #d4af37;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin: 0 2px;
+        font-weight: bold;
+        color: white;
+      }
+
+      #blocker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 20;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        cursor: pointer;
+      }
+
+      #instructions {
+        text-align: center;
+        color: #d4af37;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #aaa;
+      }
+
+      .vignette {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0 0 200px rgba(0, 0, 0, 1);
+        z-index: 5;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Cinematic Vignette -->
+    <div class="vignette"></div>
+
+    <!-- Start Screen / Blocker -->
+    <div id="blocker">
+      <div id="instructions">
+        <h1>The Grand Athenaeum</h1>
+        <p>Click anywhere to Enter</p>
+        <br />
+        <p style="font-size: 0.9rem; opacity: 0.7;">
+          (Mouse to Look, Scroll/WASD to Move)
+        </p>
+      </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="ui-layer">
+      <div class="hud-text">
+        <span class="key">W</span> <span class="key">A</span>
+        <span class="key">S</span> <span class="key">D</span> or
+        <span class="key">Scroll</span> to Move &nbsp;|&nbsp; Mouse to Look
+      </div>
+    </div>
+
+    <script>
+      // --- 1. Engine Setup ---
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x050505);
+      // Heavy fog for atmosphere
+      scene.fog = new THREE.FogExp2(0x050505, 0.02);
+
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      document
+        .getElementById("canvas-container")
+        .appendChild(renderer.domElement);
+
+      // --- 2. Custom First-Person Movement Controller ---
+      // We build this manually to ensure "Video Smoothness" (inertia)
+      const player = {
+        position: new THREE.Vector3(0, 2, 30), // Start outside
+        velocity: new THREE.Vector3(0, 0, 0),
+        rotation: new THREE.Euler(0, 0, 0, "YXZ"),
+        speed: 0,
+        turnSpeed: 0.002,
+        moveSpeed: 0.5,
+        friction: 0.92, // High friction = smooth stop, Low = slide on ice
+      };
+
+      // Input State
+      const keys = { w: false, a: false, s: false, d: false, shift: false };
+      let isLocked = false;
+
+      // Mouse Look
+      document.body.requestPointerLock =
+        document.body.requestPointerLock || document.body.mozRequestPointerLock;
+      const blocker = document.getElementById("blocker");
+
+      blocker.addEventListener("click", () => {
+        document.body.requestPointerLock();
+      });
+
+      document.addEventListener("pointerlockchange", () => {
+        if (document.pointerLockElement === document.body) {
+          isLocked = true;
+          blocker.style.display = "none";
+        } else {
+          isLocked = false;
+          blocker.style.display = "flex";
+        }
+      });
+
+      document.addEventListener("mousemove", (event) => {
+        if (!isLocked) return;
+        // Yaw (Left/Right)
+        player.rotation.y -= event.movementX * player.turnSpeed;
+        // Pitch (Up/Down) - limit to avoid flipping
+        player.rotation.x -= event.movementY * player.turnSpeed;
+        player.rotation.x = Math.max(
+          -Math.PI / 3,
+          Math.min(Math.PI / 3, player.rotation.x)
+        );
+      });
+
+      // Keyboard Movement
+      document.addEventListener("keydown", (e) => {
+        switch (e.key.toLowerCase()) {
+          case "w":
+            keys.w = true;
+            break;
+          case "a":
+            keys.a = true;
+            break;
+          case "s":
+            keys.s = true;
+            break;
+          case "d":
+            keys.d = true;
+            break;
+          case "shift":
+            keys.shift = true;
+            break;
+        }
+      });
+      document.addEventListener("keyup", (e) => {
+        switch (e.key.toLowerCase()) {
+          case "w":
+            keys.w = false;
+            break;
+          case "a":
+            keys.a = false;
+            break;
+          case "s":
+            keys.s = false;
+            break;
+          case "d":
+            keys.d = false;
+            break;
+          case "shift":
+            keys.shift = false;
+            break;
+        }
+      });
+
+      // Scroll Wheel Movement (Alternative to W/S)
+      document.addEventListener("wheel", (e) => {
+        // Scroll down (positive delta) moves forward into screen
+        // Scroll up (negative delta) moves backward
+        const direction = e.deltaY > 0 ? 1 : -1;
+        // Add a burst of speed
+        const boost = 0.5;
+
+        const forward = new THREE.Vector3(0, 0, -1).applyEuler(player.rotation);
+        player.velocity.add(forward.multiplyScalar(direction * boost));
+      });
+
+      // --- 3. World Generation ---
+
+      // Textures/Materials
+      const marbleMat = new THREE.MeshStandardMaterial({
+        color: 0x1a1a1a,
+        roughness: 0.2,
+        metalness: 0.6,
+      });
+      const woodMat = new THREE.MeshStandardMaterial({
+        color: 0x3d2b1f,
+        roughness: 0.8,
+      });
+      const glowMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+
+      // Floor
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(100, 1000),
+        marbleMat
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // Ceiling
+      const ceiling = new THREE.Mesh(
+        new THREE.PlaneGeometry(100, 1000),
+        new THREE.MeshStandardMaterial({ color: 0x0a0a0a })
+      );
+      ceiling.rotation.x = Math.PI / 2;
+      ceiling.position.y = 15;
+      scene.add(ceiling);
+
+      // Entrance Pillars (The "Building" exterior)
+      const pillarGeo = new THREE.BoxGeometry(2, 15, 2);
+      for (let i = 0; i < 4; i++) {
+        const leftPillar = new THREE.Mesh(pillarGeo, marbleMat);
+        leftPillar.position.set(-8, 7.5, 20 - i * 5);
+        leftPillar.castShadow = true;
+        leftPillar.receiveShadow = true;
+        scene.add(leftPillar);
+
+        const rightPillar = new THREE.Mesh(pillarGeo, marbleMat);
+        rightPillar.position.set(8, 7.5, 20 - i * 5);
+        rightPillar.castShadow = true;
+        rightPillar.receiveShadow = true;
+        scene.add(rightPillar);
+      }
+
+      // The Massive Doorway (Frame)
+      const lintel = new THREE.Mesh(new THREE.BoxGeometry(20, 2, 4), marbleMat);
+      lintel.position.set(0, 14, 5);
+      scene.add(lintel);
+
+      // Library Shelves Logic
+      function createBook() {
+        const width = 0.15 + Math.random() * 0.2;
+        const height = 0.8 + Math.random() * 0.4;
+        const depth = 0.6 + Math.random() * 0.1;
+        const geometry = new THREE.BoxGeometry(width, height, depth);
+        const colors = [
+          0x5c2f2f,
+          0x2f5c3b,
+          0x2f3b5c,
+          0x8f6a3d,
+          0x4a3b2a,
+          0x111111,
+        ];
+        const material = new THREE.MeshStandardMaterial({
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+        const book = new THREE.Mesh(geometry, material);
+        book.castShadow = true;
+        return book;
+      }
+
+      function createShelf(x, z) {
+        const group = new THREE.Group();
+        // Uprights
+        const uprightGeo = new THREE.BoxGeometry(0.4, 12, 3);
+        const left = new THREE.Mesh(uprightGeo, woodMat);
+        left.position.set(-2, 6, 0);
+        const right = new THREE.Mesh(uprightGeo, woodMat);
+        right.position.set(2, 6, 0);
+        group.add(left, right);
+
+        // Shelves & Books
+        for (let i = 0; i < 6; i++) {
+          const y = 1 + i * 2;
+          const plank = new THREE.Mesh(
+            new THREE.BoxGeometry(4.4, 0.2, 3),
+            woodMat
+          );
+          plank.position.set(0, y, 0);
+          plank.castShadow = true;
+          group.add(plank);
+
+          // Add books
+          let cx = -1.8;
+          while (cx < 1.8) {
+            if (Math.random() > 0.15) {
+              const book = createBook();
+              book.position.set(
+                cx + Math.random() * 0.1,
+                y + 0.5 + Math.random() * 0.1,
+                Math.random() * 0.5 - 0.25
+              );
+              book.rotation.y = (Math.random() - 0.5) * 0.2;
+              book.rotation.z = (Math.random() - 0.5) * 0.1;
+              group.add(book);
+              cx += book.geometry.parameters.width;
+            } else {
+              cx += 0.2; // gap
+            }
+          }
+        }
+        group.position.set(x, 0, z);
+        return group;
+      }
+
+      // Generate the Endless Library
+      for (let z = 0; z > -400; z -= 12) {
+        // Main Aisle Shelves
+        scene.add(createShelf(-6, z));
+        scene.add(createShelf(6, z));
+
+        // Side Aisle Shelves (Farther out)
+        scene.add(createShelf(-15, z));
+        scene.add(createShelf(15, z));
+
+        // Hanging Lights
+        if (z % 24 === 0) {
+          const lamp = new THREE.PointLight(0xffaa55, 0.8, 20);
+          lamp.position.set(0, 10, z);
+          scene.add(lamp);
+
+          // Lamp fixture visuals
+          const fixture = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.2, 0.2, 2),
+            marbleMat
+          );
+          fixture.position.set(0, 14, z);
+          scene.add(fixture);
+
+          const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.5), glowMat);
+          bulb.position.set(0, 13, z);
+          scene.add(bulb);
+        }
+      }
+
+      // --- 4. Lights ---
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
+      scene.add(ambientLight);
+
+      // Flashlight attached to player
+      const playerLight = new THREE.SpotLight(
+        0xffffff,
+        1,
+        60,
+        Math.PI / 4,
+        0.5,
+        1
+      );
+      playerLight.position.set(0, 2, 0);
+      playerLight.target.position.set(0, 2, -10);
+      scene.add(playerLight);
+      scene.add(playerLight.target);
+
+      // --- 5. Game Loop ---
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        const delta = clock.getDelta();
+
+        // 1. Calculate Acceleration based on Input
+        const moveAccel = keys.shift ? 1.5 : 0.8;
+        const inputVector = new THREE.Vector3(0, 0, 0);
+
+        if (keys.w) inputVector.z -= moveAccel;
+        if (keys.s) inputVector.z += moveAccel;
+        if (keys.a) inputVector.x -= moveAccel;
+        if (keys.d) inputVector.x += moveAccel;
+
+        // 2. Transform input based on camera rotation (so "Forward" is where you look)
+        inputVector.applyEuler(new THREE.Euler(0, player.rotation.y, 0));
+
+        // 3. Apply Acceleration to Velocity
+        player.velocity.add(inputVector.multiplyScalar(delta * 50));
+
+        // 4. Apply Friction (Damping) - This creates the smooth video feel
+        player.velocity.multiplyScalar(player.friction);
+
+        // 5. Update Position
+        // Cheap collision detection: Don't let them walk through the floor
+        player.position.add(player.velocity.clone().multiplyScalar(delta));
+
+        // Boundary check (Simple "walls" invisible) - keep them in the library bounds roughly
+        if (player.position.x > 18) player.position.x = 18;
+        if (player.position.x < -18) player.position.x = -18;
+        if (player.position.y < 2) player.position.y = 2; // Floor collision
+        if (player.position.y > 12) player.position.y = 12; // Ceiling collision
+
+        // 6. Update Camera visual
+        camera.position.copy(player.position);
+        // Add a little head bob when moving
+        if (player.velocity.length() > 0.5) {
+          camera.position.y += Math.sin(clock.getElapsedTime() * 10) * 0.05;
+        }
+
+        camera.rotation.copy(player.rotation);
+
+        // Update Flashlight
+        playerLight.position.copy(camera.position);
+        // Light points where camera points
+        const lookDir = new THREE.Vector3(0, 0, -1).applyEuler(player.rotation);
+        playerLight.target.position.copy(camera.position).add(lookDir);
+
+        renderer.render(scene, camera);
+      }
+
+      // Handle Resize
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animate();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICE | Digital Frontier</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;800&family=Syncopate:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- CORE VARIABLES --- */
+      :root {
+        --bg: #030303;
+        --text: #ffffff;
+        --accent: #6366f1;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        overflow-x: hidden;
+        font-family: "Manrope", sans-serif;
+        cursor: none; /* Custom cursor only */
+      }
+
+      /* --- TYPOGRAPHY --- */
+      .font-sync {
+        font-family: "Syncopate", sans-serif;
+      }
+      .text-giant {
+        font-size: clamp(3rem, 15vw, 20rem);
+        line-height: 0.8;
+        letter-spacing: -0.05em;
+      }
+
+      /* --- CANVAS & OVERLAYS --- */
+      #webgl-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* Film Grain Overlay */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9000;
+        opacity: 0.07;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* --- CUSTOM CURSOR --- */
+      .cursor-dot,
+      .cursor-circle {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+      }
+      .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background: white;
+      }
+      .cursor-circle {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transition: width 0.3s, height 0.3s, background-color 0.3s;
+      }
+      .cursor-circle.hovered {
+        width: 80px;
+        height: 80px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: transparent;
+        backdrop-filter: blur(2px);
+      }
+
+      /* --- PRELOADER --- */
+      #preloader {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .loader-text {
+        overflow: hidden;
+        display: flex;
+      }
+      .loader-char {
+        transform: translateY(100%);
+        display: inline-block;
+      }
+
+      /* --- UTILS --- */
+      .skew-on-scroll {
+        will-change: transform;
+      }
+      .blend-diff {
+        mix-blend-mode: difference;
+      }
+
+      /* Image Reveal Mask */
+      .reveal-img {
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 1s cubic-bezier(0.77, 0, 0.175, 1);
+      }
+      .reveal-img.active {
+        clip-path: inset(0 0 0 0);
+      }
+
+      /* Mobile Menu */
+      #mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-white selection:text-black">
+    <!-- Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="loader-text font-sync text-6xl font-bold text-white mb-4">
+        <span class="loader-char">I</span>
+        <span class="loader-char">C</span>
+        <span class="loader-char">E</span>
+        <span class="loader-char">.</span>
+      </div>
+      <div class="w-48 h-1 bg-gray-900 overflow-hidden">
+        <div id="progress-bar" class="h-full bg-white w-0"></div>
+      </div>
+    </div>
+
+    <!-- 3D Canvas -->
+    <div id="webgl-container"></div>
+
+    <!-- UI Layer -->
+    <nav
+      class="fixed top-0 left-0 w-full p-6 md:p-12 flex justify-between items-center z-50 text-white mix-blend-difference"
+    >
+      <a href="#" class="font-sync text-xl tracking-widest hover-trigger"
+        >ICE.STUDIO</a
+      >
+
+      <div
+        class="hidden md:flex gap-12 font-manrope text-sm font-bold tracking-widest uppercase"
+      >
+        <a
+          href="#work"
+          class="hover:text-gray-400 transition-colors hover-trigger"
+          >Index</a
+        >
+        <a
+          href="#about"
+          class="hover:text-gray-400 transition-colors hover-trigger"
+          >Agency</a
+        >
+        <a
+          href="#contact"
+          class="hover:text-gray-400 transition-colors hover-trigger"
+          >Contact</a
+        >
+      </div>
+
+      <button id="menu-btn" class="md:hidden font-sync text-sm hover-trigger">
+        MENU
+      </button>
+    </nav>
+
+    <!-- Main Scroll Container -->
+    <main id="main-content" class="relative z-10">
+      <!-- HERO -->
+      <section
+        class="h-screen w-full flex flex-col justify-center px-6 md:px-12 pt-20"
+      >
+        <div class="skew-on-scroll">
+          <h1
+            class="font-sync text-giant text-white uppercase leading-none overflow-hidden"
+          >
+            <div class="hero-line translate-y-[120%]">Digital</div>
+          </h1>
+          <h1
+            class="font-sync text-giant text-transparent outline-text uppercase leading-none overflow-hidden self-end text-right"
+            style="-webkit-text-stroke: 2px white;"
+          >
+            <div class="hero-line translate-y-[120%]">Alchemy</div>
+          </h1>
+        </div>
+
+        <div
+          class="flex justify-between items-end mt-12 md:mt-24 border-t border-white/20 pt-6"
+        >
+          <p
+            class="max-w-xs text-xs md:text-sm font-manrope text-gray-400 uppercase tracking-wide hero-fade opacity-0"
+          >
+            We turn code into liquid experiences. <br />Based in Tokyo & Future.
+          </p>
+          <div
+            class="hero-fade opacity-0 animate-pulse text-xs md:text-sm font-mono"
+          >
+            (SCROLL TO EXPLORE)
+          </div>
+        </div>
+      </section>
+
+      <!-- INTRO -->
+      <section
+        id="about"
+        class="min-h-[80vh] flex items-center justify-center px-6 md:px-24 py-24"
+      >
+        <p
+          class="text-3xl md:text-6xl font-manrope font-light text-center leading-tight max-w-5xl text-gray-200"
+        >
+          <span
+            class="highlight-text opacity-20 transition-opacity duration-500"
+            >We don't build websites.</span
+          >
+          <span
+            class="highlight-text opacity-20 transition-opacity duration-500"
+            >We construct</span
+          >
+          <span
+            class="font-sync font-bold text-white highlight-text opacity-20 transition-opacity duration-500"
+            >digital monuments</span
+          >
+          <span
+            class="highlight-text opacity-20 transition-opacity duration-500"
+            >that defy gravity and logic.</span
+          >
+        </p>
+      </section>
+
+      <!-- WORK -->
+      <section id="work" class="py-24 px-4 md:px-12">
+        <div
+          class="flex items-baseline justify-between mb-24 border-b border-white/20 pb-4"
+        >
+          <h2 class="font-sync text-4xl md:text-6xl">Selected Works</h2>
+          <span class="font-mono text-sm">(2023 - 2025)</span>
+        </div>
+
+        <!-- Project 1 -->
+        <div
+          class="project-card relative w-full md:w-[80vw] mx-auto mb-48 group cursor-pointer hover-trigger"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-end mb-4 mix-blend-difference text-white relative z-20"
+          >
+            <h3
+              class="font-sync text-4xl md:text-8xl transition-transform duration-500 group-hover:translate-x-4"
+            >
+              Aether
+            </h3>
+            <span class="font-mono text-xs md:text-base"
+              >WEBGL / ECOMMERCE</span
+            >
+          </div>
+
+          <div
+            class="relative w-full aspect-[16/9] overflow-hidden bg-gray-900"
+          >
+            <div class="reveal-img absolute inset-0 w-full h-full">
+              <!-- Placeholder for high-end project image -->
+              <img
+                src="https://images.unsplash.com/photo-1492551557933-34265f7af79e?q=80&w=2500&auto=format&fit=crop"
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                alt="Project 1"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-blue-900/20 mix-blend-overlay"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div
+          class="project-card relative w-full md:w-[80vw] mx-auto mb-48 group cursor-pointer hover-trigger ml-auto"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-end mb-4 mix-blend-difference text-white relative z-20"
+          >
+            <h3
+              class="font-sync text-4xl md:text-8xl transition-transform duration-500 group-hover:translate-x-4"
+            >
+              Vortex
+            </h3>
+            <span class="font-mono text-xs md:text-base">BRANDING / 3D</span>
+          </div>
+
+          <div
+            class="relative w-full aspect-[16/9] overflow-hidden bg-gray-900"
+          >
+            <div class="reveal-img absolute inset-0 w-full h-full">
+              <img
+                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2500&auto=format&fit=crop"
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                alt="Project 2"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-purple-900/20 mix-blend-overlay"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- OUTRO / CONTACT -->
+      <section
+        id="contact"
+        class="h-screen flex flex-col justify-center items-center text-center relative overflow-hidden"
+      >
+        <h2
+          class="font-sync text-[12vw] leading-none mix-blend-overlay hover:text-white transition-colors duration-300 cursor-pointer hover-trigger"
+        >
+          LET'S<br />MELT
+        </h2>
+        <div
+          class="mt-12 flex gap-8 font-manrope text-sm uppercase tracking-widest"
+        >
+          <a
+            href="#"
+            class="border-b border-transparent hover:border-white pb-1 transition-all hover-trigger"
+            >Email</a
+          >
+          <a
+            href="#"
+            class="border-b border-transparent hover:border-white pb-1 transition-all hover-trigger"
+            >Instagram</a
+          >
+          <a
+            href="#"
+            class="border-b border-transparent hover:border-white pb-1 transition-all hover-trigger"
+            >Twitter</a
+          >
+        </div>
+
+        <div class="absolute bottom-10 text-xs font-mono text-gray-600">
+          SYSTEM STATUS: OPERATIONAL <br />
+          © 2025 ICE INC.
+        </div>
+      </section>
+    </main>
+
+    <!-- LIBS -->
+    <!-- Three.js + PostProcessing -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <!-- EXPERIENCE LOGIC -->
+    <script type="module">
+      import * as THREE from "three";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+      // --- 1. PRELOADER ANIMATION ---
+      const tl = gsap.timeline();
+      const progressBar = document.getElementById("progress-bar");
+
+      // Mock loading
+      gsap.to(progressBar, {
+        width: "100%",
+        duration: 2,
+        ease: "power2.inOut",
+        onComplete: () => {
+          // Reveal sequence
+          gsap.to("#preloader", {
+            yPercent: -100,
+            duration: 1.2,
+            ease: "power4.inOut",
+          });
+
+          // Hero Text Reveal
+          gsap.to(".hero-line", {
+            y: "0%",
+            duration: 1.5,
+            stagger: 0.1,
+            delay: 0.5,
+            ease: "power3.out",
+          });
+
+          gsap.to(".hero-fade", {
+            opacity: 1,
+            duration: 1,
+            delay: 1,
+          });
+        },
+      });
+
+      // --- 2. SETUP LENIS (SMOOTH SCROLL) ---
+      const lenis = new Lenis({
+        lerp: 0.08, // Smoother, heavier feel
+        smoothWheel: true,
+      });
+
+      // Sync ScrollTrigger
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+
+      // Skew Effect on Scroll
+      const skewElems = document.querySelectorAll(".skew-on-scroll");
+      lenis.on("scroll", ({ velocity }) => {
+        skewElems.forEach((el) => {
+          const skew = velocity * 0.15;
+          gsap.to(el, {
+            skewY: skew,
+            duration: 0.1,
+            ease: "none",
+          });
+        });
+      });
+
+      // --- 3. THE "POWERFUL" 3D SCENE ---
+      const container = document.getElementById("webgl-container");
+      const scene = new THREE.Scene();
+      // Atmospheric Fog
+      scene.fog = new THREE.FogExp2(0x000000, 0.02);
+
+      const camera = new THREE.PerspectiveCamera(
+        35,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        100
+      );
+      camera.position.set(0, 0, 8);
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        alpha: true,
+      }); // Antialias off for post-proc performance
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.CineonToneMapping;
+      container.appendChild(renderer.domElement);
+
+      // -- POST PROCESSING (BLOOM) --
+      const renderScene = new RenderPass(scene, camera);
+
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        1.5,
+        0.4,
+        0.85
+      );
+      bloomPass.threshold = 0.2; // Start blooming at this brightness
+      bloomPass.strength = 1.2; // Intensity
+      bloomPass.radius = 0.5; // Spread
+
+      const outputPass = new OutputPass();
+
+      const composer = new EffectComposer(renderer);
+      composer.addPass(renderScene);
+      composer.addPass(bloomPass);
+      composer.addPass(outputPass);
+
+      // -- LIGHTING --
+      // A complex lighting setup for good reflections
+      const ambientLight = new THREE.AmbientLight(0x404040, 2);
+      scene.add(ambientLight);
+
+      // Main colored lights
+      const light1 = new THREE.PointLight(0x6366f1, 5, 20); // Indigo
+      light1.position.set(5, 5, 5);
+      scene.add(light1);
+
+      const light2 = new THREE.PointLight(0xff0080, 5, 20); // Hot Pink
+      light2.position.set(-5, -5, 5);
+      scene.add(light2);
+
+      const light3 = new THREE.DirectionalLight(0xffffff, 4); // White highlight
+      light3.position.set(0, 10, 0);
+      scene.add(light3);
+
+      // -- THE OBJECT: LIQUID SPHERE --
+      // High poly sphere for smooth vertex displacement
+      const geometry = new THREE.SphereGeometry(1.8, 128, 128);
+
+      // Custom Physical Material
+      const material = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0.1,
+        roughness: 0.05,
+        transmission: 0.95, // Glass/Water
+        thickness: 2.0,
+        ior: 1.7, // High refraction
+        reflectivity: 0.8,
+        iridescence: 1,
+        iridescenceIOR: 1.3,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0,
+        side: THREE.DoubleSide,
+      });
+
+      const sphere = new THREE.Mesh(geometry, material);
+      scene.add(sphere);
+
+      // Add an inner wireframe sphere for "Tech" depth
+      const wireGeo = new THREE.IcosahedronGeometry(1.4, 2);
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.05,
+      });
+      const wireSphere = new THREE.Mesh(wireGeo, wireMat);
+      sphere.add(wireSphere);
+
+      // -- MOUSE INTERACTION --
+      const mouse = new THREE.Vector2();
+      const targetMouse = new THREE.Vector2();
+
+      window.addEventListener("mousemove", (e) => {
+        targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      // -- ANIMATION LOOP --
+      const clock = new THREE.Clock();
+      // Simplex-like noise helper function (simplified for single file)
+      function noise(x, y, z) {
+        return Math.sin(x) * Math.sin(y) * Math.sin(z);
+      }
+
+      // Store original positions
+      const originalPositions = geometry.attributes.position.array.slice();
+
+      function animate() {
+        const time = clock.getElapsedTime();
+
+        // Smooth mouse follow
+        mouse.x += (targetMouse.x - mouse.x) * 0.05;
+        mouse.y += (targetMouse.y - mouse.y) * 0.05;
+
+        // Rotate lights for dynamic shadows/reflections
+        light1.position.x = Math.sin(time * 0.5) * 6;
+        light1.position.z = Math.cos(time * 0.5) * 6;
+
+        light2.position.x = Math.sin(time * 0.3 + Math.PI) * 6;
+        light2.position.y = Math.cos(time * 0.3) * 6;
+
+        // Rotate Sphere
+        sphere.rotation.y = time * 0.1;
+        sphere.rotation.z = time * 0.05 + mouse.x * 0.2;
+
+        // VERTEX DISPLACEMENT (The "Liquid" Effect)
+        // We manipulate the position attribute directly
+        const positions = geometry.attributes.position.array;
+
+        for (let i = 0; i < positions.length; i += 3) {
+          // Get original coords
+          const ox = originalPositions[i];
+          const oy = originalPositions[i + 1];
+          const oz = originalPositions[i + 2];
+
+          // Calculate noise frequency/amplitude
+          // Combining multiple waves
+          const wave1 = 0.5 * Math.sin(ox * 2 + time);
+          const wave2 = 0.3 * Math.cos(oy * 1.5 + time * 1.5);
+          const wave3 = 0.2 * Math.sin(oz * 3 + time * 0.5);
+
+          const displacement = 1 + (wave1 + wave2 + wave3) * 0.15; // 0.15 is intensity
+
+          positions[i] = ox * displacement;
+          positions[i + 1] = oy * displacement;
+          positions[i + 2] = oz * displacement;
+        }
+        geometry.attributes.position.needsUpdate = true;
+        geometry.computeVertexNormals(); // Essential for lighting to look correct on morphed shape
+
+        // Render
+        composer.render();
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // -- SCROLL ANIMATIONS (GSAP) --
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 1. Highlight Text in Intro
+      const highlights = document.querySelectorAll(".highlight-text");
+      highlights.forEach((text) => {
+        gsap.to(text, {
+          scrollTrigger: {
+            trigger: text,
+            start: "top 80%",
+            end: "bottom 50%",
+            scrub: true,
+          },
+          opacity: 1,
+          color: "#ffffff",
+        });
+      });
+
+      // 2. Sphere movement on scroll
+      const tlScene = gsap.timeline({
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+
+      // Move sphere around
+      tlScene
+        .to(sphere.position, { x: 2, z: 2, duration: 5 }) // To About
+        .to(sphere.position, { x: -2, z: 0, y: 1, duration: 5 }) // To Work
+        .to(sphere.material, { color: 0xaa00ff, duration: 2 }, "<") // Change color
+        .to(sphere.position, { x: 0, z: 4, y: 0, duration: 5 }); // To Contact
+
+      // 3. Image Reveals
+      const revealImages = document.querySelectorAll(".reveal-img");
+      revealImages.forEach((img) => {
+        ScrollTrigger.create({
+          trigger: img,
+          start: "top 70%",
+          onEnter: () => img.classList.add("active"),
+        });
+      });
+
+      // -- RESIZE --
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // -- CURSOR LOGIC --
+      const cursorDot = document.querySelector(".cursor-dot");
+      const cursorCircle = document.querySelector(".cursor-circle");
+      const triggers = document.querySelectorAll(".hover-trigger");
+
+      window.addEventListener("mousemove", (e) => {
+        gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+        gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.3 });
+      });
+
+      triggers.forEach((t) => {
+        t.addEventListener("mouseenter", () =>
+          cursorCircle.classList.add("hovered")
+        );
+        t.addEventListener("mouseleave", () =>
+          cursorCircle.classList.remove("hovered")
+        );
+      });
+    </script>
+  </body>
+</html>
