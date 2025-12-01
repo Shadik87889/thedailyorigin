@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Nir | Premium Housing Solution</title>
+
+    <!-- Fonts: Outfit (English) & Hind Siliguri (Bangla) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Outfit", "sans-serif"],
+              bangla: ["Hind Siliguri", "sans-serif"],
+            },
+            colors: {
+              ios: {
+                bg: "#F2F2F7",
+                card: "#FFFFFF",
+                blue: "#007AFF",
+                dark: "#1C1C1E",
+                gray: "#8E8E93",
+                separator: "#C6C6C8",
+                glass: "rgba(255, 255, 255, 0.8)",
+              },
+            },
+            boxShadow: {
+              "apple-sm": "0 2px 8px rgba(0,0,0,0.04)",
+              "apple-md": "0 4px 16px rgba(0,0,0,0.08)",
+              "apple-lg": "0 8px 32px rgba(0,0,0,0.12)",
+              "inner-light": "inset 0 1px 0 rgba(255,255,255,0.4)",
+            },
+            animation: {
+              "fade-in": "fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+              "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+              "scale-in": "scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+              shimmer: "shimmer 1.5s infinite linear",
+            },
+            keyframes: {
+              fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+              slideUp: {
+                "0%": { transform: "translateY(30px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              scaleIn: {
+                "0%": { transform: "scale(0.95)", opacity: "0" },
+                "100%": { transform: "scale(1)", opacity: "1" },
+              },
+              shimmer: {
+                "0%": { transform: "translateX(-100%)" },
+                "100%": { transform: "translateX(100%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Apple-style Reset & Utilities */
+      :root {
+        --safe-top: env(safe-area-inset-top);
+        --safe-bottom: env(safe-area-inset-bottom);
+      }
+
+      body {
+        background-color: #f5f5f7;
+        -webkit-tap-highlight-color: transparent;
+        font-feature-settings: "cv11", "ss01";
+        overscroll-behavior-y: none; /* Prevent rubber-banding on body */
+      }
+
+      /* Glassmorphism Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+      }
+
+      /* Scrollbar Hiding */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Interactions */
+      .tap-effect {
+        transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .tap-effect:active {
+        transform: scale(0.96);
+        opacity: 0.9;
+      }
+
+      /* Advanced Shimmer Skeleton */
+      .skeleton-loader {
+        position: relative;
+        overflow: hidden;
+        background: #e5e5ea;
+      }
+      .skeleton-loader::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.6),
+          transparent
+        );
+        transform: translateX(-100%);
+        animation: shimmer 1.5s infinite;
+      }
+
+      /* Typography Polish */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        letter-spacing: -0.02em;
+      }
+
+      /* Layout Fixes */
+      .safe-pb {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+      }
+      .safe-pt {
+        padding-top: max(20px, env(safe-area-inset-top));
+      }
+    </style>
+  </head>
+  <body
+    class="text-gray-900 font-sans antialiased h-screen w-screen overflow-hidden flex text-base"
+  >
+    <!-- DESKTOP SIDEBAR (Visible on md+) -->
+    <aside
+      class="hidden md:flex w-64 flex-col glass-panel border-r border-gray-200/50 h-full z-50 relative"
+    >
+      <div class="p-6">
+        <div
+          class="flex items-center gap-3 mb-8 cursor-pointer"
+          onclick="navigate('home')"
+        >
+          <div
+            class="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center font-bold text-xl shadow-lg"
+          >
+            N
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight">Nir</h1>
+            <span
+              class="text-xs text-gray-500 font-medium tracking-wide uppercase"
+              >Premium</span
+            >
+          </div>
+        </div>
+
+        <nav class="space-y-1">
+          <button
+            onclick="navigate('home')"
+            class="nav-item-desktop w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-black/5 transition-all font-medium"
+            data-target="home"
+          >
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span data-i18n="nav.home">Home</span>
+          </button>
+          <button
+            onclick="navigate('search')"
+            class="nav-item-desktop w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-black/5 transition-all font-medium"
+            data-target="search"
+          >
+            <i data-lucide="search" class="w-5 h-5"></i>
+            <span data-i18n="nav.search">Search</span>
+          </button>
+          <button
+            onclick="navigate('saved')"
+            class="nav-item-desktop w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-black/5 transition-all font-medium"
+            data-target="saved"
+          >
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span data-i18n="nav.saved">Saved</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="mt-auto p-6 border-t border-gray-200/50">
+        <button
+          onclick="checkAuthAndNavigate('post')"
+          class="w-full bg-black text-white py-3 rounded-xl font-semibold shadow-apple-md hover:bg-gray-900 transition-colors flex items-center justify-center gap-2 tap-effect mb-4"
+        >
+          <i data-lucide="plus-circle" class="w-5 h-5"></i>
+          <span data-i18n="post.title">Post Ad</span>
+        </button>
+        <div
+          onclick="checkAuthAndNavigate('profile')"
+          class="flex items-center gap-3 p-2 rounded-xl hover:bg-black/5 cursor-pointer transition-colors"
+          id="desktop-profile-btn"
+        >
+          <div
+            class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden"
+            id="desktop-avatar"
+          >
+            <i data-lucide="user" class="w-5 h-5 m-1.5 text-gray-500"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold truncate" id="desktop-username">
+              Guest
+            </p>
+            <p class="text-xs text-gray-500">View Profile</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN APP CONTENT -->
+    <div
+      id="app"
+      class="relative flex-1 h-full flex flex-col overflow-hidden bg-[#F5F5F7]"
+    >
+      <!-- MOBILE HEADER (Hidden on md+) -->
+      <header
+        class="md:hidden absolute top-0 w-full z-40 glass-panel transition-all duration-300"
+        id="mobile-header"
+      >
+        <div class="safe-pt px-5 pb-3 flex justify-between items-center">
+          <div class="flex items-center gap-2" onclick="navigate('home')">
+            <div
+              class="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center font-bold text-lg cursor-pointer shadow-md"
+            >
+              N
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button
+              onclick="toggleLanguage()"
+              class="text-xs font-semibold bg-white/50 backdrop-blur border border-white/20 hover:bg-white px-3 py-1.5 rounded-full transition-all font-bangla shadow-sm"
+              id="lang-btn"
+            >
+              বাংলা
+            </button>
+            <div
+              id="auth-state-header"
+              onclick="checkAuthAndNavigate('profile')"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"
+              >
+                <i data-lucide="user" class="w-4 h-4"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- DESKTOP HEADER (Top bar for search/lang) -->
+      <header
+        class="hidden md:flex w-full glass-panel px-8 py-4 justify-between items-center z-30"
+      >
+        <h2 class="text-2xl font-bold text-gray-900" id="page-title">
+          Discover
+        </h2>
+        <div class="flex items-center gap-4">
+          <div class="relative group">
+            <i
+              data-lucide="search"
+              class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-black transition-colors"
+            ></i>
+            <input
+              type="text"
+              placeholder="Search location..."
+              oninput="handleGlobalSearch(this.value)"
+              class="bg-gray-100 border-none rounded-full pl-10 pr-4 py-2 w-64 text-sm focus:ring-2 focus:ring-black/10 focus:bg-white transition-all outline-none"
+            />
+          </div>
+          <button
+            onclick="toggleLanguage()"
+            class="text-sm font-medium hover:text-gray-600 font-bangla"
+            id="desktop-lang-btn"
+          >
+            English
+          </button>
+        </div>
+      </header>
+
+      <!-- SCROLLABLE VIEW AREA -->
+      <main
+        id="main-content"
+        class="flex-1 overflow-y-auto no-scrollbar scroll-smooth"
+      >
+        <div
+          id="view-container"
+          class="w-full min-h-full pb-32 md:pb-10 pt-20 md:pt-6 px-4 sm:px-8 max-w-7xl mx-auto"
+        >
+          <!-- Dynamic Content Injected Here -->
+        </div>
+      </main>
+
+      <!-- MOBILE BOTTOM NAV -->
+      <nav class="md:hidden absolute bottom-0 w-full z-40 glass-nav safe-pb">
+        <div class="flex justify-around items-end pt-3 pb-1">
+          <button
+            onclick="navigate('home')"
+            class="nav-item active flex flex-col items-center gap-1 w-16 text-gray-400 transition-colors duration-300"
+            data-target="home"
+          >
+            <i data-lucide="home" class="w-6 h-6"></i>
+            <span
+              class="text-[10px] font-medium tracking-wide"
+              data-i18n="nav.home"
+              >Home</span
+            >
+          </button>
+          <button
+            onclick="navigate('search')"
+            class="nav-item flex flex-col items-center gap-1 w-16 text-gray-400 transition-colors duration-300"
+            data-target="search"
+          >
+            <i data-lucide="search" class="w-6 h-6"></i>
+            <span
+              class="text-[10px] font-medium tracking-wide"
+              data-i18n="nav.search"
+              >Search</span
+            >
+          </button>
+          <div class="relative -top-6">
+            <button
+              onclick="checkAuthAndNavigate('post')"
+              class="tap-effect bg-black text-white w-14 h-14 rounded-full shadow-apple-lg flex items-center justify-center border-[4px] border-[#F5F5F7] hover:scale-105 transition-transform"
+            >
+              <i data-lucide="plus" class="w-7 h-7"></i>
+            </button>
+          </div>
+          <button
+            onclick="navigate('saved')"
+            class="nav-item flex flex-col items-center gap-1 w-16 text-gray-400 transition-colors duration-300"
+            data-target="saved"
+          >
+            <i data-lucide="heart" class="w-6 h-6"></i>
+            <span
+              class="text-[10px] font-medium tracking-wide"
+              data-i18n="nav.saved"
+              >Saved</span
+            >
+          </button>
+          <button
+            onclick="checkAuthAndNavigate('profile')"
+            class="nav-item flex flex-col items-center gap-1 w-16 text-gray-400 transition-colors duration-300"
+            data-target="profile"
+          >
+            <i data-lucide="user" class="w-6 h-6"></i>
+            <span
+              class="text-[10px] font-medium tracking-wide"
+              data-i18n="nav.profile"
+              >Profile</span
+            >
+          </button>
+        </div>
+      </nav>
+
+      <!-- PROPERTY DETAILS SHEET (Modal) -->
+      <div
+        id="sheet-overlay"
+        class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300"
+        onclick="closeSheet()"
+      ></div>
+      <div
+        id="property-sheet"
+        class="fixed inset-x-0 bottom-0 md:inset-y-0 md:left-auto md:right-0 md:w-[480px] bg-white z-[60] transform translate-y-full md:translate-x-full md:translate-y-0 transition-transform duration-500 ease-out-expo rounded-t-[2rem] md:rounded-l-[2rem] md:rounded-tr-none shadow-2xl flex flex-col h-[90vh] md:h-full overflow-hidden"
+      >
+        <!-- Sheet Content Injected JS -->
+      </div>
+
+      <!-- AUTH MODAL -->
+      <div
+        id="auth-modal"
+        class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4"
+      >
+        <div
+          class="absolute inset-0 bg-black/30 backdrop-blur-md transition-opacity"
+          onclick="closeAuthModal()"
+        ></div>
+        <div
+          class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm relative z-10 overflow-hidden transform scale-95 opacity-0 transition-all duration-300"
+          id="auth-box"
+        >
+          <div class="p-8">
+            <div class="flex justify-between items-center mb-8">
+              <h2 class="text-3xl font-bold tracking-tight" id="auth-title">
+                Sign In
+              </h2>
+              <button
+                onclick="closeAuthModal()"
+                class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+              >
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+              <div class="space-y-1">
+                <label
+                  class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all font-medium"
+                />
+              </div>
+              <div class="space-y-1">
+                <label
+                  class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all font-medium"
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-black text-white font-bold rounded-xl py-4 text-lg shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300 mt-4 tap-effect"
+                id="auth-submit-btn"
+              >
+                Continue
+              </button>
+            </form>
+            <div class="mt-6 text-center">
+              <p class="text-sm text-gray-500" id="auth-switch-text">
+                Don't have an account?
+              </p>
+              <button
+                onclick="toggleAuthMode()"
+                class="text-black font-bold hover:underline mt-1"
+                id="auth-switch-btn"
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-gray-50 p-4 text-center text-xs text-gray-400 border-t border-gray-100"
+          >
+            Secure access powered by Firebase
+          </div>
+        </div>
+      </div>
+
+      <!-- TOAST -->
+      <div
+        id="toast"
+        class="fixed top-6 left-1/2 -translate-x-1/2 md:top-auto md:bottom-6 md:left-auto md:right-6 md:translate-x-0 bg-white/90 backdrop-blur border border-gray-200/50 text-black px-6 py-4 rounded-2xl shadow-apple-lg z-[80] flex items-center gap-3 transform -translate-y-[150%] md:translate-y-[150%] transition-transform duration-500 ease-out"
+      >
+        <div
+          id="toast-icon"
+          class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600"
+        >
+          <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm" id="toast-title">Success</h4>
+          <p class="text-xs text-gray-500" id="toast-msg">
+            Operation completed
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIC -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+        signInWithCustomToken,
+      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        doc,
+        setDoc,
+        deleteDoc,
+        getDoc,
+        query,
+        orderBy,
+        serverTimestamp,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+      // CONFIG
+      const firebaseConfig =
+        typeof __firebase_config !== "undefined"
+          ? JSON.parse(__firebase_config)
+          : {
+              apiKey: "AIzaSyDLPk8Hchvr5z4TqhtmTHNM6ZGkfBddI3g",
+              authDomain: "hostel-seek.firebaseapp.com",
+              projectId: "hostel-seek",
+              storageBucket: "hostel-seek.firebasestorage.app",
+              messagingSenderId: "977074319062",
+              appId: "1:977074319062:web:a7cd4fe2a3747a07e02377",
+              measurementId: "G-7GE2EHKCYD",
+            };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      // FIX: Use a stable ID for the collection path to prevent data from being saved to different paths in different environments
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "hostel-seek-v1";
+
+      // STATE
+      const state = {
+        user: null,
+        lang: "en",
+        route: "home",
+        properties: [],
+        savedIds: new Set(),
+        isLoginMode: true,
+        activeCategory: "All",
+        isLoading: true,
+      };
+
+      // LOCALIZATION
+      const translations = {
+        en: {
+          "nav.home": "Home",
+          "nav.search": "Search",
+          "nav.saved": "Saved",
+          "nav.profile": "Profile",
+          "post.title": "Post Ad",
+          "hero.title": "Find your <br>peace in",
+          "hero.sub": "Bangladesh",
+          "cat.all": "All",
+          "cat.family": "Family",
+          "cat.bachelor": "Bachelor",
+          "cat.mess": "Mess",
+          "cat.hostel": "Hostel",
+          "cat.sublet": "Sublet",
+          "sec.recent": "Recently Added",
+          "sec.saved": "Saved Homes",
+          "details.contact": "Contact Owner",
+          "auth.login": "Sign In",
+          "auth.register": "Create Account",
+          "auth.welcome": "Welcome Back",
+        },
+        bn: {
+          "nav.home": "হোম",
+          "nav.search": "খুঁজুন",
+          "nav.saved": "সেভড",
+          "nav.profile": "প্রোফাইল",
+          "post.title": "বিজ্ঞাপন দিন",
+          "hero.title": "আপনার নীড় <br>খুঁজুন",
+          "hero.sub": "বাংলাদেশ",
+          "cat.all": "সব",
+          "cat.family": "ফ্যামিলি",
+          "cat.bachelor": "ব্যাচেলর",
+          "cat.mess": "মেস",
+          "cat.hostel": "হোস্টেল",
+          "cat.sublet": "সাবলেট",
+          "sec.recent": "নতুন ভাড়ার বিজ্ঞপ্তি",
+          "sec.saved": "সংরক্ষিত বাসা",
+          "details.contact": "মালিকের সাথে যোগাযোগ",
+          "auth.login": "লগিন করুন",
+          "auth.register": "একাউন্ট খুলুন",
+          "auth.welcome": "স্বাগতম",
+        },
+      };
+
+      // --- AUTH SYSTEM ---
+      const initAuth = async () => {
+        if (
+          typeof __initial_auth_token !== "undefined" &&
+          __initial_auth_token
+        ) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        }
+      };
+      initAuth();
+
+      onAuthStateChanged(auth, async (user) => {
+        state.user = user;
+        updateHeaderUser();
+        if (user) {
+          closeAuthModal();
+          loadFavorites();
+        } else {
+          state.savedIds.clear();
+          renderView();
+        }
+      });
+
+      async function loadFavorites() {
+        if (!state.user) return;
+        // Guard against permission errors silently
+        try {
+          const q = collection(
+            db,
+            "artifacts",
+            appId,
+            "users",
+            state.user.uid,
+            "favorites"
+          );
+          const snap = await getDocs(q);
+          state.savedIds = new Set(snap.docs.map((d) => d.id));
+          if (state.route === "saved" || state.route === "home") renderView();
+        } catch (e) {
+          console.error("Fav load error", e);
+        }
+      }
+
+      // --- DATA LAYER ---
+      async function fetchProperties() {
+        // We removed orderBy to avoid index issues. Sorting happens in JS.
+        const q = query(
+          collection(db, "artifacts", appId, "public", "data", "properties")
+        );
+
+        onSnapshot(
+          q,
+          (snapshot) => {
+            const fetched = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            // FIX: Sort Logic - Put items with null createdAt (pending writes) at the TOP
+            state.properties = fetched.sort((a, b) => {
+              const tA = a.createdAt
+                ? a.createdAt.seconds
+                : Date.now() / 1000 + 999999;
+              const tB = b.createdAt
+                ? b.createdAt.seconds
+                : Date.now() / 1000 + 999999;
+              return tB - tA;
+            });
+
+            state.isLoading = false;
+            if (state.route === "home" || state.route === "search")
+              renderView();
+          },
+          (error) => {
+            console.error("Firestore Error:", error);
+            // FIX: Alert user if permission is denied
+            if (error.code === "permission-denied") {
+              showToast("Database Permission Denied. Check Rules.", "error");
+            }
+            state.isLoading = false;
+            renderView();
+          }
+        );
+      }
+      fetchProperties();
+
+      // --- ROUTER & RENDERER ---
+      window.navigate = (route) => {
+        state.route = route;
+        state.activeCategory = "All"; // Reset filters
+        updateNavState();
+        renderView();
+        document.getElementById("main-content").scrollTop = 0;
+        const titles = {
+          home: "Discover",
+          search: "Search",
+          saved: "Favorites",
+          profile: "Profile",
+          post: "New Listing",
+        };
+        document.getElementById("page-title").innerText =
+          titles[route] || "Nir";
+      };
+
+      function updateNavState() {
+        // Mobile
+        document.querySelectorAll(".nav-item").forEach((el) => {
+          const active = el.dataset.target === state.route;
+          el.classList.toggle("text-black", active);
+          el.classList.toggle("text-gray-400", !active);
+          if (active) el.querySelector("svg").classList.add("fill-current");
+          else el.querySelector("svg").classList.remove("fill-current");
+        });
+        // Desktop
+        document.querySelectorAll(".nav-item-desktop").forEach((el) => {
+          const active = el.dataset.target === state.route;
+          el.classList.toggle("bg-black", active);
+          el.classList.toggle("text-white", active);
+          el.classList.toggle("text-gray-500", !active);
+          el.classList.toggle("hover:bg-black/5", !active);
+        });
+      }
+
+      async function renderView() {
+        const container = document.getElementById("view-container");
+        const t = translations[state.lang];
+        lucide.createIcons();
+
+        if (
+          state.isLoading &&
+          (state.route === "home" || state.route === "search")
+        ) {
+          container.innerHTML = renderSkeletonGrid();
+          return;
+        }
+
+        if (state.route === "home") {
+          container.innerHTML = `
+                    <div class="animate-fade-in space-y-8">
+                        <!-- Hero Banner -->
+                        <div class="relative overflow-hidden rounded-[2.5rem] bg-black text-white p-8 md:p-12 shadow-apple-lg group">
+                            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop')] bg-cover bg-center opacity-60 group-hover:scale-105 transition-transform duration-[2s]"></div>
+                            <div class="relative z-10 max-w-xl">
+                                <h1 class="text-4xl md:text-6xl font-extrabold leading-[1.1] mb-4 font-bangla tracking-tight">
+                                    ${
+                                      state.lang === "en"
+                                        ? 'Find your <br><span class="text-blue-400">Sanctuary</span>'
+                                        : 'আপনার নীড় <br><span class="text-blue-400">খুঁজুন</span>'
+                                    }
+                                </h1>
+                                <p class="text-gray-300 text-lg md:text-xl font-medium mb-8 max-w-md">${
+                                  t["hero.subtitle"] ||
+                                  "Premium living solutions across Bangladesh."
+                                }</p>
+                                <button onclick="navigate('search')" class="bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-all flex items-center gap-2 group/btn">
+                                    Start Exploring <i data-lucide="arrow-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Filter Tabs -->
+                        <div class="flex gap-3 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4 md:mx-0 md:px-0" id="category-scroller">
+                            ${[
+                              "All",
+                              "Family",
+                              "Bachelor",
+                              "Mess",
+                              "Hostel",
+                              "Sublet",
+                            ]
+                              .map(
+                                (cat) => `
+                                <button onclick="setCategory('${cat}')" 
+                                    class="whitespace-nowrap px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
+                                      state.activeCategory === cat
+                                        ? "bg-black text-white shadow-apple-md scale-105"
+                                        : "bg-white border border-gray-100 text-gray-600 hover:bg-gray-50"
+                                    }">
+                                    ${t["cat." + cat.toLowerCase()] || cat}
+                                </button>
+                            `
+                              )
+                              .join("")}
+                        </div>
+
+                        <!-- Grid -->
+                        <div>
+                            <div class="flex justify-between items-end mb-6">
+                                <h3 class="text-xl font-bold text-gray-900 font-bangla">${
+                                  t["sec.recent"]
+                                }</h3>
+                                <span class="text-sm text-blue-600 font-medium cursor-pointer hover:underline">View All</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                ${getFilteredProperties()
+                                  .map((p, i) => renderCard(p, i))
+                                  .join("")}
+                            </div>
+                            ${
+                              getFilteredProperties().length === 0
+                                ? '<div class="py-20 text-center text-gray-400">No properties found.</div>'
+                                : ""
+                            }
+                        </div>
+                    </div>
+                `;
+        } else if (state.route === "saved") {
+          const savedProps = state.properties.filter((p) =>
+            state.savedIds.has(p.id)
+          );
+          container.innerHTML = `
+                    <div class="animate-fade-in">
+                        <h3 class="text-xl font-bold mb-6 font-bangla">${
+                          t["sec.saved"]
+                        } (${savedProps.length})</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${
+                              savedProps.length > 0
+                                ? savedProps
+                                    .map((p, i) => renderCard(p, i))
+                                    .join("")
+                                : `<div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-300"><i data-lucide="heart" class="w-10 h-10"></i></div>
+                                <h3 class="text-lg font-bold text-gray-900">No Favorites Yet</h3>
+                                <p class="text-gray-500">Tap the heart icon on properties you love.</p>
+                             </div>`
+                            }
+                        </div>
+                    </div>
+                `;
+        } else if (state.route === "search") {
+          container.innerHTML = `
+                    <div class="animate-fade-in space-y-6">
+                        <div class="relative md:hidden">
+                            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                            <input type="text" placeholder="${
+                              t["nav.search"]
+                            }..." oninput="handleGlobalSearch(this.value)" class="w-full bg-white border border-gray-100 rounded-2xl pl-12 pr-4 py-4 shadow-apple-sm focus:ring-2 focus:ring-black/10 outline-none text-lg">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            ${["Dhaka", "Chittagong", "Sylhet", "Rajshahi"]
+                              .map(
+                                (city) => `
+                                <div onclick="handleGlobalSearch('${city}')" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-apple-md hover:border-blue-100 cursor-pointer transition-all group">
+                                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+                                    <span class="font-bold text-gray-900 block">${city}</span>
+                                    <span class="text-xs text-gray-400">Bangladesh</span>
+                                </div>
+                            `
+                              )
+                              .join("")}
+                        </div>
+
+                        <div id="search-results-area">
+                            <h3 class="text-lg font-bold mt-4 mb-4">All Properties</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                ${state.properties
+                                  .map((p, i) => renderCard(p, i))
+                                  .join("")}
+                            </div>
+                        </div>
+                    </div>
+                `;
+        } else if (state.route === "post") {
+          container.innerHTML = `
+                    <div class="max-w-xl mx-auto animate-slide-up">
+                        <div class="bg-white rounded-[2rem] shadow-apple-lg border border-gray-100 p-8">
+                            <h2 class="text-2xl font-bold mb-6">${t["post.title"]}</h2>
+                            <form onsubmit="handlePostSubmit(event)" class="space-y-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700 ml-1">Title</label>
+                                    <input type="text" name="title" required placeholder="Ex: Luxury Apartment in Gulshan" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-4 font-medium focus:ring-2 focus:ring-black/10 outline-none transition-all">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-bold text-gray-700 ml-1">Type</label>
+                                        <select name="type" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-4 font-medium focus:ring-2 focus:ring-black/10 outline-none transition-all appearance-none">
+                                            <option value="Family">Family</option>
+                                            <option value="Bachelor">Bachelor</option>
+                                            <option value="Mess">Mess</option>
+                                            <option value="Hostel">Hostel</option>
+                                            <option value="Sublet">Sublet</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-bold text-gray-700 ml-1">Price</label>
+                                        <div class="relative">
+                                            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">৳</span>
+                                            <input type="number" name="price" required placeholder="25000" class="w-full bg-gray-50 border-0 rounded-2xl pl-10 pr-5 py-4 font-medium focus:ring-2 focus:ring-black/10 outline-none transition-all">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700 ml-1">Location</label>
+                                    <div class="relative">
+                                        <i data-lucide="map-pin" class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                                        <input type="text" name="location" required placeholder="Dhanmondi, Dhaka" class="w-full bg-gray-50 border-0 rounded-2xl pl-12 pr-5 py-4 font-medium focus:ring-2 focus:ring-black/10 outline-none transition-all">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700 ml-1">Image URL</label>
+                                    <input type="url" name="image" placeholder="https://..." class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-4 font-medium focus:ring-2 focus:ring-black/10 outline-none transition-all">
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700 ml-1">Description</label>
+                                    <textarea name="description" rows="3" placeholder="Tell us more..." class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-4 font-medium focus:ring-2 focus:ring-black/10 outline-none transition-all"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full bg-black text-white font-bold rounded-2xl py-4 shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all tap-effect">
+                                    Publish Listing
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+        } else if (state.route === "profile") {
+          if (!state.user) {
+            navigate("home");
+            return;
+          }
+          container.innerHTML = `
+                    <div class="animate-fade-in max-w-lg mx-auto text-center pt-8">
+                        <div class="w-28 h-28 bg-gradient-to-tr from-gray-800 to-black rounded-full mx-auto flex items-center justify-center shadow-2xl mb-6 relative">
+                            <span class="text-4xl text-white font-bold">${state.user.email[0].toUpperCase()}</span>
+                            <div class="absolute bottom-0 right-0 bg-green-500 w-6 h-6 rounded-full border-4 border-[#F5F5F7]"></div>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-1">${
+                          state.user.email.split("@")[0]
+                        }</h2>
+                        <p class="text-gray-500 text-sm mb-8">${
+                          state.user.email
+                        }</p>
+
+                        <div class="bg-white rounded-3xl shadow-apple-md overflow-hidden text-left divide-y divide-gray-100">
+                            <div class="p-5 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors" onclick="navigate('saved')">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center"><i data-lucide="heart" class="w-5 h-5"></i></div>
+                                    <span class="font-bold text-gray-800">My Favorites</span>
+                                </div>
+                                <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold">${
+                                  state.savedIds.size
+                                }</span>
+                            </div>
+                             <div class="p-5 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center"><i data-lucide="settings" class="w-5 h-5"></i></div>
+                                    <span class="font-bold text-gray-800">Settings</span>
+                                </div>
+                                <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                            </div>
+                            <div class="p-5 flex items-center justify-between hover:bg-red-50 cursor-pointer transition-colors" onclick="signOut(auth)">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center"><i data-lucide="log-out" class="w-5 h-5"></i></div>
+                                    <span class="font-bold text-red-600">Log Out</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        }
+
+        lucide.createIcons();
+      }
+
+      // --- COMPONENT RENDERERS ---
+
+      function renderCard(p, index) {
+        const isBn = state.lang === "bn";
+        const price = new Intl.NumberFormat(isBn ? "bn-BD" : "en-US").format(
+          p.price
+        );
+        const isSaved = state.savedIds.has(p.id);
+        // Stagger animation delay
+        const delay = index * 50;
+
+        return `
+                <div class="group bg-white rounded-[1.5rem] p-3 shadow-apple-sm hover:shadow-apple-lg transition-all duration-500 hover:-translate-y-1 relative" style="animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: ${delay}ms; opacity: 0; transform: translateY(20px);">
+                    <div class="relative h-56 rounded-2xl overflow-hidden cursor-pointer" onclick="openSheet('${
+                      p.id
+                    }')">
+                        <img src="${
+                          p.image
+                        }" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" alt="${
+          p.title
+        }">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide shadow-sm border border-white/50">
+                            ${p.type}
+                        </span>
+                        <div class="absolute bottom-3 left-3 text-white">
+                            <p class="text-lg font-bold">BDT ${price}</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="toggleSave('${
+                      p.id
+                    }')" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transition-all hover:bg-white active:scale-90 z-10 group/heart">
+                        <i data-lucide="heart" class="w-5 h-5 transition-colors ${
+                          isSaved
+                            ? "text-red-500 fill-red-500"
+                            : "text-white group-hover/heart:text-red-500"
+                        }"></i>
+                    </button>
+
+                    <div class="px-2 pt-4 pb-2 cursor-pointer" onclick="openSheet('${
+                      p.id
+                    }')">
+                        <h4 class="font-bold text-lg leading-tight text-gray-900 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors">${
+                          p.title
+                        }</h4>
+                        <div class="flex items-center text-gray-500 text-sm mb-3">
+                            <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> ${
+                              p.location
+                            }
+                        </div>
+                        <div class="flex gap-2">
+                            ${(p.amenities || ["Wifi", "CCTV"])
+                              .slice(0, 3)
+                              .map(
+                                (a) =>
+                                  `<span class="px-2.5 py-1 bg-gray-50 rounded-lg text-[10px] font-semibold text-gray-600 border border-gray-100">${a}</span>`
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+
+      function renderSkeletonGrid() {
+        return `
+                <div class="space-y-8 animate-fade-in">
+                    <div class="w-full h-80 rounded-[2.5rem] skeleton-loader"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${[1, 2, 3, 4]
+                          .map(
+                            () => `
+                            <div class="bg-white rounded-[1.5rem] p-3 shadow-sm border border-gray-100">
+                                <div class="h-56 rounded-2xl skeleton-loader mb-4"></div>
+                                <div class="px-2 space-y-3">
+                                    <div class="h-6 w-3/4 rounded-md skeleton-loader"></div>
+                                    <div class="h-4 w-1/2 rounded-md skeleton-loader"></div>
+                                    <div class="flex gap-2 pt-2">
+                                        <div class="h-6 w-12 rounded-lg skeleton-loader"></div>
+                                        <div class="h-6 w-12 rounded-lg skeleton-loader"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                          )
+                          .join("")}
+                    </div>
+                </div>
+            `;
+      }
+
+      // --- SHEET (MODAL) LOGIC ---
+      window.openSheet = (id) => {
+        const p = state.properties.find((item) => item.id === id);
+        if (!p) return;
+
+        const sheet = document.getElementById("property-sheet");
+        const overlay = document.getElementById("sheet-overlay");
+        const isBn = state.lang === "bn";
+
+        sheet.innerHTML = `
+                <div class="relative h-full flex flex-col">
+                    <!-- Image Header -->
+                    <div class="relative h-72 md:h-80 shrink-0">
+                        <img src="${
+                          p.image
+                        }" class="w-full h-full object-cover">
+                        <button onclick="closeSheet()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 backdrop-blur text-white flex items-center justify-center hover:bg-black transition-colors z-20">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="flex-1 overflow-y-auto p-6 md:p-8 bg-white -mt-6 rounded-t-[2rem] relative z-10">
+                        <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6 md:hidden"></div>
+                        
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-blue-600 font-bold text-xs uppercase tracking-wider bg-blue-50 px-2 py-1 rounded-md mb-2 inline-block">${
+                                  p.type
+                                }</span>
+                                <h2 class="text-2xl md:text-3xl font-bold leading-tight">${
+                                  p.title
+                                }</h2>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl md:text-2xl font-bold text-gray-900">৳${
+                                  p.price
+                                }</p>
+                                <p class="text-xs text-gray-400">/month</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-gray-500 mb-8 pb-8 border-b border-gray-100">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i> ${
+                              p.location
+                            }
+                        </div>
+
+                        <h3 class="font-bold text-lg mb-3">Amenities</h3>
+                        <div class="flex flex-wrap gap-3 mb-8">
+                            ${(
+                              p.amenities || [
+                                "Wifi",
+                                "Security",
+                                "Generator",
+                                "Lift",
+                                "Parking",
+                              ]
+                            )
+                              .map(
+                                (a) => `
+                                <div class="px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-2 font-medium text-gray-700 text-sm">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i> ${a}
+                                </div>
+                            `
+                              )
+                              .join("")}
+                        </div>
+
+                        <h3 class="font-bold text-lg mb-3">Description</h3>
+                        <p class="text-gray-500 leading-relaxed mb-8">
+                            ${
+                              p.description ||
+                              "Experience premium living with modern facilities. This property offers a serene environment perfect for your needs. Secure, accessible, and ready for move-in."
+                            }
+                        </p>
+                        
+                        <!-- Sticky Footer Action -->
+                        <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t border-gray-100 mt-auto">
+                            <button class="w-full bg-black text-white py-4 rounded-2xl font-bold text-lg shadow-apple-lg hover:bg-gray-900 tap-effect flex items-center justify-center gap-2">
+                                <i data-lucide="phone" class="w-5 h-5"></i> Contact Owner
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        overlay.classList.remove("hidden");
+        void sheet.offsetWidth;
+        overlay.classList.remove("opacity-0");
+        sheet.style.transform = "translate(0,0)";
+        lucide.createIcons();
+      };
+
+      window.closeSheet = () => {
+        const sheet = document.getElementById("property-sheet");
+        const overlay = document.getElementById("sheet-overlay");
+
+        overlay.classList.add("opacity-0");
+        if (window.innerWidth >= 768) {
+          sheet.style.transform = "translateX(100%)";
+        } else {
+          sheet.style.transform = "translateY(100%)";
+        }
+
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+        }, 300);
+      };
+
+      // --- FILTER & SEARCH ---
+      window.setCategory = (cat) => {
+        state.activeCategory = cat;
+        renderView();
+      };
+
+      window.handleGlobalSearch = (val) => {
+        if (state.route !== "search") navigate("search");
+
+        const area = document.getElementById("search-results-area");
+        const term = val.toLowerCase();
+        const filtered = state.properties.filter(
+          (p) =>
+            p.title.toLowerCase().includes(term) ||
+            p.location.toLowerCase().includes(term) ||
+            p.type.toLowerCase().includes(term)
+        );
+
+        area.innerHTML = `
+                <h3 class="text-lg font-bold mt-4 mb-4">Results for "${val}"</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${
+                      filtered.length
+                        ? filtered.map((p, i) => renderCard(p, i)).join("")
+                        : '<p class="text-gray-500">No matches found.</p>'
+                    }
+                </div>
+            `;
+        lucide.createIcons();
+      };
+
+      function getFilteredProperties() {
+        if (state.activeCategory === "All") return state.properties;
+        return state.properties.filter((p) =>
+          p.type.includes(state.activeCategory)
+        );
+      }
+
+      // --- ACTIONS ---
+      window.toggleSave = async (id) => {
+        event.stopPropagation();
+        if (!state.user) {
+          showToast("Please login to save", "error");
+          openAuthModal();
+          return;
+        }
+
+        const ref = doc(
+          db,
+          "artifacts",
+          appId,
+          "users",
+          state.user.uid,
+          "favorites",
+          id
+        );
+
+        if (state.savedIds.has(id)) {
+          state.savedIds.delete(id);
+          await deleteDoc(ref);
+          showToast("Removed from favorites");
+        } else {
+          state.savedIds.add(id);
+          await setDoc(ref, { savedAt: serverTimestamp() });
+          showToast("Added to favorites");
+        }
+
+        const btns = document.querySelectorAll(
+          `button[onclick="toggleSave('${id}')"] i`
+        );
+        btns.forEach((icon) => {
+          if (state.savedIds.has(id)) {
+            icon.classList.add("text-red-500", "fill-red-500");
+            icon.classList.remove("text-white");
+          } else {
+            icon.classList.remove("text-red-500", "fill-red-500");
+            icon.classList.add("text-white");
+          }
+        });
+
+        if (state.route === "saved") renderView();
+      };
+
+      window.handlePostSubmit = async (e) => {
+        e.preventDefault();
+        if (!state.user) return openAuthModal();
+
+        const btn = e.target.querySelector("button");
+        const oldText = btn.innerText;
+        btn.innerText = "Publishing...";
+        btn.disabled = true;
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          // FIX: Ensure we send a consistent object
+          await addDoc(
+            collection(db, "artifacts", appId, "public", "data", "properties"),
+            {
+              ...data,
+              price: Number(data.price),
+              ownerId: state.user.uid,
+              ownerEmail: state.user.email,
+              createdAt: serverTimestamp(),
+              image:
+                data.image ||
+                `https://source.unsplash.com/random/800x600/?apartment,interior`,
+            }
+          );
+          showToast("Listing published successfully!");
+          navigate("home");
+        } catch (err) {
+          console.error("Add Doc Error:", err);
+          showToast("Failed to publish: " + err.code, "error");
+        } finally {
+          btn.innerText = oldText;
+          btn.disabled = false;
+        }
+      };
+
+      // --- AUTH UI ---
+      window.checkAuthAndNavigate = (route) => {
+        if (state.user) navigate(route);
+        else openAuthModal();
+      };
+
+      window.openAuthModal = () => {
+        document.getElementById("auth-modal").classList.remove("hidden");
+        setTimeout(() => {
+          document
+            .getElementById("auth-box")
+            .classList.remove("scale-95", "opacity-0");
+        }, 10);
+      };
+
+      window.closeAuthModal = () => {
+        document
+          .getElementById("auth-box")
+          .classList.add("scale-95", "opacity-0");
+        setTimeout(() => {
+          document.getElementById("auth-modal").classList.add("hidden");
+        }, 300);
+      };
+
+      window.toggleAuthMode = () => {
+        state.isLoginMode = !state.isLoginMode;
+        document.getElementById("auth-title").innerText = state.isLoginMode
+          ? "Sign In"
+          : "Register";
+        document.getElementById("auth-submit-btn").innerText = state.isLoginMode
+          ? "Continue"
+          : "Create Account";
+        document.getElementById(
+          "auth-switch-text"
+        ).innerText = state.isLoginMode
+          ? "Don't have an account?"
+          : "Already have an account?";
+        document.getElementById("auth-switch-btn").innerText = state.isLoginMode
+          ? "Create Account"
+          : "Sign In";
+      };
+
+      window.handleAuthSubmit = async (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        try {
+          if (state.isLoginMode)
+            await signInWithEmailAndPassword(auth, email, password);
+          else await createUserWithEmailAndPassword(auth, email, password);
+          showToast("Welcome to Nir");
+        } catch (err) {
+          showToast(err.message, "error");
+        }
+      };
+
+      window.showToast = (msg, type = "success") => {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-msg").innerText = msg;
+        document.getElementById("toast-title").innerText =
+          type === "error" ? "Error" : "Success";
+
+        const iconBox = document.getElementById("toast-icon");
+        iconBox.className = `w-8 h-8 rounded-full flex items-center justify-center ${
+          type === "error"
+            ? "bg-red-100 text-red-600"
+            : "bg-green-100 text-green-600"
+        }`;
+        iconBox.innerHTML = `<i data-lucide="${
+          type === "error" ? "alert-circle" : "check"
+        }" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+
+        toast.classList.remove("-translate-y-[150%]", "md:translate-y-[150%]");
+        setTimeout(() => {
+          toast.classList.add("-translate-y-[150%]", "md:translate-y-[150%]");
+        }, 3000);
+      };
+
+      window.toggleLanguage = () => {
+        state.lang = state.lang === "en" ? "bn" : "en";
+        document.getElementById("lang-btn").innerText =
+          state.lang === "en" ? "বাংলা" : "English";
+        document.getElementById("desktop-lang-btn").innerText =
+          state.lang === "en" ? "বাংলা" : "English";
+        renderView();
+      };
+
+      function updateHeaderUser() {
+        const headerAuth = document.getElementById("auth-state-header");
+        if (state.user) {
+          headerAuth.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center font-bold shadow-md border-2 border-white">${state.user.email[0].toUpperCase()}</div>`;
+        } else {
+          headerAuth.innerHTML = `<div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"><i data-lucide="user" class="w-4 h-4"></i></div>`;
+        }
+
+        const dName = document.getElementById("desktop-username");
+        const dAvatar = document.getElementById("desktop-avatar");
+        if (dName && dAvatar) {
+          if (state.user) {
+            dName.innerText = state.user.email.split("@")[0];
+            dAvatar.innerHTML = `<div class="w-full h-full bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold">${state.user.email[0].toUpperCase()}</div>`;
+          } else {
+            dName.innerText = "Guest User";
+            dAvatar.innerHTML = `<i data-lucide="user" class="w-5 h-5 m-1.5 text-gray-500"></i>`;
+          }
+        }
+        lucide.createIcons();
+      }
+
+      window.addEventListener("load", () => {
+        lucide.createIcons();
+        renderView();
+      });
+    </script>
+  </body>
+</html>
