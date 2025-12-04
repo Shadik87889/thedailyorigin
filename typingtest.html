@@ -2751,20 +2751,32 @@
                     ctaButton1 = `<button id="modal-next-lesson-btn" data-lesson-id="${nextLesson.id}" class="w-full text-center text-lg font-semibold text-black bg-cyan-500 hover:bg-cyan-400 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-md">
                                     ${translations[lang].results_next_lesson}
                                 </button>`;
+                    
+                    // User passed: Show "Try Again" instead of "Back to Lessons" so they can improve score
+                    ctaButton2 = `<button id="modal-retry-lesson-btn" class="w-full text-center text-lg font-semibold text-cyan-400 bg-indigo-900 hover:bg-indigo-800 rounded-lg px-6 py-3 transition-all border border-indigo-700 shadow-md">
+                                    ${translations[lang].results_retry}
+                                  </button>`;
+
                 } else if (result.accuracy < 95) { // Failed lesson
+                     // Primary button is ALREADY "Try Again"
                      ctaButton1 = `<button id="modal-retry-btn" class="w-full text-center text-lg font-semibold text-black bg-cyan-500 hover:bg-cyan-400 rounded-lg px-6 py-3 transition-all transform hover:scale-105 shadow-md">
                                     ${translations[lang].results_retry}
                                   </button>`;
+                     
+                     // User failed: Show "Back to Lessons" as secondary to avoid double "Try Again" buttons
+                     ctaButton2 = `<button id="modal-back-btn" class="w-full text-center text-lg font-semibold text-cyan-400 bg-indigo-900 hover:bg-indigo-800 rounded-lg px-6 py-3 transition-all border border-indigo-700 shadow-md">
+                                    ${translations[lang].results_back_to_lessons}
+                                  </button>`;
+
                 } else { // Passed, but it's the LAST lesson
                      ctaButton1 = `<button class="w-full text-center text-lg font-semibold text-white bg-green-600 rounded-lg px-6 py-3 shadow-md" disabled>
                                     Stage Complete!
                                 </button>`;
+                     // Last lesson passed: Show "Try Again"
+                     ctaButton2 = `<button id="modal-retry-lesson-btn" class="w-full text-center text-lg font-semibold text-cyan-400 bg-indigo-900 hover:bg-indigo-800 rounded-lg px-6 py-3 transition-all border border-indigo-700 shadow-md">
+                                    ${translations[lang].results_retry}
+                                  </button>`;
                 }
-                
-                // UPDATED: Changed from "Back to Lessons" to "Try Again"
-                ctaButton2 = `<button id="modal-retry-lesson-btn" class="w-full text-center text-lg font-semibold text-cyan-400 bg-indigo-900 hover:bg-indigo-800 rounded-lg px-6 py-3 transition-all border border-indigo-700 shadow-md">
-                                ${translations[lang].results_retry}
-                              </button>`;
                 
             } else {
                 // Default modal for time/words/quote/code
@@ -2891,8 +2903,20 @@
                     retryBtn.addEventListener('click', resetTest);
                 }
 
-                // UPDATED: Listener for the new Try Again (Retry Lesson) button
-                document.getElementById('modal-retry-lesson-btn').addEventListener('click', resetTest);
+                // Listener for "Try Again" (Secondary button when passed)
+                const retryLessonBtn = document.getElementById('modal-retry-lesson-btn');
+                if (retryLessonBtn) {
+                    retryLessonBtn.addEventListener('click', resetTest);
+                }
+
+                // Listener for "Back to Lessons" (Secondary button when failed)
+                const backBtn = document.getElementById('modal-back-btn');
+                if (backBtn) {
+                    backBtn.addEventListener('click', () => {
+                        resultsModal.classList.add('hidden');
+                        window.location.hash = 'lessons';
+                    });
+                }
                 
             } else {
                 document.getElementById('modal-retry-btn').addEventListener('click', resetTest);
