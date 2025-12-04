@@ -1304,7 +1304,7 @@
     <!-- 
       =================================
     -->
-    <script type="module">
+<script type="module">
         // Firebase SDK imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { 
@@ -2761,8 +2761,9 @@
                                 </button>`;
                 }
                 
-                ctaButton2 = `<button id="modal-back-to-lessons-btn" data-view="lessons" class="w-full text-center text-lg font-semibold text-cyan-400 bg-indigo-900 hover:bg-indigo-800 rounded-lg px-6 py-3 transition-all border border-indigo-700 shadow-md">
-                                ${translations[lang].results_back_to_lessons}
+                // UPDATED: Changed from "Back to Lessons" to "Try Again"
+                ctaButton2 = `<button id="modal-retry-lesson-btn" class="w-full text-center text-lg font-semibold text-cyan-400 bg-indigo-900 hover:bg-indigo-800 rounded-lg px-6 py-3 transition-all border border-indigo-700 shadow-md">
+                                ${translations[lang].results_retry}
                               </button>`;
                 
             } else {
@@ -2787,8 +2788,13 @@
             else modeDesc = 'Quote';
 
             // Render modal content
+            // UPDATED: Added relative positioning and Close (X) button
             resultsModalContent.innerHTML = `
-                <div class="p-6 md:p-8">
+                <div class="p-6 md:p-8 relative">
+                    <button id="modal-close-btn" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10" title="Close">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                    
                     <div class="text-center">
                         <i data-lucide="${result.accuracy > 95 ? 'party-popper' : 'meh'}" class="w-16 h-16 ${result.accuracy > 95 ? 'text-cyan-400' : 'text-amber-400'} mx-auto"></i>
                         <h2 class="text-3xl font-bold text-center text-white mt-4 mb-6">
@@ -2848,6 +2854,19 @@
                     certificateModal.classList.remove('hidden'); // Show certificate modal
                 });
             }
+            
+            // --- NEW: Add listener for the Close (X) button ---
+            document.getElementById('modal-close-btn').addEventListener('click', () => {
+                resultsModal.classList.add('hidden');
+                
+                // If in lesson mode, closing the modal takes you back to the Lesson Dashboard.
+                // If in normal mode, it just closes the modal and resets the test.
+                if (result.mode === 'lesson') {
+                    window.location.hash = 'lessons'; 
+                } else {
+                    resetTest();
+                }
+            });
             // --- End New Listener ---
 
             // Add event listeners for new buttons
@@ -2872,10 +2891,9 @@
                     retryBtn.addEventListener('click', resetTest);
                 }
 
-                document.getElementById('modal-back-to-lessons-btn').addEventListener('click', () => {
-                    resultsModal.classList.add('hidden');
-                    window.location.hash = 'lessons';
-                });
+                // UPDATED: Listener for the new Try Again (Retry Lesson) button
+                document.getElementById('modal-retry-lesson-btn').addEventListener('click', resetTest);
+                
             } else {
                 document.getElementById('modal-retry-btn').addEventListener('click', resetTest);
                 document.getElementById('modal-next-btn').addEventListener('click', resetTest);
@@ -3244,7 +3262,7 @@
             const systemPrompt = "You are a text generator for a typing test. Given a topic, generate a clean, single-paragraph text of about 50-100 words. The text must be suitable for all audiences. Do not include titles, markdown, or any special characters other than standard punctuation (commas, periods). Just output the raw text paragraph.";
             
             // API call
-            const apiKey = "AIzaSyCUc9sMqdmcBnGsVpBeN9kbg5JSLcmhxeM"; // API key will be injected by the environment
+            const apiKey = ""; // API key will be injected by the environment
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             const payload = {
