@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Celestial | Premium Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Syncopate:wght@300;700&family=Inter:wght@200;300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap");
+
+      :root {
+        --color-accent: #ffffff;
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-bg: rgba(5, 5, 10, 0.2);
+        --cursor-size: 40px;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #030303;
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+        cursor: none; /* Hide default cursor */
+      }
+
+      /* Noise Texture for Film Look */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9000;
+        opacity: 0.4;
+      }
+
+      /* Custom Cursor */
+      .cursor-dot,
+      .cursor-circle {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+      }
+      .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background: white;
+      }
+      .cursor-circle {
+        width: var(--cursor-size);
+        height: var(--cursor-size);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: width 0.3s ease, height 0.3s ease,
+          background-color 0.3s ease;
+      }
+      /* Hover state for cursor */
+      body.hovering .cursor-circle {
+        width: 60px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+
+      /* Lenis Setup */
+      html.lenis {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      /* Canvas fixed in background */
+      #webgl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* Typography */
+      .font-display {
+        font-family: "Syncopate", sans-serif;
+      }
+      .font-mono-tech {
+        font-family: "Space Grotesk", monospace;
+      }
+
+      .text-premium-gradient {
+        background: linear-gradient(180deg, #ffffff 0%, #666666 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .text-huge {
+        font-size: clamp(4rem, 13vw, 16rem);
+        line-height: 0.85;
+        letter-spacing: -0.06em;
+        font-weight: 700;
+      }
+
+      /* Layout Utilities */
+      section {
+        position: relative;
+        z-index: 10;
+      }
+
+      .container-fluid {
+        width: 88%;
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+
+      /* Components */
+      .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        border: 1px solid var(--glass-border);
+        border-radius: 2px;
+      }
+
+      .tech-line {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+      }
+
+      /* Horizontal Scroll Section */
+      .h-scroll-wrapper {
+        width: 400%; /* 4 sections wide */
+        height: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .h-section {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .h-section::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 20%;
+        height: 60%;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+      }
+
+      ::selection {
+        background: #ffffff;
+        color: #000;
+      }
+
+      /* Loading Overlay */
+      #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .loader-line {
+        width: 0%;
+        height: 1px;
+        background: white;
+        transition: width 0.5s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Grain/Noise Texture for Premium Feel -->
+    <div class="noise-overlay"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <!-- Loader -->
+    <div id="loader">
+      <div class="font-display text-2xl mb-4 tracking-widest text-white">
+        TERRA NOVA
+      </div>
+      <div class="w-64 h-[1px] bg-gray-900 relative overflow-hidden">
+        <div class="loader-line absolute top-0 left-0 h-full bg-white"></div>
+      </div>
+      <div class="font-mono-tech text-xs text-gray-500 mt-4 tracking-[0.3em]">
+        INITIALIZING ASSETS
+      </div>
+    </div>
+
+    <!-- The 3D Canvas -->
+    <canvas id="webgl"></canvas>
+
+    <!-- Content -->
+    <main>
+      <!-- SECTION 1: HERO -->
+      <section
+        class="h-screen flex flex-col justify-center items-center relative overflow-hidden"
+        data-cursor="hover"
+      >
+        <!-- Subtle Grid Background -->
+        <div
+          class="absolute inset-0 z-0 opacity-10"
+          style="
+            background-image: linear-gradient(
+                rgba(255, 255, 255, 0.05) 1px,
+                transparent 1px
+              ),
+              linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.05) 1px,
+                transparent 1px
+              );
+            background-size: 100px 100px;
+          "
+        ></div>
+
+        <div class="container-fluid z-10 text-center">
+          <div class="overflow-hidden mb-8">
+            <div class="hero-sub flex justify-center items-center gap-4">
+              <div class="h-[1px] w-12 bg-white/30"></div>
+              <p
+                class="font-mono-tech text-gray-400 tracking-[0.5em] text-xs uppercase"
+              >
+                Est. 2084
+              </p>
+              <div class="h-[1px] w-12 bg-white/30"></div>
+            </div>
+          </div>
+          <div class="overflow-hidden">
+            <h1
+              class="hero-title font-display text-huge text-premium-gradient uppercase leading-none mix-blend-difference"
+            >
+              Terra<br />Nova
+            </h1>
+          </div>
+          <div class="overflow-hidden mt-12">
+            <p
+              class="hero-desc font-light text-lg text-gray-400 max-w-xl mx-auto leading-relaxed tracking-wide"
+            >
+              Experience the quiet majesty of a procedurally generated cosmos.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50"
+        >
+          <div
+            class="w-[1px] h-16 bg-gradient-to-b from-transparent via-white to-transparent"
+          ></div>
+          <span class="font-mono-tech text-[10px] tracking-widest uppercase"
+            >Scroll</span
+          >
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTRO (Clean Typography) -->
+      <section class="py-40 relative">
+        <div
+          class="container-fluid grid grid-cols-1 lg:grid-cols-12 gap-16 items-start"
+        >
+          <div class="lg:col-span-8">
+            <h2
+              class="text-split font-display text-4xl md:text-6xl font-light leading-tight tracking-tight"
+            >
+              We don't just simulate worlds.<br />
+              <span class="text-gray-500">We architect existence.</span>
+            </h2>
+          </div>
+          <div class="lg:col-span-4 fade-up pt-4">
+            <div class="h-[1px] w-full bg-white/20 mb-6"></div>
+            <p class="text-base text-gray-400 leading-loose font-light">
+              Leveraging GPU-accelerated fractal algorithms, we render planetary
+              topography with micrometer precision. Every peak, trough, and
+              coastline is unique to your session.
+            </p>
+            <a
+              href="#"
+              class="inline-block mt-8 font-mono-tech text-xs uppercase tracking-[0.2em] border-b border-white/30 pb-1 hover:border-white transition-colors"
+              data-cursor="hover"
+              >Read The Whitepaper</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: PLANETARY DATA (Minimalist Grid) -->
+      <section class="py-32 relative">
+        <div class="container-fluid">
+          <div
+            class="mb-20 flex justify-between items-end fade-up border-b border-white/10 pb-6"
+          >
+            <h3
+              class="font-display text-2xl tracking-widest uppercase text-white/80"
+            >
+              Telemetry
+            </h3>
+            <span
+              class="font-mono-tech text-xs text-emerald-500 flex items-center gap-2"
+            >
+              <span
+                class="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"
+              ></span>
+              LIVE CONNECTION
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/10">
+            <!-- Card 1 -->
+            <div
+              class="bg-black p-12 fade-up group hover:bg-white/5 transition-colors duration-500"
+              data-cursor="hover"
+            >
+              <div
+                class="font-mono-tech text-xs text-gray-600 mb-6 tracking-widest"
+              >
+                01 // COMPOSITION
+              </div>
+              <div
+                class="text-5xl font-light font-display mb-2 group-hover:text-white transition-colors text-gray-300"
+              >
+                N₂O₂
+              </div>
+              <p class="text-sm text-gray-500 font-mono-tech mt-4">
+                78% Nitrogen / 21% Oxygen
+              </p>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+              class="bg-black p-12 fade-up group hover:bg-white/5 transition-colors duration-500"
+              style="transition-delay: 0.1s;"
+              data-cursor="hover"
+            >
+              <div
+                class="font-mono-tech text-xs text-gray-600 mb-6 tracking-widest"
+              >
+                02 // GRAVITY
+              </div>
+              <div
+                class="text-5xl font-light font-display mb-2 group-hover:text-white transition-colors text-gray-300"
+              >
+                1.0G
+              </div>
+              <p class="text-sm text-gray-500 font-mono-tech mt-4">
+                Earth Standard Equivalent
+              </p>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+              class="bg-black p-12 fade-up group hover:bg-white/5 transition-colors duration-500"
+              style="transition-delay: 0.2s;"
+              data-cursor="hover"
+            >
+              <div
+                class="font-mono-tech text-xs text-gray-600 mb-6 tracking-widest"
+              >
+                03 // SURFACE TEMP
+              </div>
+              <div
+                class="text-5xl font-light font-display mb-2 group-hover:text-white transition-colors text-gray-300"
+              >
+                287K
+              </div>
+              <p class="text-sm text-gray-500 font-mono-tech mt-4">
+                Optimal Range
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: HORIZONTAL SCROLL -->
+      <section
+        id="horizontal-scroll"
+        class="h-screen w-full bg-transparent overflow-hidden relative"
+      >
+        <div class="h-scroll-wrapper">
+          <!-- Panel 1 -->
+          <div class="h-section">
+            <div class="relative z-10 text-center">
+              <p
+                class="font-mono-tech text-xs text-gray-500 tracking-[0.5em] mb-6 uppercase"
+              >
+                Mission Phase I
+              </p>
+              <h2
+                class="font-display text-[7vw] leading-none text-white mix-blend-difference"
+              >
+                ORBITAL<br />ENTRY
+              </h2>
+            </div>
+          </div>
+
+          <!-- Panel 2 -->
+          <div class="h-section">
+            <div class="container-fluid grid grid-cols-2 gap-20 items-center">
+              <div
+                class="glass-panel p-16 border-l-2 border-l-white border-y-0 border-r-0 rounded-none"
+              >
+                <h3 class="font-display text-4xl mb-6">Topography Scan</h3>
+                <p
+                  class="text-gray-400 mb-8 text-lg font-light leading-relaxed"
+                >
+                  Our scanners indicate a planet rich in diverse biomes. From
+                  the polar ice caps to the equatorial archipelagos, detail is
+                  preserved at a sub-polygon level.
+                </p>
+                <div class="flex gap-4">
+                  <div
+                    class="px-4 py-2 border border-white/20 font-mono-tech text-xs"
+                  >
+                    OCEANIC: 71%
+                  </div>
+                  <div
+                    class="px-4 py-2 border border-white/20 font-mono-tech text-xs"
+                  >
+                    TERRESTRIAL: 29%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3 -->
+          <div class="h-section">
+            <div
+              class="glass-panel p-24 text-center border border-white/10 rounded-full aspect-square flex flex-col justify-center items-center hover:bg-white/5 transition-all duration-700"
+              data-cursor="hover"
+            >
+              <h2 class="font-display text-5xl mb-4">
+                Initialize<br />Landing
+              </h2>
+              <div class="h-[1px] w-20 bg-white/50 my-6"></div>
+              <button
+                class="font-mono-tech uppercase tracking-[0.3em] text-xs hover:text-white/70 transition-colors"
+              >
+                Begin Sequence
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: PARALLAX -->
+      <section
+        class="min-h-screen flex items-center justify-center py-32 overflow-hidden relative"
+      >
+        <div
+          class="absolute inset-0 z-0 bg-gradient-to-t from-black via-transparent to-transparent"
+        ></div>
+        <div class="container-fluid relative z-10">
+          <div class="parallax-text text-center">
+            <h2
+              class="font-display text-[15vw] font-bold text-white/5 leading-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full pointer-events-none"
+            >
+              INFINITY
+            </h2>
+            <div class="relative z-10 max-w-xl mx-auto text-center mt-20">
+              <p
+                class="font-mono-tech text-xs tracking-[0.5em] text-gray-500 mb-6 uppercase"
+              >
+                Final Logs
+              </p>
+              <h3 class="text-3xl font-light mb-8 leading-snug">
+                "The universe is not only stranger than we suppose, but stranger
+                than we
+                <span class="text-white border-b border-white/30">can</span>
+                suppose."
+              </h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <section class="py-12 border-t border-white/5 bg-[#050505] relative z-20">
+        <div class="container-fluid">
+          <div class="flex flex-col md:flex-row justify-between items-end">
+            <div>
+              <h2 class="font-display text-2xl font-bold mb-2 tracking-widest">
+                TERRA NOVA
+              </h2>
+              <p
+                class="font-mono-tech text-[10px] text-gray-600 tracking-widest uppercase"
+              >
+                © 2084 Interactive Division
+              </p>
+            </div>
+            <div
+              class="mt-10 md:mt-0 flex gap-12 font-mono-tech text-xs tracking-widest text-gray-500"
+            >
+              <a
+                href="#"
+                class="hover:text-white transition-colors"
+                data-cursor="hover"
+                >SYS.LOG</a
+              >
+              <a
+                href="#"
+                class="hover:text-white transition-colors"
+                data-cursor="hover"
+                >CREDITS</a
+              >
+              <a
+                href="#"
+                class="hover:text-white transition-colors"
+                data-cursor="hover"
+                >LEGAL</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+          "lenis": "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.mjs"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import Lenis from "lenis";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // --- Configuration (Premium Colors: Darker, Desaturated, Cinematic) ---
+      const CONFIG = {
+        scrollSpeed: 0.0005,
+        autoRotateSpeed: 0.0003,
+        sunPosition: new THREE.Vector3(5, 3, 5),
+        colors: {
+          waterDeep: new THREE.Color("#030303"), // Almost black
+          waterShallow: new THREE.Color("#0a1525"), // Deep dark navy
+          sand: new THREE.Color("#383838"), // Dark volcanic sand
+          grass: new THREE.Color("#1a251a"), // Desaturated dark lichen
+          forest: new THREE.Color("#0d140d"), // Deep forest
+          mountain: new THREE.Color("#2a2a2a"), // Dark slate
+          snow: new THREE.Color("#e0e0e0"), // Off-white snow
+        },
+      };
+
+      // --- Custom Cursor Logic ---
+      const cursorDot = document.querySelector(".cursor-dot");
+      const cursorCircle = document.querySelector(".cursor-circle");
+
+      // Initial position off-screen
+      gsap.set([cursorDot, cursorCircle], {
+        xPercent: -50,
+        yPercent: -50,
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        gsap.to(cursorDot, { duration: 0.1, x: e.clientX, y: e.clientY });
+        gsap.to(cursorCircle, {
+          duration: 0.5,
+          x: e.clientX,
+          y: e.clientY,
+          ease: "power2.out",
+        });
+      });
+
+      // Hover Effect for Interactables
+      const hoverables = document.querySelectorAll('[data-cursor="hover"]');
+      hoverables.forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          document.body.classList.add("hovering")
+        );
+        el.addEventListener("mouseleave", () =>
+          document.body.classList.remove("hovering")
+        );
+      });
+
+      // --- Scene Setup ---
+      const canvas = document.querySelector("#webgl");
+      const scene = new THREE.Scene();
+      // scene.fog = new THREE.FogExp2(0x030303, 0.02); // Cinematic fog
+
+      const camera = new THREE.PerspectiveCamera(
+        40,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 0, 16);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        antialias: false,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.9; // Slightly darker for drama
+
+      // --- Shaders (Same logic, new aesthetic tuning) ---
+      const noiseFunctions = `
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+            float snoise(vec3 v) {
+                const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 = v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i); 
+                vec4 p = permute( permute( permute( 
+                        i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            }
+            float fbm(vec3 x, int octaves) {
+                float v = 0.0; float a = 0.5; vec3 shift = vec3(100.0);
+                for (int i = 0; i < 10; ++i) {
+                    if(i >= octaves) break;
+                    v += a * snoise(x);
+                    x = x * 2.0 + shift;
+                    a *= 0.5;
+                }
+                return v;
+            }
+        `;
+
+      const terrainVertex = `
+            ${noiseFunctions}
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying float vHeight;
+            void main() {
+                vUv = uv;
+                float noiseVal = fbm(position * 1.5, 6);
+                vHeight = noiseVal;
+                // Sharper, rockier terrain displacement
+                float displacement = 0.0;
+                if(noiseVal > 0.02) { displacement = (noiseVal - 0.02) * 0.18; }
+                vec3 newPosition = position + normal * displacement;
+                vNormal = normalize(normalMatrix * normal);
+                vPosition = (modelViewMatrix * vec4(newPosition, 1.0)).xyz;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+      const terrainFragment = `
+            uniform vec3 uSunPos;
+            uniform vec3 uColorDeep;
+            uniform vec3 uColorShallow;
+            uniform vec3 uColorSand;
+            uniform vec3 uColorGrass;
+            uniform vec3 uColorForest;
+            uniform vec3 uColorMountain;
+            uniform vec3 uColorSnow;
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying float vHeight;
+            void main() {
+                vec3 viewDir = normalize(-vPosition);
+                vec3 normal = normalize(vNormal);
+                vec3 sunDir = normalize(uSunPos);
+                
+                // More dramatic lighting (Hemisphere-ish)
+                float diff = max(dot(normal, sunDir), 0.0);
+                
+                float specularStrength = 0.0;
+                float shininess = 40.0; // Sharp highlights
+                vec3 color;
+                
+                // Adjusted height zones for the new darker palette
+                if (vHeight < -0.2) { color = uColorDeep; specularStrength = 0.9; } 
+                else if (vHeight < 0.05) { 
+                    float t = smoothstep(-0.2, 0.05, vHeight); 
+                    color = mix(uColorDeep, uColorShallow, t); 
+                    specularStrength = 0.5 * (1.0 - t); 
+                } 
+                else if (vHeight < 0.08) { color = uColorSand; specularStrength = 0.1; } 
+                else if (vHeight < 0.25) { float t = smoothstep(0.08, 0.25, vHeight); color = mix(uColorGrass, uColorForest, t); } 
+                else if (vHeight < 0.50) { float t = smoothstep(0.25, 0.50, vHeight); color = mix(uColorForest, uColorMountain, t); } 
+                else { color = uColorSnow; }
+
+                vec3 reflectDir = reflect(-sunDir, normal);
+                float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+                vec3 specular = spec * specularStrength * vec3(1.0, 1.0, 1.0); // White specular for sharp look
+
+                // Fresnel (Atmosphere Edge) - Thinner, whiter
+                float fresnel = pow(1.0 - dot(viewDir, normal), 4.0);
+                vec3 atmosphere = vec3(0.5, 0.6, 0.8) * fresnel * 0.4;
+
+                vec3 finalColor = color * (diff + 0.05) + specular + atmosphere;
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+
+      const cloudVertex = `
+            ${noiseFunctions}
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying float vNoise;
+            uniform float uTime;
+            void main() {
+                vUv = uv;
+                vNormal = normalize(normalMatrix * normal);
+                vNoise = fbm(position * 1.1 + vec3(uTime * 0.05, 0.0, 0.0), 4);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+      const cloudFragment = `
+            varying vec3 vNormal;
+            varying float vNoise;
+            uniform vec3 uSunPos;
+            void main() {
+                float alpha = smoothstep(0.3, 0.7, vNoise); // Thinner clouds
+                vec3 sunDir = normalize(uSunPos);
+                float diff = max(dot(vNormal, sunDir), 0.0);
+                vec3 color = vec3(0.95, 0.95, 1.0) * (diff + 0.2); // Blue-white tint
+                gl_FragColor = vec4(color, alpha * 0.6); 
+            }
+        `;
+
+      // --- Objects ---
+      const geometry = new THREE.IcosahedronGeometry(3.5, 96);
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          uSunPos: { value: CONFIG.sunPosition },
+          uColorDeep: { value: CONFIG.colors.waterDeep },
+          uColorShallow: { value: CONFIG.colors.waterShallow },
+          uColorSand: { value: CONFIG.colors.sand },
+          uColorGrass: { value: CONFIG.colors.grass },
+          uColorForest: { value: CONFIG.colors.forest },
+          uColorMountain: { value: CONFIG.colors.mountain },
+          uColorSnow: { value: CONFIG.colors.snow },
+        },
+        vertexShader: terrainVertex,
+        fragmentShader: terrainFragment,
+      });
+      const planet = new THREE.Mesh(geometry, material);
+      scene.add(planet);
+
+      const cloudGeometry = new THREE.IcosahedronGeometry(3.56, 64);
+      const cloudMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uSunPos: { value: CONFIG.sunPosition },
+        },
+        vertexShader: cloudVertex,
+        fragmentShader: cloudFragment,
+        transparent: true,
+        blending: THREE.NormalBlending,
+        depthWrite: false,
+      });
+      const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+      scene.add(clouds);
+
+      const glowGeometry = new THREE.IcosahedronGeometry(3.8, 40);
+      const glowMaterial = new THREE.ShaderMaterial({
+        uniforms: { uSunPos: { value: CONFIG.sunPosition } },
+        vertexShader: `varying vec3 vNormal; varying vec3 vPosition; void main() { vNormal = normalize(normalMatrix * normal); vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+        fragmentShader: `varying vec3 vNormal; varying vec3 vPosition; uniform vec3 uSunPos; void main() { vec3 viewDir = normalize(-vPosition); float fresnel = pow(1.0 - dot(vNormal, viewDir), 3.5); vec3 sunDir = normalize(uSunPos); float sunDot = max(dot(vNormal, sunDir), 0.0); gl_FragColor = vec4(0.6, 0.7, 0.9, 1.0) * fresnel * (sunDot + 0.1); }`,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
+      });
+      const atmosphere = new THREE.Mesh(glowGeometry, glowMaterial);
+      scene.add(atmosphere);
+
+      // Subtler Stars
+      const starsGeo = new THREE.BufferGeometry();
+      const starsCount = 4000;
+      const posArray = new Float32Array(starsCount * 3);
+      const sizeArray = new Float32Array(starsCount);
+      for (let i = 0; i < starsCount * 3; i++) {
+        posArray[i] = (Math.random() - 0.5) * 70;
+        if (i % 3 === 0) sizeArray[i / 3] = Math.random();
+      }
+      starsGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+      starsGeo.setAttribute("size", new THREE.BufferAttribute(sizeArray, 1));
+      const starsMat = new THREE.PointsMaterial({
+        size: 0.03,
+        color: 0x8899aa,
+        transparent: true,
+        opacity: 0.6,
+      });
+      const starField = new THREE.Points(starsGeo, starsMat);
+      scene.add(starField);
+
+      // --- Bloom (More Subtle, Less Hazy) ---
+      const renderScene = new RenderPass(scene, camera);
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        1.5,
+        0.4,
+        0.85
+      );
+      bloomPass.threshold = 0.6; // Higher threshold = only brightest parts glow
+      bloomPass.strength = 0.4; // Softer glow
+      bloomPass.radius = 0.5;
+      const composer = new EffectComposer(renderer);
+      composer.addPass(renderScene);
+      composer.addPass(bloomPass);
+
+      // --- Animations ---
+      const lenis = new Lenis({
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+      });
+      function update(time) {
+        lenis.raf(time * 1000);
+        ScrollTrigger.update();
+      }
+      gsap.ticker.add((time) => update(time));
+      lenis.on("scroll", ScrollTrigger.update);
+
+      // Loader
+      const tlLoad = gsap.timeline();
+      tlLoad
+        .to(".loader-line", {
+          width: "100%",
+          duration: 1.5,
+          ease: "power2.inOut",
+        })
+        .to("#loader", { yPercent: -100, duration: 1, ease: "power4.inOut" })
+        .from(".hero-sub", { opacity: 0, y: 20, duration: 1 }, "-=0.5")
+        .from(
+          ".hero-title",
+          { opacity: 0, y: 50, duration: 1.5, ease: "power3.out" },
+          "-=0.8"
+        )
+        .from(".hero-desc", { opacity: 0, duration: 1 }, "-=0.5");
+
+      // Reveal Animations
+      gsap.utils.toArray(".text-split").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: { trigger: el, start: "top 85%" },
+          y: 60,
+          opacity: 0,
+          duration: 1.5,
+          ease: "power3.out",
+        });
+      });
+      gsap.utils.toArray(".fade-up").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: { trigger: el, start: "top 90%" },
+          y: 40,
+          opacity: 0,
+          duration: 1.2,
+          ease: "power2.out",
+        });
+      });
+
+      // Horizontal Scroll
+      let horizontalSection = document.querySelector(".h-scroll-wrapper");
+      gsap.to(horizontalSection, {
+        xPercent: -75,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#horizontal-scroll",
+          pin: true,
+          scrub: 1,
+          end: "+=3500",
+        },
+      });
+
+      // Parallax
+      gsap.to(".parallax-text h2", {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".parallax-text",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // Planet Interaction
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) => {
+          const r = self.progress * Math.PI * 2;
+          planet.rotation.y = r;
+          clouds.rotation.y = r * 1.15;
+          starField.rotation.y = -r * 0.1;
+        },
+      });
+
+      const clock = new THREE.Clock();
+      function animate() {
+        const elapsed = clock.getElapsedTime();
+        planet.rotation.y += CONFIG.autoRotateSpeed;
+        clouds.rotation.y += CONFIG.autoRotateSpeed * 1.1;
+        clouds.material.uniforms.uTime.value = elapsed;
+        composer.render();
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
+</html>

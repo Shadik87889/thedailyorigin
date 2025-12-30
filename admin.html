@@ -3,64 +3,223 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TDO - Admin Panel</title>
+    <title>Newsroom CMS | The Daily Origin</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap"
       rel="stylesheet"
     />
-    <!-- NEW: Add Logo Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- NEW: SunEditor (Rich Text Editor) -->
+
+    <!-- SunEditor (Rich Text) -->
     <link
       href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-      body {
-        font-family: "Inter", sans-serif;
-        background-color: #0f172a; /* slate-900 */
-        color: #d1d5db;
-      }
-      .header-glass {
-        background-color: rgba(2, 6, 23, 0.6);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid #1e293b;
-      }
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0f172a;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #0891b2;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #22d3ee;
+      :root {
+        --color-brand-black: #000000;
+        --color-brand-red: #c90000;
+        --font-sans: "Inter", sans-serif;
+        --font-serif: "Merriweather", serif;
+        --font-display: "Playfair Display", serif;
       }
 
-      #loading-spinner {
-        border: 4px solid #1e293b;
-        border-top: 4px solid #22d3ee;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
+      body {
+        font-family: var(--font-sans);
+        background-color: #f8fafc; /* Slate-50 */
+        color: #1e293b; /* Slate-800 */
+        -webkit-font-smoothing: antialiased;
       }
-      @keyframes spin {
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        font-family: var(--font-display);
+      }
+
+      /* --- Custom Components --- */
+
+      .btn-primary {
+        background-color: var(--color-brand-black);
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        font-size: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.2s;
+        border: 1px solid var(--color-brand-black);
+      }
+      .btn-primary:hover {
+        background-color: var(--color-brand-red);
+        border-color: var(--color-brand-red);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.2s;
+      }
+      .btn-outline:hover {
+        border-color: var(--color-brand-black);
+        color: var(--color-brand-black);
+      }
+
+      .btn-danger {
+        background-color: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        font-weight: 600;
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+      }
+      .btn-danger:hover {
+        background-color: #ef4444;
+        color: white;
+        border-color: #ef4444;
+      }
+
+      /* Form Elements */
+      .input-field {
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        background-color: #fff;
+        padding: 0.75rem;
+        font-family: var(--font-sans);
+        color: #0f172a;
+        border-radius: 0; /* Sharp edges for editorial feel */
+        transition: border-color 0.2s;
+      }
+      .input-field:focus {
+        outline: none;
+        border-color: var(--color-brand-black);
+        box-shadow: 0 0 0 1px var(--color-brand-black);
+      }
+
+      /* Sidebar */
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        color: #94a3b8;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar-link:hover {
+        color: white;
+        background-color: #1e1e1e;
+      }
+      .sidebar-link.active {
+        color: white;
+        background-color: #1e1e1e;
+        border-left-color: var(--color-brand-red);
+      }
+
+      /* Stats Card */
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        border-top: 4px solid var(--color-brand-black);
+      }
+
+      /* Table Styles */
+      .cms-table th {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.7rem;
+        color: #64748b;
+        font-weight: 700;
+        padding: 1rem 1.5rem;
+        border-bottom: 2px solid #e2e8f0;
+        background-color: #f8fafc;
+      }
+      .cms-table td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
+      }
+      .cms-table tr:hover td {
+        background-color: #f8fafc;
+      }
+
+      /* Status Badges */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .badge-success {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .badge-warning {
+        background-color: #fef9c3;
+        color: #854d0e;
+      }
+      .badge-gray {
+        background-color: #f1f5f9;
+        color: #475569;
+      }
+
+      /* SunEditor Override for Professional Look */
+      .sun-editor {
+        border: 1px solid #e2e8f0 !important;
+      }
+      .sun-editor .se-toolbar {
+        background: #f8fafc !important;
+        outline: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+      }
+      .sun-editor .se-btn-tray {
+        padding: 4px !important;
+      }
+
+      /* Toast */
+      #toast-notification {
+        transform: translateY(100%);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      #toast-notification.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Loader */
+      .loader {
+        border-top-color: var(--color-brand-red);
+        -webkit-animation: spinner 1.5s linear infinite;
+        animation: spinner 1.5s linear infinite;
+      }
+      @keyframes spinner {
         0% {
           transform: rotate(0deg);
         }
@@ -68,628 +227,415 @@
           transform: rotate(360deg);
         }
       }
-
-      /* NEW: Logo Font Styles */
-      .logo-main {
-        font-family: "Oswald", sans-serif;
-        font-weight: 700;
-      }
-      .logo-artisan {
-        font-family: "Caveat", cursive;
-      }
-
-      /* Modal styles */
-      #article-modal::backdrop,
-      #delete-confirm-modal::backdrop {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(5px);
-      }
-      .form-input,
-      .form-select,
-      .form-textarea {
-        background-color: #1e293b; /* slate-800 */
-        border: 1px solid #334155; /* slate-700 */
-        color: white;
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        width: 100%;
-        transition: all 0.2s;
-      }
-      /* Padded down for filter bar */
-      .form-select {
-        padding-right: 2.5rem;
-      }
-      .filter-select {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-      }
-
-      .form-input:focus,
-      .form-select:focus,
-      .form-textarea:focus {
-        outline: none;
-        border-color: #0891b2;
-        box-shadow: 0 0 0 2px #0e7490;
-      }
-      .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: #cbd5e1; /* slate-300 */
-      }
-      /* Style for disabled pagination button */
-      .pagination-btn:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-      }
-
-      /* --- NEW: Toast Notification Style --- */
-      #toast-notification {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background-color: #020617; /* slate-950 */
-        color: #22d3ee; /* cyan-400 */
-        padding: 1rem 1.5rem;
-        border: 1px solid #0891b2;
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 4px rgba(8, 145, 178, 0.3);
-        transform: translateX(calc(100% + 2rem));
-        transition: transform 0.3s ease-out;
-        z-index: 100;
-      }
-      #toast-notification.show {
-        transform: translateX(0);
-      }
-
-      /* --- NEW: Article Content Preview Styles (Copied from article.html) --- */
-      .article-content h2 {
-        font-size: 1.875rem; /* text-3xl */
-        font-weight: 800; /* extra-bold */
-        color: white;
-        margin-top: 1.5rem; /* mt-6 */
-        margin-bottom: 1rem; /* mb-4 */
-        border-left: 3px solid #0891b2; /* border-l-4 border-cyan-700 */
-        padding-left: 1rem; /* pl-4 */
-      }
-      .article-content p {
-        font-size: 1.125rem; /* text-lg */
-        line-height: 1.75; /* leading-relaxed */
-        color: #d1d5db; /* text-gray-300 */
-        margin-bottom: 1.5rem; /* mb-6 */
-      }
-      .article-content strong {
-        color: #f8fafc; /* text-slate-50 */
-        font-weight: 700;
-      }
-      .article-content blockquote {
-        border-left: 4px solid #1e293b; /* border-slate-800 */
-        padding-left: 1.5rem; /* pl-6 */
-        font-style: italic;
-        color: #94a3b8; /* text-slate-400 */
-        margin-top: 2rem;
-        margin-bottom: 2rem;
-        font-size: 1.25rem; /* text-xl */
-      }
-      .article-content ul {
-        list-style-type: disc;
-        padding-left: 2rem;
-        margin-bottom: 1.5rem;
-        font-size: 1.125rem;
-        line-height: 1.75;
-      }
-      .article-content ol {
-        list-style-type: decimal;
-        padding-left: 2rem;
-        margin-bottom: 1.5rem;
-        font-size: 1.125rem;
-        line-height: 1.75;
-      }
-      .article-content li {
-        margin-bottom: 0.5rem;
-      }
-      .article-content a {
-        color: #22d3ee; /* cyan-400 */
-        text-decoration: underline;
-        transition: color 0.2s;
-      }
-      .article-content a:hover {
-        color: #67e8f9; /* cyan-300 */
-      }
-      .article-content code {
-        background: #1e293b; /* slate-800 */
-        color: #e2e8f0; /* slate-200 */
-        padding: 0.1rem 0.4rem;
-        border-radius: 0.25rem;
-        font-family: monospace;
-      }
-      .article-content pre {
-        background: #020617; /* slate-950 */
-        border: 1px solid #1e293b; /* slate-800 */
-        padding: 1rem;
-        border-radius: 0.5rem;
-        overflow-x: auto;
-        margin-bottom: 1.5rem;
-      }
-      .article-content pre code {
-        background: none;
-        padding: 0;
-      }
-
-      /* --- NEW: SunEditor Dark Theme Override --- */
-      .sun-editor {
-        background-color: #1e293b !important; /* slate-800 */
-        border: 1px solid #334155 !important; /* slate-700 */
-        border-radius: 0.5rem !important;
-      }
-      .sun-editor .se-toolbar {
-        background-color: #0f172a !important; /* slate-900 */
-        border-bottom: 1px solid #334155 !important;
-        border-radius: 0.5rem 0.5rem 0 0 !important;
-      }
-      .sun-editor .se-toolbar button,
-      .sun-editor .se-toolbar .se-btn-select {
-        color: #cbd5e1 !important; /* slate-300 */
-      }
-      .sun-editor .se-toolbar button:hover,
-      .sun-editor .se-toolbar button:active,
-      .sun-editor .se-toolbar button.on {
-        background-color: #334155 !important;
-        color: white !important;
-      }
-      .sun-editor .se-wrapper {
-        border-radius: 0 0 0.5rem 0.5rem !important;
-      }
-      .sun-editor .se-wrapper .se-wrapper-inner .se-wrapper-wysiwyg {
-        background-color: #020617 !important; /* slate-950 */
-        color: #d1d5db !important; /* text-gray-300 */
-        font-family: "Inter", sans-serif;
-        padding: 1.5rem !important;
-      }
-      .sun-editor .se-resizing-bar {
-        background-color: #0f172a !important; /* slate-900 */
-        border-top: 1px solid #334155 !important;
-        color: #94a3b8 !important;
-      }
-      /* Dropdowns */
-      .sun-editor .se-list-inner {
-        background-color: #1e293b !important; /* slate-800 */
-        border: 1px solid #334155 !important;
-      }
-      .sun-editor .se-list-inner button:hover,
-      .sun-editor .se-list-inner button.on {
-        background-color: #334155 !important;
-      }
-      /* NEW: Style for the Code (HTML) View */
-      .sun-editor .se-wrapper-code .se-code-container textarea {
-        background-color: #020617 !important; /* slate-950 */
-        color: #e2e8f0 !important; /* slate-200 */
-        font-family: monospace !important;
-        padding: 1.5rem !important;
-      }
-      /* Apply article preview styles directly to the editor's content */
-      .se-wrapper-wysiwyg h2 {
-        font-size: 1.875rem !important;
-        font-weight: 800 !important;
-        color: white !important;
-        margin-top: 1.5rem !important;
-        margin-bottom: 1rem !important;
-        border-left: 3px solid #0891b2 !important;
-        padding-left: 1rem !important;
-      }
-      .se-wrapper-wysiwyg p {
-        font-size: 1.125rem !important;
-        line-height: 1.75 !important;
-        color: #d1d5db !important;
-        margin-bottom: 1.5rem !important;
-      }
-      .se-wrapper-wysiwyg strong {
-        color: #f8fafc !important;
-        font-weight: 700 !important;
-      }
-      .se-wrapper-wysiwyg blockquote {
-        border-left: 4px solid #334155 !important; /* slate-700 */
-        padding-left: 1.5rem !important;
-        font-style: italic !important;
-        color: #94a3b8 !important;
-        margin-top: 2rem !important;
-        margin-bottom: 2rem !important;
-        font-size: 1.25rem !important;
-      }
-      .se-wrapper-wysiwyg ul {
-        list-style-type: disc !important;
-        padding-left: 2rem !important;
-        margin-bottom: 1.5rem !important;
-        font-size: 1.125rem !important;
-      }
-      .se-wrapper-wysiwyg ol {
-        list-style-type: decimal !important;
-        padding-left: 2rem !important;
-        margin-bottom: 1.5rem !important;
-        font-size: 1.125rem !important;
-      }
-      .se-wrapper-wysiwyg li {
-        margin-bottom: 0.5rem !important;
-      }
-      .se-wrapper-wysiwyg a {
-        color: #22d3ee !important; /* cyan-400 */
-        text-decoration: underline !important;
-      }
-      .se-wrapper-wysiwyg code {
-        background: #334155 !important; /* slate-700 */
-        color: #e2e8f0 !important;
-        padding: 0.1rem 0.4rem !important;
-        border-radius: 0.25rem !important;
-      }
-      .se-wrapper-wysiwyg pre {
-        background: #020617 !important; /* slate-950 */
-        border: 1px solid #1e293b !important;
-        padding: 1rem !important;
-        border-radius: 0.5rem !important;
-        overflow-x: auto !important;
-        margin-bottom: 1.5rem !important;
-      }
-      .se-wrapper-wysiwyg pre code {
-        background: none !important;
-        padding: 0 !important;
-        color: #e2e8f0 !important;
-      }
-      /* Force background color inside the WYSIWYG editor iframe */
-      .sun-editor-editable {
-        background-color: #020617 !important; /* Forces the background color */
-        color: #d1d5db !important; /* Ensures text remains visible */
-      }
     </style>
   </head>
-  <body class="antialiased">
-    <!-- 1. Login View -->
+  <body class="h-screen flex flex-col overflow-hidden">
+    <!-- 1. LOGIN VIEW -->
     <div
       id="auth-container"
-      class="min-h-screen flex items-center justify-center bg-slate-950"
+      class="fixed inset-0 z-50 bg-[#f8fafc] flex flex-col items-center justify-center p-4"
     >
       <div
-        class="w-full max-w-md p-8 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-cyan-900/10"
+        class="w-full max-w-md bg-white border border-gray-200 shadow-xl p-8 md:p-12 relative overflow-hidden"
       >
-        <!-- UPDATED: Logo -->
-        <div class="flex justify-center items-baseline space-x-2 mb-4">
-          <span class="text-3xl text-white logo-main">The Daily</span>
-          <span class="relative">
-            <span class="text-4xl font-bold text-cyan-400 logo-artisan"
-              >Origin</span
-            >
-            <!-- SVG Underline -->
-            <svg
-              class="absolute left-0 w-full h-4 -bottom-1 text-cyan-500"
-              viewBox="0 0 100 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M2 12 C 30 22 70 22 98 12"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-              />
-            </svg>
-            <!-- BETA Tag -->
-            <span
-              class="absolute -top-2 -right-6 text-xs font-bold text-yellow-400 bg-slate-800 px-2 py-0.5 rounded-full rotate-12 border border-yellow-500"
-              >BETA</span
-            >
-          </span>
+        <div class="absolute top-0 left-0 w-full h-1 bg-black"></div>
+        <div class="text-center mb-8">
+          <h1 class="text-4xl font-black tracking-tight mb-2">
+            The Daily Origin.
+          </h1>
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400">
+            Newsroom CMS Access
+          </p>
         </div>
-        <h2 class="text-2xl font-extrabold text-white text-center mb-2">
-          Admin Panel
-        </h2>
-        <p class="text-center text-slate-400 mb-6">
-          Sign in to manage your content.
-        </p>
 
-        <form id="login-form">
-          <div class="mb-4">
-            <label for="login-email" class="form-label">Email</label>
-            <input type="email" id="login-email" class="form-input" required />
+        <form id="login-form" class="space-y-6">
+          <div>
+            <label
+              class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2"
+              >Email Identity</label
+            >
+            <input
+              type="email"
+              id="login-email"
+              class="input-field"
+              placeholder="editor@thedailyorigin.com"
+              required
+            />
           </div>
-          <div class="mb-6">
-            <label for="login-password" class="form-label">Password</label>
+          <div>
+            <label
+              class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2"
+              >Password</label
+            >
             <input
               type="password"
               id="login-password"
-              class="form-input"
+              class="input-field"
+              placeholder="••••••••"
               required
             />
           </div>
-          <button
-            type="submit"
-            class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 shadow-lg shadow-cyan-700/20"
-          >
-            Sign In
+          <button type="submit" class="w-full btn-primary py-4">
+            Authenticate
           </button>
-          <p id="login-error" class="text-red-400 text-center text-sm mt-4"></p>
         </form>
+        <p
+          id="login-error"
+          class="text-red-600 text-center text-sm mt-6 font-medium"
+        ></p>
       </div>
+      <p class="mt-8 text-gray-400 text-xs text-center">
+        &copy; 2025 The Daily Origin Media Group. <br />Unauthorized access is
+        prohibited.
+      </p>
     </div>
 
-    <!-- 2. Loading View -->
+    <!-- 2. LOADING STATE -->
     <div
       id="loading-container"
-      class="hidden min-h-screen flex flex-col items-center justify-center text-cyan-400"
+      class="fixed inset-0 z-40 bg-white hidden flex flex-col items-center justify-center"
     >
-      <div id="loading-spinner"></div>
-      <p class="mt-4 text-lg">Authenticating & Fetching Roles...</p>
+      <div
+        class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"
+      ></div>
+      <h2 class="text-xl font-display font-bold text-gray-800">
+        Authenticating Credentials...
+      </h2>
     </div>
 
-    <!-- 3. Admin Dashboard View -->
-    <div id="admin-dashboard" class="hidden min-h-screen">
-      <!-- Header -->
-      <header class="header-glass sticky top-0 z-40 w-full">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between items-center h-20">
-            <!-- UPDATED: Header Logo -->
-            <div class="flex items-center space-x-4">
-              <div class="flex items-baseline space-x-2">
-                <span class="text-2xl text-white logo-main">The Daily</span>
-                <span class="relative">
-                  <span class="text-3xl font-bold text-cyan-400 logo-artisan"
-                    >Origin</span
-                  >
-                  <!-- SVG Underline -->
-                  <svg
-                    class="absolute left-0 w-full h-3 -bottom-1 text-cyan-500"
-                    viewBox="0 0 100 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    preserveAspectRatio="none"
-                  >
-                    <path
-                      d="M2 12 C 30 22 70 22 98 12"
-                      stroke="currentColor"
-                      stroke-width="3"
-                      stroke-linecap="round"
-                    />
-                  </svg>
-                  <!-- BETA Tag -->
-                  <span
-                    class="absolute -top-2 -right-5 text-xs font-bold text-yellow-400 bg-slate-800 px-2 py-0.5 rounded-full rotate-12 border border-yellow-500"
-                    >BETA</span
-                  >
-                </span>
-              </div>
-              <span
-                class="text-2xl font-extrabold text-slate-500 tracking-wider pt-1"
-              >
-                / ADMIN
-              </span>
-            </div>
-            <div class="flex items-center space-x-4">
-              <span
-                id="user-email-display"
-                class="text-slate-300 text-sm hidden md:block"
-              ></span>
-              <button
-                id="logout-button"
-                class="text-slate-400 hover:text-cyan-400 transition-colors flex items-center space-x-2"
-              >
-                <i data-lucide="log-out" class="w-5 h-5"></i>
-                <span class="text-sm font-medium">Logout</span>
-              </button>
-            </div>
-          </div>
+    <!-- 3. MAIN DASHBOARD LAYOUT -->
+    <div id="admin-dashboard" class="hidden flex h-full">
+      <!-- Sidebar Navigation -->
+      <aside
+        class="w-64 bg-black text-white hidden md:flex flex-col flex-shrink-0 z-20"
+      >
+        <div
+          class="h-16 flex items-center px-6 bg-black border-b border-gray-900"
+        >
+          <span class="font-display font-bold text-xl tracking-tight"
+            >TDO <span class="text-[#C90000]">.</span> Admin</span
+          >
         </div>
-      </header>
 
-      <!-- Main Content -->
-      <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- SuperAdmin Navigation Tabs -->
-        <nav id="admin-nav" class="hidden mb-8 border-b border-slate-700">
-          <button
-            data-view="articles"
-            class="nav-tab text-base font-semibold px-6 py-3 border-b-2 border-cyan-500 text-white"
-          >
-            Manage Articles
+        <nav class="flex-1 overflow-y-auto py-4">
+          <div class="px-6 mb-2">
+            <p
+              class="text-[10px] font-bold uppercase tracking-widest text-gray-500"
+            >
+              Editorial
+            </p>
+          </div>
+          <button data-view="articles" class="sidebar-link w-full active">
+            <i data-lucide="file-text" class="w-5 h-5 mr-3"></i> Articles
           </button>
-          <button
-            data-view="users"
-            class="nav-tab text-base font-semibold px-6 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200"
-          >
-            Manage Users
+          <button data-view="authors" class="sidebar-link w-full">
+            <i data-lucide="users" class="w-5 h-5 mr-3"></i> Authors
           </button>
-          <!-- NEW: Manage Authors Tab -->
-          <button
-            data-view="authors"
-            class="nav-tab text-base font-semibold px-6 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200"
-          >
-            Manage Authors
+
+          <div class="px-6 mt-8 mb-2">
+            <p
+              class="text-[10px] font-bold uppercase tracking-widest text-gray-500"
+            >
+              System
+            </p>
+          </div>
+          <button data-view="users" class="sidebar-link w-full">
+            <i data-lucide="shield" class="w-5 h-5 mr-3"></i> Access Control
+          </button>
+          <button data-view="settings" class="sidebar-link w-full">
+            <i data-lucide="settings" class="w-5 h-5 mr-3"></i> Settings
           </button>
         </nav>
 
-        <!-- Dashboard Content Area -->
-        <div id="content-view">
-          <!-- Content will be rendered here by JS -->
+        <div class="p-4 border-t border-gray-900 bg-[#0a0a0a]">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded bg-[#C90000] flex items-center justify-center text-xs font-bold"
+            >
+              U
+            </div>
+            <div class="flex-1 overflow-hidden">
+              <p
+                id="user-email-display"
+                class="text-xs font-medium text-gray-300 truncate"
+              >
+                user@example.com
+              </p>
+              <p class="text-[10px] text-gray-500 uppercase tracking-wider">
+                Online
+              </p>
+            </div>
+            <button
+              id="logout-button"
+              class="text-gray-500 hover:text-white transition-colors"
+            >
+              <i data-lucide="log-out" class="w-5 h-5"></i>
+            </button>
+          </div>
         </div>
-      </main>
+      </aside>
+
+      <!-- Main Content Wrapper -->
+      <div class="flex-1 flex flex-col min-w-0 bg-[#f8fafc] overflow-hidden">
+        <!-- Mobile Header -->
+        <header
+          class="md:hidden bg-black text-white h-16 flex items-center justify-between px-4 z-20"
+        >
+          <span class="font-display font-bold text-xl">The Daily Origin</span>
+          <button id="mobile-menu-toggle">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </header>
+
+        <!-- Top Utility Bar (Desktop) -->
+        <header
+          class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8"
+        >
+          <div class="flex items-center text-sm text-gray-500 font-medium">
+            <span class="text-gray-400">Dashboard</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 mx-2"></i>
+            <span id="breadcrumb-current" class="text-black font-bold"
+              >Overview</span
+            >
+          </div>
+          <div class="flex items-center gap-4">
+            <a
+              href="index.html"
+              target="_blank"
+              class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#C90000] transition-colors flex items-center gap-2"
+            >
+              View Live Site <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <main id="content-view" class="flex-1 overflow-y-auto p-4 md:p-8">
+          <!-- Content injected via JS -->
+        </main>
+      </div>
     </div>
 
-    <!-- 4. Article Editor Modal -->
+    <!-- 4. MODALS -->
+
+    <!-- Article Editor Modal -->
     <dialog
       id="article-modal"
-      class="bg-slate-900 text-slate-200 rounded-lg shadow-xl border border-slate-700 w-full max-w-4xl p-0 m-auto"
+      class="bg-transparent p-0 w-full max-w-5xl h-[90vh] backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
-      <form id="article-form" class="p-8">
-        <h2 id="modal-title" class="text-3xl font-extrabold text-white mb-6">
-          Create New Article
-        </h2>
-        <input type="hidden" id="article-id-input" />
-
-        <div class="mb-4">
-          <label for="article-title" class="form-label">Title</label>
-          <input type="text" id="article-title" class="form-input" required />
-        </div>
-
-        <div class="mb-4">
-          <label for="article-summary" class="form-label">Summary</label>
-          <textarea
-            id="article-summary"
-            class="form-textarea"
-            rows="3"
-            required
-          ></textarea>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-          <div>
-            <label for="article-category" class="form-label">Category</label>
-            <select id="article-category" class="form-select" required>
-              <option value="Tech">Tech</option>
-              <option value="World">World</option>
-              <option value="Politics">Politics</option>
-              <option value="Science">Science</option>
-              <option value="Culture">Culture</option>
-              <option value="Others">Others</option>
-              <!-- UPDATED CATEGORIES -->
-              <option value="Sports">Sports</option>
-              <option value="Education">Education</option>
-            </select>
-          </div>
-          <div>
-            <label for="article-image-url" class="form-label">Image URL</label>
-            <input
-              type="url"
-              id="article-image-url"
-              class="form-input"
-              placeholder="https://source.unsplash.com/..."
-              required
-            />
-          </div>
-        </div>
-
-        <!-- NEW: Author and Status Dropdowns -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-          <div>
-            <label for="article-author-select" class="form-label">Author</label>
-            <select id="article-author-select" class="form-select" required>
-              <!-- Authors will be populated by JS -->
-              <option value="">Loading authors...</option>
-            </select>
-          </div>
-          <div>
-            <label for="article-status" class="form-label">Status</label>
-            <select id="article-status" class="form-select" required>
-              <option value="Draft">Draft</option>
-              <option value="Published">Published</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- NEW: Article Body with Write/Preview Tabs -->
-        <div class="mb-6">
-          <label class="form-label">Full Article Body</label>
-          <!-- Tab Buttons (REMOVED) -->
-
-          <!-- Write Textarea (SunEditor will replace this) -->
-          <textarea
-            id="article-body"
-            class="form-textarea"
-            rows="10"
-            placeholder="Start writing your article..."
-          ></textarea>
-
-          <!-- Preview Div (REMOVED) -->
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <label
-            class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800 rounded-lg"
-          >
-            <input
-              type="checkbox"
-              id="article-isHero"
-              class="form-checkbox h-5 w-5 rounded bg-slate-700 border-slate-600 text-cyan-600 focus:ring-cyan-500"
-            />
-            <span class="text-slate-300 font-medium"
-              >Hero Article (Featured on top)</span
+      <div
+        class="bg-white w-full h-full flex flex-col shadow-2xl overflow-hidden rounded-lg"
+      >
+        <!-- Modal Header -->
+        <div
+          class="h-16 border-b border-gray-200 flex items-center justify-between px-6 bg-gray-50"
+        >
+          <h3 id="modal-title" class="font-display font-bold text-xl">
+            Compose Story
+          </h3>
+          <div class="flex items-center gap-3">
+            <button
+              id="modal-cancel-btn"
+              class="btn-outline py-2 border-gray-300"
             >
-          </label>
-          <label
-            class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800 rounded-lg"
-          >
-            <input
-              type="checkbox"
-              id="article-isTopStory"
-              class="form-checkbox h-5 w-5 rounded bg-slate-700 border-slate-600 text-cyan-600 focus:ring-cyan-500"
-            />
-            <span class="text-slate-300 font-medium">Top Story</span>
-          </label>
-          <label
-            class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800 rounded-lg"
-          >
-            <input
-              type="checkbox"
-              id="article-isBreaking"
-              class="form-checkbox h-5 w-5 rounded bg-slate-700 border-slate-600 text-cyan-600 focus:ring-cyan-500"
-            />
-            <span class="text-slate-300 font-medium"
-              >Breaking News (Ticker)</span
-            >
-          </label>
+              Discard
+            </button>
+            <button id="modal-save-btn" class="btn-primary py-2">
+              Publish Changes
+            </button>
+          </div>
         </div>
 
-        <div class="flex justify-end space-x-4">
-          <button
-            type="button"
-            id="modal-cancel-btn"
-            class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-6 rounded-lg transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            id="modal-save-btn"
-            class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-lg transition-colors shadow-lg shadow-cyan-700/20"
-          >
-            Save Article
-          </button>
+        <!-- Modal Body (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-6 md:p-10 bg-white">
+          <form id="article-form" class="max-w-4xl mx-auto space-y-8">
+            <input type="hidden" id="article-id-input" />
+
+            <!-- Top Meta -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+              <div class="md:col-span-8 space-y-4">
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                    >Headline</label
+                  >
+                  <input
+                    type="text"
+                    id="article-title"
+                    class="input-field text-2xl font-display font-bold placeholder-gray-300 border-gray-200"
+                    placeholder="Enter an engaging headline..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                    >Lead Summary</label
+                  >
+                  <textarea
+                    id="article-summary"
+                    rows="3"
+                    class="input-field font-serif text-gray-600"
+                    placeholder="A brief summary for the preview card..."
+                    required
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Sidebar Meta -->
+              <div
+                class="md:col-span-4 space-y-4 bg-gray-50 p-6 border border-gray-100 h-fit"
+              >
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                    >Status</label
+                  >
+                  <select id="article-status" class="input-field text-sm">
+                    <option value="Draft">Draft</option>
+                    <option value="Published">Published</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                    >Category</label
+                  >
+                  <select id="article-category" class="input-field text-sm">
+                    <option value="World">World</option>
+                    <option value="Politics">Politics</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Science">Science</option>
+                    <option value="Culture">Culture</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Business">Business</option>
+                    <option value="Others">Others</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                    >Author</label
+                  >
+                  <select
+                    id="article-author-select"
+                    class="input-field text-sm"
+                  >
+                    <option value="">Select Author...</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image & Flags -->
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start border-t border-b border-gray-100 py-8"
+            >
+              <div>
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                  >Hero Image URL</label
+                >
+                <input
+                  type="url"
+                  id="article-image-url"
+                  class="input-field"
+                  placeholder="https://..."
+                  required
+                />
+              </div>
+              <div class="space-y-3">
+                <p
+                  class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1"
+                >
+                  Placement
+                </p>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="article-isHero"
+                    class="w-4 h-4 text-black focus:ring-black border-gray-300 rounded"
+                  />
+                  <span class="text-sm font-medium"
+                    >Hero Story (Homepage Large)</span
+                  >
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="article-isTopStory"
+                    class="w-4 h-4 text-black focus:ring-black border-gray-300 rounded"
+                  />
+                  <span class="text-sm font-medium">Top Story (The Brief)</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="article-isBreaking"
+                    class="w-4 h-4 text-black focus:ring-black border-gray-300 rounded"
+                  />
+                  <span class="text-sm font-medium">Breaking News Ticker</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Editor -->
+            <div>
+              <label
+                class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2"
+                >Article Body</label
+              >
+              <div class="border border-gray-200">
+                <textarea id="article-body" class="w-full h-96"></textarea>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </dialog>
 
-    <!-- NEW: 5. Delete Confirmation Modal -->
+    <!-- Delete Confirmation Modal -->
     <dialog
       id="delete-confirm-modal"
-      class="bg-slate-900 text-slate-200 rounded-lg shadow-xl border border-slate-700 w-full max-w-md m-auto p-8"
+      class="bg-white p-8 rounded-none shadow-2xl border-t-4 border-red-600 max-w-sm w-full backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
-      <h2 class="text-2xl font-bold text-white mb-4">Are you sure?</h2>
-      <p class="text-slate-400 mb-6">
-        Are you sure you want to delete this? This action cannot be undone.
+      <h2 class="font-display font-bold text-2xl mb-2 text-black">
+        Confirm Deletion
+      </h2>
+      <p class="text-gray-600 mb-6 text-sm">
+        This action is permanent and cannot be undone. Are you sure you want to
+        proceed?
       </p>
       <input type="hidden" id="delete-confirm-id" />
-      <div class="flex justify-end space-x-4">
-        <button
-          type="button"
-          id="delete-cancel-btn"
-          class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-6 rounded-lg transition-colors"
-        >
+      <div class="flex justify-end gap-3">
+        <button id="delete-cancel-btn" class="btn-outline py-2 px-4 text-xs">
           Cancel
         </button>
         <button
-          type="button"
           id="delete-confirm-btn"
-          class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-6 rounded-lg transition-colors"
+          class="bg-red-600 text-white font-bold uppercase text-xs px-4 py-2 hover:bg-red-700 transition"
         >
-          Delete
+          Yes, Delete It
         </button>
       </div>
     </dialog>
 
-    <!-- NEW: 6. Toast Notification -->
-    <div id="toast-notification" class="flex items-center space-x-3">
-      <!-- Icon will be prepended here by JS -->
-      <span id="toast-message" class="font-medium">Success!</span>
+    <!-- Toast Notification -->
+    <div
+      id="toast-notification"
+      class="fixed bottom-6 right-6 z-50 bg-black text-white px-6 py-4 shadow-2xl flex items-center gap-4 border-l-4 border-[#C90000]"
+    >
+      <i
+        id="toast-icon"
+        data-lucide="check-circle"
+        class="w-5 h-5 text-[#C90000]"
+      ></i>
+      <span id="toast-message" class="font-medium text-sm"
+        >Action completed successfully.</span
+      >
     </div>
 
-    <!-- Firebase and App Logic -->
+    <!-- FIREBASE LOGIC -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
       import {
@@ -711,10 +657,9 @@
         query,
         where,
         serverTimestamp,
-        Timestamp,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-      // --- Your Provided Firebase Config ---
+      // --- Config ---
       const firebaseConfig = {
         apiKey: "AIzaSyCFVD4Ts03OXJ14aJ5h_HGAAuiIg5nme7A",
         authDomain: "edu-env.firebaseapp.com",
@@ -725,648 +670,468 @@
         measurementId: "G-VK9WTY47JB",
       };
 
-      // --- Global Variables ---
-      let app, db, auth;
-      let currentUser = null;
-      let currentUserRole = null; // 'writer' or 'superadmin'
-      let currentView = "articles"; // for superadmin
-      let articleListenerUnsubscribe = null; // To stop listening
-      let userListenerUnsubscribe = null; // To stop listening
-      let authorListenerUnsubscribe = null; // NEW: To stop listening for authors
-      let sunEditorInstance = null; // NEW: To hold the editor
-      let deleteType = null; // NEW: To track delete type
+      // --- Globals ---
+      let app, db, auth, currentUser, currentUserRole;
+      let currentView = "articles";
+      let sunEditorInstance = null;
 
-      // --- Cache & Filter State ---
-      let allArticlesCache = [];
-      let allUsersCache = [];
-      let allAuthorsCache = []; // Cache for authors
-      // -- Articles filter state --
-      let articlesCurrentPage = 1;
-      const ARTICLES_PER_PAGE = 10;
-      let articlesSearchTerm = "";
-      let articlesCategoryFilter = "all";
-      let articlesAuthorFilter = "all";
-      let articlesStatusFilter = "all";
-      // -- Users filter state --
-      let usersSearchTerm = "";
-      // -- Authors filter state --
-      let authorsSearchTerm = "";
+      // Data Caches
+      let articlesCache = [];
+      let authorsCache = [];
+      let usersCache = [];
 
+      // Paths
       const appId =
         typeof __app_id !== "undefined" ? __app_id : "default-news-app";
-      const articlesCollectionPath = `artifacts/${appId}/public/data/articles`;
-      const rolesCollectionPath = `artifacts/${appId}/roles`;
-      const authorsCollectionPath = `artifacts/${appId}/public/data/authors`; // NEW: Public authors collection
+      const paths = {
+        articles: `artifacts/${appId}/public/data/articles`,
+        authors: `artifacts/${appId}/public/data/authors`,
+        roles: `artifacts/${appId}/roles`,
+      };
 
-      // --- UI Element References ---
-      const authContainer = document.getElementById("auth-container");
-      const loadingContainer = document.getElementById("loading-container");
-      const adminDashboard = document.getElementById("admin-dashboard");
-      const loginForm = document.getElementById("login-form");
-      const loginEmail = document.getElementById("login-email");
-      const loginPassword = document.getElementById("login-password");
-      const loginError = document.getElementById("login-error");
-      const userEmailDisplay = document.getElementById("user-email-display");
-      const logoutButton = document.getElementById("logout-button");
-      const adminNav = document.getElementById("admin-nav");
-      const contentView = document.getElementById("content-view");
+      // --- UI Controllers ---
+      function showToast(msg, isError = false) {
+        const toast = document.getElementById("toast-notification");
+        const msgEl = document.getElementById("toast-message");
+        const iconEl = document.getElementById("toast-icon");
 
-      // Modal elements
-      const articleModal = document.getElementById("article-modal");
-      const articleForm = document.getElementById("article-form");
-      const modalTitle = document.getElementById("modal-title");
-      const articleIdInput = document.getElementById("article-id-input");
-      const modalCancelBtn = document.getElementById("modal-cancel-btn");
+        msgEl.textContent = msg;
+        toast.classList.toggle("border-red-500", isError);
+        toast.classList.toggle("border-[#C90000]", !isError); // Default red
 
-      // NEW: Delete Modal elements
-      const deleteConfirmModal = document.getElementById(
-        "delete-confirm-modal"
-      );
-      const deleteConfirmIdInput = document.getElementById("delete-confirm-id");
-      const deleteCancelBtn = document.getElementById("delete-cancel-btn");
-      const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
-
-      // NEW: Toast elements
-      const toastNotification = document.getElementById("toast-notification");
-      const toastMessage = document.getElementById("toast-message");
-
-      // --- 1. AUTHENTICATION ---
-
-      function initializeFirebase() {
-        app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-        setupAuthListener();
-        setupLoginHandler();
-        logoutButton.addEventListener("click", handleLogout);
-        // NEW: Setup global event delegation
-        setupGlobalEventDelegation();
+        // Show
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
       }
 
-      function setupAuthListener() {
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            // User is signed in
-            currentUser = user;
-            showView("loading");
-            currentUserRole = await getUserRole(user.uid);
+      function switchView(viewName) {
+        currentView = viewName;
 
-            if (currentUserRole) {
-              userEmailDisplay.textContent = user.email;
-              setupDashboard(currentUserRole);
-              showView("dashboard");
-            } else {
-              // This user is authenticated but has no role.
-              // Log them out.
-              console.error("User has no role. Logging out.");
-              handleLogout("You do not have permission to access this panel.");
-            }
-          } else {
-            // User is signed out
-            currentUser = null;
-            currentUserRole = null;
-            showView("auth");
-            cleanupListeners(); // Stop listening to data
-          }
+        // Update breadcrumb
+        const breadcrumb = document.getElementById("breadcrumb-current");
+        if (breadcrumb)
+          breadcrumb.textContent =
+            viewName.charAt(0).toUpperCase() + viewName.slice(1);
+
+        // Update Sidebar Active State
+        document.querySelectorAll(".sidebar-link").forEach((btn) => {
+          if (btn.dataset.view === viewName) btn.classList.add("active");
+          else btn.classList.remove("active");
         });
+
+        // Render
+        renderContent(viewName);
       }
 
-      async function getUserRole(uid) {
-        try {
-          const roleDocRef = doc(db, rolesCollectionPath, uid);
-          const docSnap = await getDoc(roleDocRef);
-          if (docSnap.exists()) {
-            return docSnap.data().role;
-          } else {
-            console.warn(`No role document found for user ${uid}`);
-            return null;
-          }
-        } catch (error) {
-          console.error("Error fetching user role:", error);
-          return null;
-        }
+      function renderContent(view) {
+        const container = document.getElementById("content-view");
+        container.innerHTML =
+          '<div class="flex justify-center p-12"><div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8"></div></div>'; // Loading state
+
+        setTimeout(() => {
+          if (view === "articles") renderArticlesView(container);
+          else if (view === "authors") renderAuthorsView(container);
+          else if (view === "users") renderUsersView(container);
+          else if (view === "settings")
+            container.innerHTML = `<div class="p-12 text-center text-gray-500 font-serif italic">Settings module under construction.</div>`;
+
+          lucide.createIcons();
+        }, 200);
       }
 
-      function setupLoginHandler() {
-        loginForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          loginError.textContent = "";
-          try {
-            await signInWithEmailAndPassword(
-              auth,
-              loginEmail.value,
-              loginPassword.value
-            );
-            // onAuthStateChanged will handle the rest
-          } catch (error) {
-            console.error("Login failed:", error);
-            loginError.textContent = "Error: " + error.message;
-          }
-        });
-      }
+      // --- View Renderers ---
 
-      async function handleLogout(errorMsg = "") {
-        await signOut(auth);
-        if (errorMsg) {
-          loginError.textContent = errorMsg;
-        } else {
-          loginForm.reset();
-          loginError.textContent = "";
-        }
-      }
+      function renderArticlesView(container) {
+        const isSuperAdmin = currentUserRole === "superadmin";
+        container.innerHTML = `
+            <div class="space-y-6">
+                <!-- Stats Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="stat-card">
+                        <span class="text-xs font-bold uppercase text-gray-400 tracking-widest">Total Articles</span>
+                        <p class="text-4xl font-display font-bold mt-2">${
+                          articlesCache.length
+                        }</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="text-xs font-bold uppercase text-gray-400 tracking-widest">Published</span>
+                        <p class="text-4xl font-display font-bold mt-2">${
+                          articlesCache.filter((a) => a.publishedAt).length
+                        }</p>
+                    </div>
+                     <div class="stat-card">
+                        <span class="text-xs font-bold uppercase text-gray-400 tracking-widest">In Draft</span>
+                        <p class="text-4xl font-display font-bold mt-2">${
+                          articlesCache.filter((a) => !a.publishedAt).length
+                        }</p>
+                    </div>
+                </div>
 
-      function showView(view) {
-        authContainer.classList.add("hidden");
-        loadingContainer.classList.add("hidden");
-        adminDashboard.classList.add("hidden");
-
-        if (view === "auth") authContainer.classList.remove("hidden");
-        if (view === "loading") loadingContainer.classList.remove("hidden");
-        if (view === "dashboard") adminDashboard.classList.remove("hidden");
-      }
-
-      // --- 2. DASHBOARD & NAVIGATION ---
-
-      function setupDashboard(role) {
-        // NEW: Listen for authors *first* as other views depend on it
-        listenForAuthors();
-        if (role === "superadmin") {
-          adminNav.classList.remove("hidden");
-          setupNavTabs();
-          loadView(currentView); // Load default view
-        } else if (role === "writer") {
-          adminNav.classList.add("hidden");
-          loadView("articles"); // Writers only see articles
-        }
-      }
-
-      function setupNavTabs() {
-        adminNav.querySelectorAll(".nav-tab").forEach((tab) => {
-          tab.addEventListener("click", (e) => {
-            const newView = e.target.dataset.view;
-            if (newView === currentView) return; // Don't reload same view
-
-            currentView = newView;
-            loadView(currentView);
-
-            // Update tab styles
-            adminNav.querySelectorAll(".nav-tab").forEach((t) => {
-              t.classList.remove("border-cyan-500", "text-white");
-              t.classList.add(
-                "border-transparent",
-                "text-slate-400",
-                "hover:text-slate-200"
-              );
-            });
-            e.target.classList.add("border-cyan-500", "text-white");
-            e.target.classList.remove(
-              "border-transparent",
-              "text-slate-400",
-              "hover:text-slate-200"
-            );
-          });
-        });
-      }
-
-      function loadView(view) {
-        cleanupListeners(); // Stop old listeners
-        // Reset filter/search states
-        articlesSearchTerm = "";
-        articlesCategoryFilter = "all";
-        articlesAuthorFilter = "all";
-        articlesStatusFilter = "all";
-        articlesCurrentPage = 1;
-        usersSearchTerm = "";
-        authorsSearchTerm = "";
-
-        if (view === "articles") {
-          loadArticlesView();
-        } else if (view === "users") {
-          loadUsersView();
-        } else if (view === "authors") {
-          loadAuthorsView();
-        }
-      }
-
-      function cleanupListeners() {
-        if (articleListenerUnsubscribe) articleListenerUnsubscribe();
-        if (userListenerUnsubscribe) userListenerUnsubscribe();
-        // We keep the author listener active
-      }
-
-      // Listen for authors and cache them
-      function listenForAuthors() {
-        // Only attach listener if it's not already running
-        if (authorListenerUnsubscribe) return;
-
-        const q = query(collection(db, authorsCollectionPath));
-        authorListenerUnsubscribe = onSnapshot(
-          q,
-          (snapshot) => {
-            allAuthorsCache = [];
-            snapshot.forEach((doc) => {
-              allAuthorsCache.push({ id: doc.id, ...doc.data() });
-            });
-            allAuthorsCache.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-            console.log("Authors cache updated:", allAuthorsCache);
-
-            // If author view is active, refresh it
-            if (currentView === "authors") {
-              renderAuthorsTable();
-            }
-            // If articles view is active, refresh author filter dropdown
-            if (currentView === "articles") {
-              populateAuthorFilter();
-            }
-          },
-          (error) => {
-            console.error("Error listening to authors:", error);
-            showToast("Error loading authors.", true);
-          }
-        );
-      }
-
-      // --- 3. MANAGE ARTICLES VIEW ---
-
-      function loadArticlesView() {
-        // 1. Render the container HTML with filters and pagination
-        contentView.innerHTML = `
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-3xl font-extrabold text-white">${
-                      currentUserRole === "superadmin"
-                        ? "All Articles"
-                        : "My Articles"
-                    }</h1>
-                    <button id="create-article-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-5 rounded-lg transition-colors flex items-center space-x-2">
-                        <i data-lucide="plus" class="w-5 h-5"></i>
-                        <span>New Article</span>
+                <!-- Actions Bar -->
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 border border-gray-200">
+                    <div class="relative w-full md:w-96">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <input type="text" id="article-search" placeholder="Search headlines..." class="input-field pl-10 py-2 text-sm border-gray-300" />
+                    </div>
+                    <button id="create-article-btn" class="btn-primary flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i> New Story
                     </button>
                 </div>
 
-                <!-- NEW: Filter Bar -->
-                <div class="mb-4 p-4 bg-slate-900 border border-slate-800 rounded-lg grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <div class="md:col-span-2">
-                        <label for="article-search" class="form-label !mb-1 text-sm">Search</label>
-                        <input type="search" id="article-search" placeholder="Search by title..." class="form-input !py-2 !px-3" />
-                    </div>
-                    <div>
-                        <label for="article-category-filter" class="form-label !mb-1 text-sm">Category</label>
-                        <select id="article-category-filter" class="form-select filter-select">
-                            <option value="all">All Categories</option>
-                            <option value="Tech">Tech</option>
-                            <option value="World">World</option>
-                            <option value="Politics">Politics</option>
-                            <option value="Science">Science</option>
-                            <option value="Culture">Culture</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Education">Education</option>
-                            <option value="Others">Others</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="article-author-filter" class="form-label !mb-1 text-sm">Author</label>
-                        <select id="article-author-filter" class="form-select filter-select" ${
-                          currentUserRole === "writer" ? "disabled" : ""
-                        }>
-                            <!-- Author options populated by JS -->
-                        </select>
-                    </div>
-                    <div>
-                        <label for="article-status-filter" class="form-label !mb-1 text-sm">Status</label>
-                        <select id="article-status-filter" class="form-select filter-select">
-                            <option value="all">All Statuses</option>
-                            <option value="Published">Published</option>
-                            <option value="Draft">Draft</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Article Table -->
-                <!-- MODIFIED: Added overflow-x-auto to allow horizontal scrolling on mobile -->
-                <div class="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden overflow-x-auto">
-                    <table class="w-full min-w-full divide-y divide-slate-700">
-                        <thead class="bg-slate-800">
+                <!-- Table -->
+                <div class="bg-white border border-gray-200 overflow-hidden overflow-x-auto">
+                    <table class="w-full text-left cms-table">
+                        <thead>
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Title</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Category</th>
-                                ${
-                                  currentUserRole === "superadmin"
-                                    ? '<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Author</th>'
-                                    : ""
-                                }
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                                <th>Headline</th>
+                                <th>Status</th>
+                                <th>Category</th>
+                                <th>Author</th>
+                                <th>Last Updated</th>
+                                <th class="text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="articles-table-body" class="divide-y divide-slate-800">
-                            <tr><td colspan="6" class="p-6 text-center text-slate-500">Loading articles...</td></tr>
+                        <tbody id="articles-tbody">
+                            ${
+                              articlesCache.length === 0
+                                ? '<tr><td colspan="6" class="text-center py-8 text-gray-500 italic">No articles found. Start writing!</td></tr>'
+                                : ""
+                            }
                         </tbody>
                     </table>
                 </div>
+            </div>
+          `;
 
-                <!-- NEW: Pagination Controls -->
-                <div class="flex justify-between items-center mt-4">
-                    <span id="pagination-info" class="text-sm text-slate-400"></span>
-                    <div class="flex space-x-2">
-                        <button id="prev-page-btn" class="pagination-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center">
-                            <i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Prev
-                        </button>
-                        <button id="next-page-btn" class="pagination-btn bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center">
-                            Next <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        lucide.createIcons();
+        renderArticleRows(articlesCache);
 
-        // 2. Populate author filter
-        populateAuthorFilter();
-
-        // 3. Set up "Create" button
+        // Event Listeners
         document
           .getElementById("create-article-btn")
-          .addEventListener("click", () => showArticleModal());
-
-        // 4. Set up filter/pagination event listeners
+          .addEventListener("click", () => openArticleModal());
         document
           .getElementById("article-search")
           .addEventListener("input", (e) => {
-            articlesSearchTerm = e.target.value;
-            articlesCurrentPage = 1;
-            renderArticlesTable();
-          });
-        document
-          .getElementById("article-category-filter")
-          .addEventListener("change", (e) => {
-            articlesCategoryFilter = e.target.value;
-            articlesCurrentPage = 1;
-            renderArticlesTable();
-          });
-        document
-          .getElementById("article-author-filter")
-          .addEventListener("change", (e) => {
-            articlesAuthorFilter = e.target.value;
-            articlesCurrentPage = 1;
-            renderArticlesTable();
-          });
-        document
-          .getElementById("article-status-filter")
-          .addEventListener("change", (e) => {
-            articlesStatusFilter = e.target.value;
-            articlesCurrentPage = 1;
-            renderArticlesTable();
-          });
-
-        document
-          .getElementById("prev-page-btn")
-          .addEventListener("click", () => {
-            if (articlesCurrentPage > 1) {
-              articlesCurrentPage--;
-              renderArticlesTable();
-            }
-          });
-        document
-          .getElementById("next-page-btn")
-          .addEventListener("click", () => {
-            // Total pages calculation will be in renderArticlesTable
-            articlesCurrentPage++;
-            renderArticlesTable();
-          });
-
-        // 5. Create Firestore query
-        let q;
-        if (currentUserRole === "superadmin") {
-          q = query(collection(db, articlesCollectionPath));
-        } else {
-          q = query(
-            collection(db, articlesCollectionPath),
-            where("authorId", "==", currentUser.uid)
-          );
-        }
-
-        // 6. Attach listener
-        articleListenerUnsubscribe = onSnapshot(
-          q,
-          (snapshot) => {
-            allArticlesCache = [];
-            snapshot.forEach((doc) =>
-              allArticlesCache.push({ id: doc.id, ...doc.data() })
+            const term = e.target.value.toLowerCase();
+            const filtered = articlesCache.filter((a) =>
+              a.title.toLowerCase().includes(term)
             );
-            // Sort by date, newest first
-            allArticlesCache.sort(
-              (a, b) =>
-                (b.publishedAt?.toDate() || b.updatedAt?.toDate() || 0) -
-                (a.publishedAt?.toDate() || a.updatedAt?.toDate() || 0)
-            );
-            // Initial render
-            renderArticlesTable();
-          },
-          (error) => {
-            console.error("Error listening to articles:", error);
-            document.getElementById(
-              "articles-table-body"
-            ).innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-400">Error loading articles.</td></tr>`;
+            renderArticleRows(filtered);
+          });
+      }
+
+      function renderArticleRows(articles) {
+        const tbody = document.getElementById("articles-tbody");
+        if (!tbody) return;
+
+        tbody.innerHTML = articles
+          .map(
+            (a) => `
+            <tr class="group transition-colors">
+                <td class="font-bold text-gray-900 font-display text-lg">
+                    ${a.title}
+                    ${
+                      a.isBreaking
+                        ? '<span class="ml-2 text-[10px] text-red-600 font-sans uppercase tracking-widest border border-red-200 px-1">Breaking</span>'
+                        : ""
+                    }
+                </td>
+                <td>
+                    <span class="badge ${
+                      a.publishedAt ? "badge-success" : "badge-warning"
+                    }">
+                        ${a.publishedAt ? "Published" : "Draft"}
+                    </span>
+                </td>
+                <td><span class="text-xs font-bold uppercase text-gray-500 tracking-wider">${
+                  a.category
+                }</span></td>
+                <td class="text-sm text-gray-600">${
+                  a.authorName || "Unknown"
+                }</td>
+                <td class="text-xs text-gray-400 font-mono">${
+                  a.updatedAt
+                    ? new Date(a.updatedAt.seconds * 1000).toLocaleDateString()
+                    : "N/A"
+                }</td>
+                <td class="text-right space-x-2">
+                    <button class="btn-outline py-1 px-3 text-xs border-gray-300 hover:border-black edit-article-btn" data-id="${
+                      a.id
+                    }">Edit</button>
+                    <button class="text-red-400 hover:text-red-600 p-1 delete-article-btn" data-id="${
+                      a.id
+                    }"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </td>
+            </tr>
+          `
+          )
+          .join("");
+
+        // Re-attach listeners for dynamic buttons
+        document.querySelectorAll(".edit-article-btn").forEach((b) =>
+          b.addEventListener("click", () => {
+            const art = articlesCache.find((x) => x.id === b.dataset.id);
+            openArticleModal(art);
+          })
+        );
+        document.querySelectorAll(".delete-article-btn").forEach((b) =>
+          b.addEventListener("click", () => {
+            openDeleteModal(b.dataset.id, "article");
+          })
+        );
+      }
+
+      function renderAuthorsView(container) {
+        container.innerHTML = `
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- List -->
+                <div class="lg:col-span-2 space-y-4">
+                     <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold font-display">Author Roster</h2>
+                    </div>
+                    <div class="bg-white border border-gray-200">
+                        <table class="w-full text-left cms-table">
+                            <thead><tr><th>Profile</th><th>Name</th><th>Bio Excerpt</th><th class="text-right">Actions</th></tr></thead>
+                            <tbody id="authors-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 border border-gray-200 shadow-sm sticky top-6">
+                        <h3 id="author-form-title" class="font-display font-bold text-xl mb-4">Add New Author</h3>
+                        <form id="author-form" class="space-y-4">
+                            <input type="hidden" id="author-id" />
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Full Name</label>
+                                <input type="text" id="author-name" class="input-field" required />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Bio</label>
+                                <textarea id="author-bio" rows="4" class="input-field"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Avatar URL</label>
+                                <input type="url" id="author-image" class="input-field" placeholder="https://..." />
+                            </div>
+                            <div class="pt-2 flex gap-2">
+                                <button type="submit" class="btn-primary flex-1">Save Profile</button>
+                                <button type="button" id="author-cancel" class="btn-outline hidden">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          `;
+
+        renderAuthorRows();
+
+        // Form Logic
+        const form = document.getElementById("author-form");
+        const cancelBtn = document.getElementById("author-cancel");
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const id = document.getElementById("author-id").value;
+          const data = {
+            name: document.getElementById("author-name").value,
+            bio: document.getElementById("author-bio").value,
+            imageUrl: document.getElementById("author-image").value,
+          };
+
+          try {
+            if (id) await updateDoc(doc(db, paths.authors, id), data);
+            else await addDoc(collection(db, paths.authors), data);
+            showToast("Author profile saved.");
+            form.reset();
+            document.getElementById("author-id").value = "";
+            document.getElementById("author-form-title").textContent =
+              "Add New Author";
+            cancelBtn.classList.add("hidden");
+          } catch (err) {
+            showToast(err.message, true);
           }
-        );
-      }
-
-      function populateAuthorFilter() {
-        const authorFilterSelect = document.getElementById(
-          "article-author-filter"
-        );
-        if (!authorFilterSelect) return; // View not loaded yet
-
-        if (currentUserRole === "superadmin") {
-          authorFilterSelect.innerHTML =
-            '<option value="all">All Authors</option>';
-          allAuthorsCache.forEach((author) => {
-            authorFilterSelect.innerHTML += `<option value="${author.id}">${author.name}</option>`;
-          });
-        } else {
-          // Writer is locked to their own ID
-          const myAuthorProfile = allAuthorsCache.find(
-            (a) => a.id === currentUser.uid
-          );
-          authorFilterSelect.innerHTML = `<option value="${currentUser.uid}">${
-            myAuthorProfile?.name || "My Articles"
-          }</option>`;
-          articlesAuthorFilter = currentUser.uid; // Lock filter
-        }
-      }
-
-      function renderArticlesTable() {
-        const tableBody = document.getElementById("articles-table-body");
-        if (!tableBody) return; // View not active
-
-        // 1. Apply Filters
-        let filteredArticles = allArticlesCache.filter((article) => {
-          const searchMatch =
-            !articlesSearchTerm ||
-            article.title
-              .toLowerCase()
-              .includes(articlesSearchTerm.toLowerCase()) ||
-            article.summary
-              .toLowerCase()
-              .includes(articlesSearchTerm.toLowerCase());
-          const categoryMatch =
-            articlesCategoryFilter === "all" ||
-            article.category === articlesCategoryFilter;
-          const authorMatch =
-            articlesAuthorFilter === "all" ||
-            article.authorId === articlesAuthorFilter;
-          const statusMatch =
-            articlesStatusFilter === "all" ||
-            (articlesStatusFilter === "Published" && article.publishedAt) ||
-            (articlesStatusFilter === "Draft" && !article.publishedAt);
-
-          return searchMatch && categoryMatch && authorMatch && statusMatch;
         });
 
-        // 2. Apply Pagination
-        const totalItems = filteredArticles.length;
-        const totalPages = Math.ceil(totalItems / ARTICLES_PER_PAGE);
-        if (articlesCurrentPage > totalPages && totalPages > 0) {
-          articlesCurrentPage = totalPages;
-        }
-        if (articlesCurrentPage < 1) {
-          articlesCurrentPage = 1;
-        }
-
-        const startIndex = (articlesCurrentPage - 1) * ARTICLES_PER_PAGE;
-        const endIndex = startIndex + ARTICLES_PER_PAGE;
-        const paginatedArticles = filteredArticles.slice(startIndex, endIndex);
-
-        // 3. Render Table
-        if (paginatedArticles.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No articles match your filters.</td></tr>`;
-        } else {
-          tableBody.innerHTML = ""; // Clear
-          paginatedArticles.forEach((article) => {
-            const tr = document.createElement("tr");
-            tr.className = "hover:bg-slate-800/50 transition-colors";
-            const timeAgo =
-              article.publishedAt || article.updatedAt
-                ? formatRelativeTime(article.publishedAt || article.updatedAt)
-                : "N/A";
-
-            const status = article.publishedAt ? "Published" : "Draft";
-            const statusColor = article.publishedAt
-              ? "text-green-400"
-              : "text-yellow-400";
-
-            tr.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-white">${
-                              article.title
-                            }</div>
-                            <div class="text-sm text-slate-400">${article.summary.substring(
-                              0,
-                              40
-                            )}...</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-900 text-cyan-200">${
-                              article.category
-                            }</span>
-                        </td>
-                        ${
-                          currentUserRole === "superadmin"
-                            ? `<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">${
-                                article.authorName || "N/A"
-                              }</td>`
-                            : ""
-                        }
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">${timeAgo}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${statusColor}">${status}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                            <button class="article-edit-btn text-cyan-400 hover:text-cyan-200" data-id="${
-                              article.id
-                            }">Edit</button>
-                            <button class="article-delete-btn text-red-500 hover:text-red-300" data-id="${
-                              article.id
-                            }">Delete</button>
-                        </td>
-                    `;
-            tableBody.appendChild(tr);
-          });
-        }
-
-        // 4. Update Pagination UI
-        const paginationInfo = document.getElementById("pagination-info");
-        const prevBtn = document.getElementById("prev-page-btn");
-        const nextBtn = document.getElementById("next-page-btn");
-
-        if (totalItems === 0) {
-          paginationInfo.textContent = "No articles found";
-        } else {
-          paginationInfo.textContent = `Showing ${startIndex + 1} to ${Math.min(
-            endIndex,
-            totalItems
-          )} of ${totalItems} articles`;
-        }
-        prevBtn.disabled = articlesCurrentPage <= 1;
-        nextBtn.disabled = articlesCurrentPage >= totalPages;
+        cancelBtn.addEventListener("click", () => {
+          form.reset();
+          document.getElementById("author-id").value = "";
+          document.getElementById("author-form-title").textContent =
+            "Add New Author";
+          cancelBtn.classList.add("hidden");
+        });
       }
 
-      // --- 4. ARTICLE EDITOR MODAL ---
+      function renderAuthorRows() {
+        const tbody = document.getElementById("authors-tbody");
+        if (!tbody) return;
 
-      // ... (No changes in this section) ...
-      // NEW: Define SunEditor options
-      const editorOptions = {
-        buttonList: [
-          ["undo", "redo"],
-          ["font", "fontSize", "formatBlock"],
-          ["paragraphStyle", "blockquote"],
-          ["bold", "underline", "italic", "strike", "subscript", "superscript"],
-          ["fontColor", "hiliteColor"],
-          ["removeFormat"],
-          "/", // Line break
-          ["outdent", "indent"],
-          ["align", "horizontalRule", "list", "lineHeight"],
-          ["table", "link", "image", "video"],
-          ["fullScreen", "showBlocks", "codeView"],
-          ["preview", "print"],
-        ],
-        width: "100%",
-        height: "auto",
-        minHeight: "400px",
-        defaultStyle:
-          "font-family: 'Inter', sans-serif; font-size: 1.125rem; color: #d1d5db;",
-        // Apply tailwind classes for links, etc inside the editor
-        // We are using CSS overrides instead for a more robust theme
-      };
+        tbody.innerHTML = authorsCache
+          .map(
+            (a) => `
+            <tr>
+                <td class="w-16"><img src="${
+                  a.imageUrl || "https://placehold.co/40"
+                }" class="w-10 h-10 rounded-full object-cover bg-gray-100"></td>
+                <td class="font-bold">${a.name}</td>
+                <td class="text-sm text-gray-500 truncate max-w-[150px]">${
+                  a.bio || ""
+                }</td>
+                <td class="text-right space-x-1">
+                    <button class="text-blue-600 hover:text-blue-800 p-1 edit-author-btn" data-id="${
+                      a.id
+                    }"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                    <button class="text-red-400 hover:text-red-600 p-1 delete-author-btn" data-id="${
+                      a.id
+                    }"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </td>
+            </tr>
+          `
+          )
+          .join("");
 
-      function showArticleModal(article = null) {
-        articleForm.reset();
+        document.querySelectorAll(".edit-author-btn").forEach((b) =>
+          b.addEventListener("click", () => {
+            const auth = authorsCache.find((x) => x.id === b.dataset.id);
+            document.getElementById("author-id").value = auth.id;
+            document.getElementById("author-name").value = auth.name;
+            document.getElementById("author-bio").value = auth.bio || "";
+            document.getElementById("author-image").value = auth.imageUrl || "";
+            document.getElementById("author-form-title").textContent =
+              "Edit Author";
+            document.getElementById("author-cancel").classList.remove("hidden");
+          })
+        );
 
-        // --- NEW: Populate Author Dropdown ---
-        const authorSelect = document.getElementById("article-author-select");
-        authorSelect.innerHTML = '<option value="">Select an author</option>';
-        if (allAuthorsCache.length === 0) {
-          authorSelect.innerHTML =
-            '<option value="">No authors found. Please add one.</option>';
-        } else {
-          allAuthorsCache.forEach((author) => {
-            authorSelect.innerHTML += `<option value="${author.id}">${author.name}</option>`;
-          });
-        }
+        document.querySelectorAll(".delete-author-btn").forEach((b) =>
+          b.addEventListener("click", () => {
+            // Check dependency
+            const hasArticles = articlesCache.some(
+              (art) => art.authorId === b.dataset.id
+            );
+            if (hasArticles)
+              showToast("Cannot delete: Author has active articles.", true);
+            else openDeleteModal(b.dataset.id, "author");
+          })
+        );
+      }
 
-        // Store content for the editor
-        let existingBody = "";
+      function renderUsersView(container) {
+        container.innerHTML = `
+             <div class="max-w-4xl mx-auto space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold font-display">System Access Control</h2>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-100 p-4 flex items-start gap-3">
+                    <i data-lucide="info" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-sm text-blue-800">Users must first register via Firebase Auth. Here you assign their CMS role. <br><strong>Superadmins</strong> have full access. <strong>Writers</strong> can only edit articles.</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 shadow-sm">
+                    <table class="w-full text-left cms-table">
+                        <thead><tr><th>User ID / Email Reference</th><th>Current Role</th><th class="text-right">Action</th></tr></thead>
+                        <tbody id="users-tbody"></tbody>
+                    </table>
+                </div>
+             </div>
+          `;
+
+        const tbody = document.getElementById("users-tbody");
+
+        // In a real app, you'd list all users. Firestore roles collection usually contains UIDs.
+        // Since we can't list Auth users from client SDK easily without a cloud function,
+        // we only list roles we know about in the DB.
+        tbody.innerHTML = usersCache
+          .map(
+            (u) => `
+             <tr>
+                <td class="font-mono text-xs text-gray-600">${u.id} ${
+              u.id === currentUser.uid
+                ? '<span class="ml-2 badge badge-gray">You</span>'
+                : ""
+            }</td>
+                <td>
+                    <select class="input-field py-1 text-sm w-40 role-select" data-id="${
+                      u.id
+                    }" ${u.id === currentUser.uid ? "disabled" : ""}>
+                        <option value="writer" ${
+                          u.role === "writer" ? "selected" : ""
+                        }>Writer</option>
+                        <option value="superadmin" ${
+                          u.role === "superadmin" ? "selected" : ""
+                        }>Superadmin</option>
+                    </select>
+                </td>
+                <td class="text-right">
+                    <button class="text-red-400 hover:text-red-600 user-delete-btn" data-id="${
+                      u.id
+                    }" ${
+              u.id === currentUser.uid ? "disabled" : ""
+            }>Revoke</button>
+                </td>
+             </tr>
+          `
+          )
+          .join("");
+
+        document.querySelectorAll(".role-select").forEach((s) =>
+          s.addEventListener("change", async (e) => {
+            try {
+              await setDoc(
+                doc(db, paths.roles, e.target.dataset.id),
+                { role: e.target.value },
+                { merge: true }
+              );
+              showToast("Role updated.");
+            } catch (err) {
+              showToast(err.message, true);
+            }
+          })
+        );
+
+        document.querySelectorAll(".user-delete-btn").forEach((b) =>
+          b.addEventListener("click", () => {
+            openDeleteModal(b.dataset.id, "user");
+          })
+        );
+      }
+
+      // --- Logic: Article Modal ---
+      function openArticleModal(article = null) {
+        const modal = document.getElementById("article-modal");
+        const form = document.getElementById("article-form");
+        const titleEl = document.getElementById("modal-title");
+        const saveBtn = document.getElementById("modal-save-btn");
+
+        form.reset();
+
+        // Populate Authors
+        const authSelect = document.getElementById("article-author-select");
+        authSelect.innerHTML =
+          '<option value="">Select Author...</option>' +
+          authorsCache
+            .map((a) => `<option value="${a.id}">${a.name}</option>`)
+            .join("");
 
         if (article) {
-          // Edit mode
-          modalTitle.textContent = "Edit Article";
-          articleIdInput.value = article.id;
-          document.getElementById("article-title").value = article.title || "";
+          titleEl.textContent = "Edit Story";
+          saveBtn.textContent = "Update Story";
+          document.getElementById("article-id-input").value = article.id;
+          document.getElementById("article-title").value = article.title;
           document.getElementById("article-summary").value =
             article.summary || "";
+          document.getElementById("article-status").value = article.publishedAt
+            ? "Published"
+            : "Draft";
           document.getElementById("article-category").value =
-            article.category || "Tech";
+            article.category || "World";
+          document.getElementById("article-author-select").value =
+            article.authorId || "";
           document.getElementById("article-image-url").value =
             article.imageUrl || "";
-          existingBody = article.body || ""; // NEW
+
           document.getElementById("article-isHero").checked =
             article.isHero || false;
           document.getElementById("article-isTopStory").checked =
@@ -1374,616 +1139,236 @@
           document.getElementById("article-isBreaking").checked =
             article.isBreaking || false;
 
-          // NEW: Set author and status
-          document.getElementById("article-author-select").value =
-            article.authorId || "";
-          document.getElementById("article-status").value = article.publishedAt
-            ? "Published"
-            : "Draft";
+          sunEditorInstance.setContents(article.body || "");
         } else {
-          // Create mode
-          modalTitle.textContent = "Create New Article";
-          articleIdInput.value = "";
-          // NEW: Default to Draft
-          document.getElementById("article-status").value = "Draft";
-          existingBody = ""; // NEW
+          titleEl.textContent = "Compose New Story";
+          saveBtn.textContent = "Publish Story";
+          document.getElementById("article-id-input").value = "";
+          sunEditorInstance.setContents("");
+        }
 
-          // NEW: If writer, default to their author profile
-          if (currentUserRole === "writer") {
-            document.getElementById("article-author-select").value =
-              currentUser.uid;
+        modal.showModal();
+
+        // Save Logic
+        saveBtn.onclick = async () => {
+          const id = document.getElementById("article-id-input").value;
+          const status = document.getElementById("article-status").value;
+          const authorId = document.getElementById("article-author-select")
+            .value;
+
+          if (!document.getElementById("article-title").value) {
+            showToast("Headline required", true);
+            return;
           }
-        }
-        articleModal.showModal();
+          if (!authorId) {
+            showToast("Author required", true);
+            return;
+          }
 
-        // --- NEW: Initialize SunEditor ---
-        // Must be called *after* the dialog is shown
-        if (sunEditorInstance) {
-          sunEditorInstance.destroy();
-          sunEditorInstance = null;
-        }
+          const authorName =
+            authorsCache.find((a) => a.id === authorId)?.name || "Staff";
+
+          const data = {
+            title: document.getElementById("article-title").value,
+            summary: document.getElementById("article-summary").value,
+            category: document.getElementById("article-category").value,
+            imageUrl: document.getElementById("article-image-url").value,
+            body: sunEditorInstance.getContents(),
+            isHero: document.getElementById("article-isHero").checked,
+            isTopStory: document.getElementById("article-isTopStory").checked,
+            isBreaking: document.getElementById("article-isBreaking").checked,
+            authorId,
+            authorName,
+            updatedAt: serverTimestamp(),
+          };
+
+          // Publishing Logic
+          if (status === "Published" && (!article || !article.publishedAt)) {
+            data.publishedAt = serverTimestamp();
+          } else if (status === "Draft") {
+            data.publishedAt = null;
+          }
+
+          try {
+            saveBtn.textContent = "Saving...";
+            if (id) await updateDoc(doc(db, paths.articles, id), data);
+            else await addDoc(collection(db, paths.articles), data);
+
+            showToast("Story saved successfully.");
+            modal.close();
+          } catch (err) {
+            showToast(err.message, true);
+            saveBtn.textContent = "Try Again";
+          }
+        };
+
+        document.getElementById("modal-cancel-btn").onclick = () =>
+          modal.close();
+      }
+
+      // --- Logic: Delete Modal ---
+      function openDeleteModal(id, type) {
+        const modal = document.getElementById("delete-confirm-modal");
+        const confirmBtn = document.getElementById("delete-confirm-btn");
+        document.getElementById("delete-confirm-id").value = id;
+
+        modal.showModal();
+
+        confirmBtn.onclick = async () => {
+          try {
+            if (type === "article")
+              await deleteDoc(doc(db, paths.articles, id));
+            if (type === "author") await deleteDoc(doc(db, paths.authors, id));
+            if (type === "user") await deleteDoc(doc(db, paths.roles, id));
+            showToast("Deleted successfully.");
+            modal.close();
+          } catch (err) {
+            showToast(err.message, true);
+          }
+        };
+
+        document.getElementById("delete-cancel-btn").onclick = () =>
+          modal.close();
+      }
+
+      // --- Initialization Flow ---
+      async function init() {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // Setup Editor
         sunEditorInstance = SUNEDITOR.create("article-body", {
-          ...editorOptions,
-          value: existingBody, // Pass the content to the editor
+          buttonList: [
+            ["undo", "redo"],
+            ["font", "fontSize", "formatBlock"],
+            ["bold", "underline", "italic", "strike"],
+            ["fontColor", "hiliteColor"],
+            ["removeFormat"],
+            ["align", "list", "lineHeight"],
+            ["table", "link", "image", "video"],
+            ["fullScreen", "showBlocks", "codeView"],
+          ],
+          width: "100%",
+          height: "400px",
+          placeholder: "Type your story here...",
         });
-      }
 
-      modalCancelBtn.addEventListener("click", () => {
-        // NEW: Destroy editor instance on cancel
-        if (sunEditorInstance) {
-          sunEditorInstance.destroy();
-          sunEditorInstance = null;
-        }
-        articleModal.close();
-      });
-
-      articleForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const articleId = articleIdInput.value;
-        const status = document.getElementById("article-status").value;
-
-        // Get original article data if in edit mode
-        let originalArticle = null;
-        if (articleId) {
-          originalArticle = allArticlesCache.find((a) => a.id === articleId);
-        }
-
-        // NEW: Get author
-        const authorSelect = document.getElementById("article-author-select");
-        const selectedAuthorId = authorSelect.value;
-        const selectedAuthorName =
-          authorSelect.options[authorSelect.selectedIndex]?.text || null;
-
-        if (!selectedAuthorId) {
-          showToast("Please select an author.", true);
-          return;
-        }
-
-        const articleData = {
-          title: document.getElementById("article-title").value,
-          summary: document.getElementById("article-summary").value,
-          category: document.getElementById("article-category").value,
-          imageUrl: document.getElementById("article-image-url").value,
-          body: sunEditorInstance.getContents(true), // NEW: Get HTML from editor
-          isHero: document.getElementById("article-isHero").checked,
-          isTopStory: document.getElementById("article-isTopStory").checked,
-          isBreaking: document.getElementById("article-isBreaking").checked,
-          updatedAt: serverTimestamp(),
-          authorId: selectedAuthorId,
-          authorName: selectedAuthorName,
-          publishedAt: originalArticle?.publishedAt || null, // Default to old value
-        };
-
-        // --- NEW: Simplified Status Logic ---
-        const wasPublished = originalArticle?.publishedAt;
-        const isSetToPublish = status === "Published";
-
-        if (isSetToPublish && !wasPublished) {
-          // -> Publishing a draft
-          articleData.publishedAt = serverTimestamp();
-        } else if (!isSetToPublish && wasPublished) {
-          // -> Unpublishing to draft
-          articleData.publishedAt = null;
-        }
-        // If (isSetToPublish && wasPublished) -> stays published, publishedAt unchanged
-        // If (!isSetToPublish && !wasPublished) -> stays draft, publishedAt stays null
-
-        try {
-          if (articleId) {
-            // Update existing article
-            const docRef = doc(db, articlesCollectionPath, articleId);
-            await updateDoc(docRef, articleData);
-            showToast("Article updated successfully!");
-          } else {
-            // Create new article
-            // If it's a new draft, ensure publishedAt is null
-            if (status === "Draft") {
-              articleData.publishedAt = null;
-            }
-            await addDoc(collection(db, articlesCollectionPath), articleData);
-            showToast("Article created successfully!");
-          }
-          articleModal.close();
-          // NEW: Destroy editor instance on successful save
-          if (sunEditorInstance) {
-            sunEditorInstance.destroy();
-            sunEditorInstance = null;
-          }
-        } catch (error) {
-          console.error("Error saving article:", error);
-          showToast("Error: " + error.message, true);
-        }
-      });
-
-      // --- 5. MANAGE USERS VIEW (SUPERADMIN ONLY) ---
-
-      function loadUsersView() {
-        // 1. Render container HTML with search
-        contentView.innerHTML = `
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-extrabold text-white">Manage User Roles</h1>
-                </div>
-
-                <!-- NEW: User Search -->
-                <div class="mb-4 p-4 bg-slate-900 border border-slate-800 rounded-lg flex items-end space-x-4">
-                     <div class="flex-grow">
-                        <label for="user-search" class="form-label !mb-1 text-sm">Search by User ID</label>
-                        <input type="search" id="user-search" placeholder="Search by User ID..." class="form-input !py-2 !px-3" />
-                    </div>
-                     <p class="text-sm text-slate-400 pb-2">Users must be created in Firebase Auth first.</p>
-                </div>
-
-                <!-- MODIFIED: Added overflow-x-auto to allow horizontal scrolling on mobile -->
-                <div class="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden overflow-x-auto">
-                    <table class="w-full min-w-full divide-y divide-slate-700">
-                        <thead class="bg-slate-800">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">User ID (from Auth)</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Role</th>
-                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body" class="divide-y divide-slate-800">
-                            <tr><td colspan="3" class="p-6 text-center text-slate-500">Loading users...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-        // 2. Setup search listener
-        document
-          .getElementById("user-search")
-          .addEventListener("input", (e) => {
-            usersSearchTerm = e.target.value;
-            renderUsersTable();
-          });
-
-        // 3. Attach firestore listener
-        const q = query(collection(db, rolesCollectionPath));
-        userListenerUnsubscribe = onSnapshot(
-          q,
-          (snapshot) => {
-            allUsersCache = [];
-            snapshot.forEach((doc) =>
-              allUsersCache.push({ id: doc.id, ...doc.data() })
-            );
-            renderUsersTable(); // Initial render
-          },
-          (error) => {
-            console.error("Error listening to users:", error);
-            document.getElementById(
-              "users-table-body"
-            ).innerHTML = `<tr><td colspan="3" class="p-6 text-center text-red-400">Error loading users.</td></tr>`;
-          }
-        );
-      }
-
-      function renderUsersTable() {
-        const tableBody = document.getElementById("users-table-body");
-        if (!tableBody) return; // View not active
-
-        // 1. Apply filter
-        const filteredUsers = allUsersCache.filter(
-          (user) =>
-            !usersSearchTerm ||
-            user.id.toLowerCase().includes(usersSearchTerm.toLowerCase())
-        );
-
-        // 2. Render table
-        if (filteredUsers.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-500">No user roles found.</td></tr>`;
-          return;
-        }
-
-        tableBody.innerHTML = ""; // Clear
-        filteredUsers.forEach((user) => {
-          const tr = document.createElement("tr");
-          tr.className = "hover:bg-slate-800/50";
-          tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-white">${
-                          user.id
-                        }</div>
-                        ${
-                          user.id === currentUser.uid
-                            ? '<span class="text-xs text-cyan-400">(This is you)</span>'
-                            : ""
-                        }
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <select class="role-select form-select !py-2 !px-3 text-sm" data-id="${
-                          user.id
-                        }" ${user.id === currentUser.uid ? "disabled" : ""}>
-                            <option value="writer" ${
-                              user.role === "writer" ? "selected" : ""
-                            }>Writer</option>
-                            <option value="superadmin" ${
-                              user.role === "superadmin" ? "selected" : ""
-                            }>SuperAdmin</option>
-                        </select>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button class="user-delete-btn text-red-500 hover:text-red-300" data-id="${
-                          user.id
-                        }" ${user.id === currentUser.uid ? "disabled" : ""}>
-                            Delete
-                        </button>
-                    </td>
-                `;
-          tableBody.appendChild(tr);
-        });
-      }
-
-      async function handleChangeUserRole(id, newRole) {
-        try {
-          await setDoc(doc(db, rolesCollectionPath, id), { role: newRole });
-          showToast(`Role for ${id} updated to ${newRole}`);
-        } catch (error) {
-          console.error("Error changing role:", error);
-          showToast("Error: " + error.message, true);
-        }
-      }
-
-      // --- 6. MANAGE AUTHORS VIEW (SUPERADMIN ONLY) ---
-
-      function loadAuthorsView() {
-        // 1. Render container HTML
-        contentView.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Add/Edit Author Form -->
-                <div class="md:col-span-1">
-                    <h2 id="author-form-title" class="text-2xl font-bold text-white mb-4">Add Author</h2>
-                    <form id="author-form" class="p-6 bg-slate-900 border border-slate-800 rounded-lg shadow-lg space-y-4">
-                        <input type="hidden" id="author-id-input" />
-                        <div>
-                            <label for="author-name" class="form-label">Author Name</label>
-                            <input type="text" id="author-name" class="form-input" required />
-                        </div>
-                        <div>
-                            <label for="author-bio" class="form-label">Author Bio</label>
-                            <textarea id="author-bio" class="form-textarea" rows="4" placeholder="Short bio..."></textarea>
-                        </div>
-                        <div>
-                            <label for="author-image-url" class="form-label">Author Image URL</label>
-                            <input type="url" id="author-image-url" class="form-input" placeholder="https://..." />
-                        </div>
-                        <div class="flex justify-end space-x-2">
-                             <button type="button" id="author-cancel-btn" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Cancel</button>
-                             <button type="submit" id="author-save-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded-lg transition-colors">Save Author</button>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- Authors List -->
-                <div class="md:col-span-2">
-                    <h2 class="text-2xl font-bold text-white mb-4">Current Authors</h2>
-                    <!-- NEW: Author Search -->
-                    <div class="mb-4">
-                        <label for="author-search" class="sr-only">Search Authors</label>
-                        <input type="search" id="author-search" placeholder="Search by name..." class="form-input !py-2 !px-3" />
-                    </div>
-                    <!-- MODIFIED: Added overflow-x-auto to allow horizontal scrolling on mobile -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-lg shadow-lg overflow-hidden overflow-x-auto">
-                        <table class="w-full min-w-full divide-y divide-slate-700">
-                            <thead class="bg-slate-800">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Name</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Bio</th>
-                                    <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
-                                </tr>
-                            </thead>
-                            <tbody id="authors-table-body" class="divide-y divide-slate-800">
-                                <!-- JS will render rows here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-          `;
-
-        // 2. Wire up forms and listeners
-        const authorForm = document.getElementById("author-form");
-        const authorCancelBtn = document.getElementById("author-cancel-btn");
-
-        authorForm.addEventListener("submit", handleSaveAuthor);
-        authorCancelBtn.addEventListener("click", resetAuthorForm);
-        document
-          .getElementById("author-search")
-          .addEventListener("input", (e) => {
-            authorsSearchTerm = e.target.value;
-            renderAuthorsTable();
-          });
-
-        // 3. Render table from cache (listener is already active)
-        renderAuthorsTable();
-      }
-
-      function renderAuthorsTable() {
-        const tableBody = document.getElementById("authors-table-body");
-        if (!tableBody) return; // View not active
-
-        // 1. Apply filter
-        const filteredAuthors = allAuthorsCache.filter(
-          (author) =>
-            !authorsSearchTerm ||
-            author.name.toLowerCase().includes(authorsSearchTerm.toLowerCase())
-        );
-
-        // 2. Render
-        if (filteredAuthors.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-500">No authors found.</td></tr>`;
-        } else {
-          tableBody.innerHTML = "";
-          filteredAuthors.forEach((author) => {
-            tableBody.innerHTML += `
-                    <tr class="hover:bg-slate-800/50">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center space-x-3">
-                                <img class="h-10 w-10 rounded-full object-cover" src="${
-                                  author.imageUrl ||
-                                  "https://placehold.co/40x40/0f172a/334155?text=NA"
-                                }" alt="">
-                                <span class="text-sm font-medium text-white">${
-                                  author.name
-                                }</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-400">${
-                          author.bio ? author.bio.substring(0, 50) + "..." : ""
-                        }</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                            <button class="author-edit-btn text-cyan-400 hover:text-cyan-200" data-id="${
-                              author.id
-                            }">Edit</button>
-                            <button class="author-delete-btn text-red-500 hover:text-red-300" data-id="${
-                              author.id
-                            }">Delete</button>
-                        </td>
-                    </tr>
-                  `;
-          });
-        }
-      }
-
-      function resetAuthorForm() {
-        document.getElementById("author-form").reset();
-        document.getElementById("author-id-input").value = "";
-        document.getElementById("author-cancel-btn").classList.add("hidden");
-        document.getElementById("author-form-title").textContent = "Add Author";
-      }
-
-      async function handleSaveAuthor(e) {
-        e.preventDefault();
-        const authorId = document.getElementById("author-id-input").value;
-
-        const authorData = {
-          name: document.getElementById("author-name").value,
-          bio: document.getElementById("author-bio").value,
-          imageUrl: document.getElementById("author-image-url").value,
-        };
-
-        try {
-          if (authorId) {
-            await updateDoc(
-              doc(db, authorsCollectionPath, authorId),
-              authorData
-            );
-            showToast("Author updated!");
-          } else {
-            await addDoc(collection(db, authorsCollectionPath), authorData);
-            showToast("Author added!");
-          }
-          resetAuthorForm();
-          // The onSnapshot listener will handle the UI update
-        } catch (error) {
-          console.error("Error saving author:", error);
-          showToast("Error: " + error.message, true);
-        }
-      }
-
-      // --- 7. GLOBAL EVENT DELEGATION ---
-
-      function setupGlobalEventDelegation() {
-        adminDashboard.addEventListener("click", (e) => {
-          // Article Edit/Delete
-          const editBtn = e.target.closest(".article-edit-btn");
-          if (editBtn) {
-            const id = editBtn.dataset.id;
-            const article = allArticlesCache.find((a) => a.id === id);
-            if (article) showArticleModal(article);
-            return;
-          }
-
-          const deleteBtn = e.target.closest(".article-delete-btn");
-          if (deleteBtn) {
-            showDeleteConfirmModal(deleteBtn.dataset.id, "article");
-            return;
-          }
-
-          // User Delete
-          const deleteUserBtn = e.target.closest(".user-delete-btn");
-          if (deleteUserBtn && !deleteUserBtn.disabled) {
-            showDeleteConfirmModal(deleteUserBtn.dataset.id, "user");
-            return;
-          }
-
-          // Author Edit/Delete
-          const editAuthorBtn = e.target.closest(".author-edit-btn");
-          if (editAuthorBtn) {
-            const id = editAuthorBtn.dataset.id;
-            const author = allAuthorsCache.find((a) => a.id === id);
-            if (author) {
-              document.getElementById("author-id-input").value = author.id;
-              document.getElementById("author-name").value = author.name;
-              document.getElementById("author-bio").value = author.bio || "";
-              document.getElementById("author-image-url").value =
-                author.imageUrl || "";
-              document.getElementById("author-form-title").textContent =
-                "Edit Author";
+        // Auth Listener
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            currentUser = user;
+            // Check Role
+            try {
               document
-                .getElementById("author-cancel-btn")
+                .getElementById("loading-container")
                 .classList.remove("hidden");
-              window.scrollTo(0, 0); // Scroll to top
-            }
-            return;
-          }
+              document.getElementById("auth-container").classList.add("hidden");
 
-          const deleteAuthorBtn = e.target.closest(".author-delete-btn");
-          if (deleteAuthorBtn) {
-            // Check if author is in use
-            const authorId = deleteAuthorBtn.dataset.id;
-            const articlesByAuthor = allArticlesCache.filter(
-              (a) => a.authorId === authorId
-            );
-            if (articlesByAuthor.length > 0) {
-              showToast(
-                "Cannot delete author: They are assigned to " +
-                  articlesByAuthor.length +
-                  " article(s).",
-                true
-              );
-            } else {
-              showDeleteConfirmModal(deleteAuthorBtn.dataset.id, "author");
+              const roleSnap = await getDoc(doc(db, paths.roles, user.uid));
+              if (roleSnap.exists()) {
+                currentUserRole = roleSnap.data().role;
+                document.getElementById("user-email-display").textContent =
+                  user.email;
+
+                // Load Data
+                startListeners();
+
+                document
+                  .getElementById("loading-container")
+                  .classList.add("hidden");
+                document
+                  .getElementById("admin-dashboard")
+                  .classList.remove("hidden");
+
+                // Default View
+                switchView("articles");
+              } else {
+                // No role
+                signOut(auth);
+                alert("Access Denied: No role assigned.");
+                window.location.reload();
+              }
+            } catch (e) {
+              console.error(e);
             }
-            return;
+          } else {
+            document
+              .getElementById("auth-container")
+              .classList.remove("hidden");
+            document.getElementById("admin-dashboard").classList.add("hidden");
           }
         });
 
-        // For role dropdown
-        adminDashboard.addEventListener("change", (e) => {
-          const roleSelect = e.target.closest(".role-select");
-          if (roleSelect && !roleSelect.disabled) {
-            const id = roleSelect.dataset.id;
-            const newRole = roleSelect.value;
-            handleChangeUserRole(id, newRole);
-          }
-        });
-
-        // Delete Modal buttons
-        deleteCancelBtn.addEventListener("click", () =>
-          deleteConfirmModal.close()
-        );
-        deleteConfirmBtn.addEventListener("click", confirmDelete);
+        // Mobile Menu
+        document.getElementById("mobile-menu-toggle").onclick = () => {
+          const sidebar = document.querySelector("aside");
+          sidebar.classList.toggle("hidden");
+          sidebar.classList.toggle("flex");
+          sidebar.classList.toggle("absolute");
+          sidebar.classList.toggle("h-full");
+          sidebar.classList.toggle("w-64");
+        };
       }
 
-      // UPDATED: This just shows the modal.
-      function showDeleteConfirmModal(id, type) {
-        deleteConfirmIdInput.value = id;
-        deleteConfirmIdInput.dataset.type = type; // 'article' or 'user' or 'author'
-        deleteConfirmModal.showModal();
-      }
-
-      // NEW: Handle the actual deletion after confirmation
-      async function confirmDelete() {
-        const id = deleteConfirmIdInput.value;
-        const type = deleteConfirmIdInput.dataset.type;
-
-        try {
-          if (type === "article") {
-            await deleteDoc(doc(db, articlesCollectionPath, id));
-            showToast("Article deleted successfully!");
-          } else if (type === "user") {
-            await deleteDoc(doc(db, rolesCollectionPath, id));
-            showToast("User role deleted.");
-          } else if (type === "author") {
-            await deleteDoc(doc(db, authorsCollectionPath, id));
-            showToast("Author deleted.");
-          }
-        } catch (error) {
-          console.error(`Error deleting ${type}:`, error);
-          showToast("Error: " + error.message, true);
-        }
-
-        deleteConfirmModal.close();
-        deleteConfirmIdInput.value = "";
-        deleteConfirmIdInput.dataset.type = "";
-      }
-
-      // --- 8. HELPER FUNCTIONS ---
-
-      // NEW: Show toast notification
-      let toastTimeout;
-      function showToast(message, isError = false) {
-        toastMessage.textContent = message;
-
-        // Clear any existing timeouts
-        if (toastTimeout) clearTimeout(toastTimeout);
-
-        // --- FIX: Find and remove the old icon (which is an SVG) ---
-        const oldIcon = toastNotification.querySelector("svg");
-        if (oldIcon) {
-          oldIcon.remove();
-        }
-
-        // Create a new <i> tag for lucide to replace
-        const newIcon = document.createElement("i");
-        newIcon.classList.add("w-6", "h-6");
-
-        // Set styles
-        if (isError) {
-          toastNotification.classList.add("border-red-500", "text-red-400");
-          toastNotification.classList.remove(
-            "border-cyan-700",
-            "text-cyan-400"
+      function startListeners() {
+        // Articles
+        onSnapshot(query(collection(db, paths.articles)), (snap) => {
+          articlesCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          // Sort by date desc
+          articlesCache.sort(
+            (a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0)
           );
-          newIcon.setAttribute("data-lucide", "alert-circle"); // Set new icon
-        } else {
-          toastNotification.classList.remove("border-red-500", "text-red-400");
-          toastNotification.classList.add("border-cyan-700", "text-cyan-400");
-          newIcon.setAttribute("data-lucide", "check-circle"); // Set new icon
+          if (currentView === "articles")
+            renderArticlesView(document.getElementById("content-view"));
+        });
+
+        // Authors
+        onSnapshot(collection(db, paths.authors), (snap) => {
+          authorsCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          if (currentView === "authors")
+            renderAuthorsView(document.getElementById("content-view"));
+        });
+
+        // Roles (Users)
+        if (currentUserRole === "superadmin") {
+          onSnapshot(collection(db, paths.roles), (snap) => {
+            usersCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            if (currentView === "users")
+              renderUsersView(document.getElementById("content-view"));
+          });
         }
 
-        // Add the new <i> tag at the beginning
-        toastNotification.prepend(newIcon);
+        // Navigation Events
+        document.querySelectorAll(".sidebar-link").forEach((btn) => {
+          btn.addEventListener("click", () => switchView(btn.dataset.view));
+        });
 
-        lucide.createIcons(); // Redraw icon (this will convert the new <i> to <svg>)
-
-        // Show toast
-        toastNotification.classList.add("show");
-
-        // Hide after 3 seconds
-        toastTimeout = setTimeout(() => {
-          toastNotification.classList.remove("show");
-        }, 3000);
+        // Logout
+        document
+          .getElementById("logout-button")
+          .addEventListener("click", () => signOut(auth));
       }
 
-      function formatRelativeTime(timestamp) {
-        if (!timestamp) return "N/A";
-        const date = timestamp.toDate();
-        const now = new Date();
-        const seconds = Math.floor((now - date) / 1000);
-        if (seconds < 10) return "just now";
+      // Login Handler
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("login-email").value;
+          const pass = document.getElementById("login-password").value;
+          const errEl = document.getElementById("login-error");
 
-        let interval = seconds / 31536000;
-        if (interval > 1) {
-          const years = Math.floor(interval);
-          return `${years} year${years > 1 ? "s" : ""} ago`;
-        }
-        interval = seconds / 2592000;
-        if (interval > 1) {
-          const months = Math.floor(interval);
-          return `${months} month${months > 1 ? "s" : ""} ago`;
-        }
-        interval = seconds / 86400;
-        if (interval > 1) {
-          const days = Math.floor(interval);
-          return `${days} day${days > 1 ? "s" : ""} ago`;
-        }
-        interval = seconds / 3600;
-        if (interval > 1) {
-          const hours = Math.floor(interval);
-          return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-        }
-        interval = seconds / 60;
-        if (interval > 1) {
-          const minutes = Math.floor(interval);
-          return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-        }
-        return Math.floor(seconds) + " seconds ago";
-      }
-      // --- START THE APP ---
-      initializeFirebase();
-      lucide.createIcons();
+          try {
+            errEl.textContent = "";
+            await signInWithEmailAndPassword(auth, email, pass);
+          } catch (err) {
+            errEl.textContent = "Authentication Failed: " + err.message;
+          }
+        });
+
+      // Start
+      init();
     </script>
   </body>
 </html>

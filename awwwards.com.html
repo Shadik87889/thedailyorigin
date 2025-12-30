@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Celestial | Deep Immersion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@200;300;400;600&family=Space+Grotesk:wght@300;500;700&display=swap");
+
+      :root {
+        --color-accent: #4cc9f0;
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-bg: rgba(10, 15, 30, 0.4);
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #020205;
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* Lenis Setup */
+      html.lenis {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      /* Canvas fixed in background */
+      #webgl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* Typography */
+      .font-display {
+        font-family: "Syncopate", sans-serif;
+      }
+      .font-mono-tech {
+        font-family: "Space Grotesk", monospace;
+      }
+
+      .text-huge {
+        font-size: clamp(4rem, 15vw, 20rem);
+        line-height: 0.8;
+        letter-spacing: -0.05em;
+      }
+
+      /* Layout Utilities */
+      section {
+        position: relative;
+        z-index: 10;
+      }
+
+      .container-fluid {
+        width: 90%;
+        max-width: 1800px;
+        margin: 0 auto;
+      }
+
+      /* Components */
+      .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 4px;
+      }
+
+      .tech-border {
+        position: relative;
+      }
+      .tech-border::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 20px;
+        height: 20px;
+        border-top: 2px solid var(--color-accent);
+        border-left: 2px solid var(--color-accent);
+      }
+      .tech-border::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 20px;
+        height: 20px;
+        border-bottom: 2px solid var(--color-accent);
+        border-right: 2px solid var(--color-accent);
+      }
+
+      /* Horizontal Scroll Section */
+      .h-scroll-wrapper {
+        width: 400%; /* 4 sections wide */
+        height: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .h-section {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      ::selection {
+        background: var(--color-accent);
+        color: #000;
+      }
+
+      /* Loading Overlay */
+      #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.5s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loader -->
+    <div id="loader">
+      <div class="font-mono-tech text-accent animate-pulse">
+        INITIALIZING BIOS...
+      </div>
+    </div>
+
+    <!-- The 3D Canvas -->
+    <canvas id="webgl"></canvas>
+
+    <!-- Content -->
+    <main>
+      <!-- SECTION 1: HERO -->
+      <section
+        class="h-screen flex flex-col justify-center items-center relative overflow-hidden"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 z-0"
+        ></div>
+
+        <div class="container-fluid z-10 text-center mix-blend-difference">
+          <div class="overflow-hidden mb-4">
+            <p
+              class="hero-sub font-mono-tech text-blue-300 tracking-[0.5em] text-sm uppercase"
+            >
+              System Online // v.9.2
+            </p>
+          </div>
+          <div class="overflow-hidden">
+            <h1
+              class="hero-title font-display text-huge font-bold uppercase text-white leading-none"
+            >
+              Terra<br />Nova
+            </h1>
+          </div>
+          <div class="overflow-hidden mt-8">
+            <p
+              class="hero-desc font-light text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed"
+            >
+              A procedural journey into the unknown. <br />
+              <span
+                class="text-xs font-mono-tech tracking-widest text-gray-500 mt-2 block"
+                >SCROLL TO INITIATE DESCENT</span
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTRO (Wide Layout) -->
+      <section class="py-32 relative">
+        <div
+          class="container-fluid grid grid-cols-1 lg:grid-cols-12 gap-12 items-end"
+        >
+          <div class="lg:col-span-8">
+            <h2
+              class="text-split font-display text-5xl md:text-7xl font-bold leading-tight"
+            >
+              We scan for <span class="text-blue-400">habitable</span> signals
+              in the infinite void.
+            </h2>
+          </div>
+          <div class="lg:col-span-4 fade-up">
+            <p
+              class="text-lg text-gray-400 leading-relaxed border-l border-white/20 pl-6"
+            >
+              Using advanced Fractal Brownian Motion algorithms, we simulate
+              planetary surfaces in real-time. Every mountain, ocean, and cloud
+              layer is mathematically generated on your GPU.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: PLANETARY DATA (Grid) -->
+      <section class="py-32 relative">
+        <div class="container-fluid">
+          <div
+            class="mb-16 border-b border-white/10 pb-4 flex justify-between items-end fade-up"
+          >
+            <h3 class="font-mono-tech text-2xl uppercase">Telemetry Data</h3>
+            <span class="font-mono-tech text-xs text-blue-400">LIVE FEED</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div
+              class="glass-panel p-8 tech-border fade-up hover:bg-white/5 transition-colors duration-500"
+            >
+              <div class="font-mono-tech text-xs text-gray-500 mb-2">
+                01 // ATMOSPHERE
+              </div>
+              <div class="text-4xl font-display mb-4">78% N2</div>
+              <p class="text-sm text-gray-400">
+                Nitrogen-rich atmosphere compatible with carbon-based lifeforms.
+                Trace amounts of Argon detected.
+              </p>
+              <div
+                class="mt-8 h-1 w-full bg-gray-800 rounded-full overflow-hidden"
+              >
+                <div class="h-full bg-blue-500 w-[78%]"></div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+              class="glass-panel p-8 tech-border fade-up hover:bg-white/5 transition-colors duration-500"
+              style="transition-delay: 0.1s;"
+            >
+              <div class="font-mono-tech text-xs text-gray-500 mb-2">
+                02 // GRAVITY
+              </div>
+              <div class="text-4xl font-display mb-4">9.8 m/s²</div>
+              <p class="text-sm text-gray-400">
+                Surface gravity matches Earth standard. Bone density loss is
+                negligible for short-term stays.
+              </p>
+              <div class="mt-8 flex gap-2">
+                <div
+                  class="h-2 w-2 bg-green-500 rounded-full animate-pulse"
+                ></div>
+                <span class="text-xs text-green-500 font-mono-tech"
+                  >OPTIMAL</span
+                >
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+              class="glass-panel p-8 tech-border fade-up hover:bg-white/5 transition-colors duration-500"
+              style="transition-delay: 0.2s;"
+            >
+              <div class="font-mono-tech text-xs text-gray-500 mb-2">
+                03 // TEMPERATURE
+              </div>
+              <div class="text-4xl font-display mb-4">14°C</div>
+              <p class="text-sm text-gray-400">
+                Mean surface temperature allows for liquid water. Polar caps
+                stable. Seasonal variance: +/- 20°C.
+              </p>
+              <div class="mt-8 font-mono-tech text-xs text-gray-500">
+                MIN: -40°C // MAX: 35°C
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: HORIZONTAL SCROLL (The "Mind Blowing" Part) -->
+      <section
+        id="horizontal-scroll"
+        class="h-screen w-full bg-transparent overflow-hidden relative"
+      >
+        <div class="h-scroll-wrapper">
+          <!-- Panel 1 -->
+          <div class="h-section relative">
+            <div
+              class="absolute inset-0 bg-black/20 backdrop-blur-sm z-0"
+            ></div>
+            <div class="relative z-10 text-center">
+              <h2
+                class="font-display text-[8vw] leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-800"
+              >
+                PHASE I
+              </h2>
+              <p
+                class="font-mono-tech text-xl text-blue-400 tracking-widest mt-4"
+              >
+                ORBITAL ENTRY
+              </p>
+            </div>
+          </div>
+
+          <!-- Panel 2 -->
+          <div class="h-section relative">
+            <div class="container-fluid grid grid-cols-2 gap-20 items-center">
+              <div class="glass-panel p-12">
+                <h3 class="font-display text-4xl mb-6">Surface Scan</h3>
+                <p class="text-gray-300 mb-6 text-lg">
+                  Deploying probes to analyze the fractal terrain. Our shaders
+                  use multiple octaves of Simplex Noise to generate realistic
+                  coastlines.
+                </p>
+                <ul class="font-mono-tech text-sm text-gray-400 space-y-2">
+                  <li class="flex items-center">
+                    <span class="w-2 h-2 bg-blue-500 mr-2 rounded-full"></span>
+                    Ocean Depth: 12km
+                  </li>
+                  <li class="flex items-center">
+                    <span class="w-2 h-2 bg-blue-500 mr-2 rounded-full"></span>
+                    Peak Height: 8km
+                  </li>
+                </ul>
+              </div>
+              <div
+                class="text-[20rem] font-display font-bold text-white/5 leading-none absolute right-20 select-none pointer-events-none"
+              >
+                02
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3 -->
+          <div class="h-section">
+            <div class="text-center">
+              <div
+                class="font-mono-tech text-sm uppercase mb-4 tracking-[0.5em] text-gray-500"
+              >
+                Status Report
+              </div>
+              <h2 class="font-display text-[6vw] leading-tight text-white">
+                Atmosphere<br />
+                <span class="text-blue-500 italic">Stable</span>
+              </h2>
+            </div>
+          </div>
+
+          <!-- Panel 4 -->
+          <div class="h-section">
+            <div class="glass-panel p-20 text-center border-white/20">
+              <h2 class="font-display text-6xl mb-8">Ready for<br />Arrival</h2>
+              <button
+                class="px-12 py-4 border border-white hover:bg-white hover:text-black transition-all duration-300 font-mono-tech uppercase tracking-widest"
+              >
+                Initiate Landing Sequence
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: PARALLAX TEXT -->
+      <section
+        class="min-h-screen flex items-center justify-center py-32 overflow-hidden"
+      >
+        <div class="container-fluid relative">
+          <div class="parallax-text text-center">
+            <h2
+              class="font-display text-[12vw] font-bold text-white/10 leading-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full"
+            >
+              EXPLORATION
+            </h2>
+            <div class="relative z-10 max-w-2xl mx-auto text-center">
+              <h3 class="text-4xl font-bold mb-6">The Infinite Horizon</h3>
+              <p class="text-lg text-gray-400">
+                Beyond the visible spectrum lies the truth. We build these
+                digital worlds not just to see, but to feel the scale of the
+                cosmos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <section
+        class="py-20 border-t border-white/10 bg-black/40 backdrop-blur-lg mt-20"
+      >
+        <div class="container-fluid">
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-end"
+          >
+            <div>
+              <h2 class="font-display text-4xl font-bold mb-2">TERRA NOVA</h2>
+              <p class="font-mono-tech text-xs text-gray-500 tracking-widest">
+                PROCEDURAL GENERATION EXPERIMENT
+              </p>
+            </div>
+            <div class="mt-10 md:mt-0 flex gap-8 font-mono-tech text-sm">
+              <a href="#" class="hover:text-blue-400 transition-colors"
+                >Manifesto</a
+              >
+              <a href="#" class="hover:text-blue-400 transition-colors"
+                >Star Map</a
+              >
+              <a href="#" class="hover:text-blue-400 transition-colors"
+                >Credits</a
+              >
+            </div>
+          </div>
+          <div
+            class="mt-20 text-center text-xs text-gray-700 font-mono-tech uppercase"
+          >
+            Running on Three.js r160 & GSAP 3.12
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <!-- 1. GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- 2. Three.js Import Map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+          "lenis": "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.mjs"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import Lenis from "lenis";
+
+      // Register GSAP Plugin
+      gsap.registerPlugin(ScrollTrigger);
+
+      // --- Configuration ---
+      const CONFIG = {
+        scrollSpeed: 0.0005, // Slower due to longer page
+        autoRotateSpeed: 0.0003,
+        sunPosition: new THREE.Vector3(5, 3, 5),
+        colors: {
+          waterDeep: new THREE.Color("#001e42"),
+          waterShallow: new THREE.Color("#004a80"),
+          sand: new THREE.Color("#d4b483"),
+          grass: new THREE.Color("#2d5a27"),
+          forest: new THREE.Color("#1a331a"),
+          mountain: new THREE.Color("#555555"),
+          snow: new THREE.Color("#ffffff"),
+        },
+      };
+
+      // --- Setup Scene ---
+      const canvas = document.querySelector("#webgl");
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(
+        40,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 0, 16);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        antialias: false,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+
+      // --- Shaders (Preserved from previous version) ---
+      const noiseFunctions = `
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+            float snoise(vec3 v) {
+                const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 = v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i); 
+                vec4 p = permute( permute( permute( 
+                        i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            }
+            float fbm(vec3 x, int octaves) {
+                float v = 0.0; float a = 0.5; vec3 shift = vec3(100.0);
+                for (int i = 0; i < 10; ++i) {
+                    if(i >= octaves) break;
+                    v += a * snoise(x);
+                    x = x * 2.0 + shift;
+                    a *= 0.5;
+                }
+                return v;
+            }
+        `;
+
+      const terrainVertex = `
+            ${noiseFunctions}
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying float vHeight;
+            void main() {
+                vUv = uv;
+                float noiseVal = fbm(position * 1.5, 6);
+                vHeight = noiseVal;
+                float displacement = 0.0;
+                if(noiseVal > 0.05) { displacement = (noiseVal - 0.05) * 0.15; }
+                vec3 newPosition = position + normal * displacement;
+                vNormal = normalize(normalMatrix * normal);
+                vPosition = (modelViewMatrix * vec4(newPosition, 1.0)).xyz;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+      const terrainFragment = `
+            uniform vec3 uSunPos;
+            uniform vec3 uColorDeep;
+            uniform vec3 uColorShallow;
+            uniform vec3 uColorSand;
+            uniform vec3 uColorGrass;
+            uniform vec3 uColorForest;
+            uniform vec3 uColorMountain;
+            uniform vec3 uColorSnow;
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying float vHeight;
+            void main() {
+                vec3 viewDir = normalize(-vPosition);
+                vec3 normal = normalize(vNormal);
+                vec3 sunDir = normalize(uSunPos);
+                float diff = max(dot(normal, sunDir), 0.0);
+                float specularStrength = 0.0;
+                float shininess = 30.0;
+                vec3 color;
+                if (vHeight < -0.2) { color = uColorDeep; specularStrength = 0.8; } 
+                else if (vHeight < 0.05) { float t = smoothstep(-0.2, 0.05, vHeight); color = mix(uColorDeep, uColorShallow, t); specularStrength = 0.6 * (1.0 - t); } 
+                else if (vHeight < 0.1) { color = uColorSand; specularStrength = 0.0; } 
+                else if (vHeight < 0.35) { float t = smoothstep(0.1, 0.35, vHeight); color = mix(uColorGrass, uColorForest, t); } 
+                else if (vHeight < 0.55) { float t = smoothstep(0.35, 0.55, vHeight); color = mix(uColorForest, uColorMountain, t); } 
+                else { color = uColorSnow; }
+                vec3 reflectDir = reflect(-sunDir, normal);
+                float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+                vec3 specular = spec * specularStrength * vec3(1.0, 1.0, 0.9);
+                float fresnel = pow(1.0 - dot(viewDir, normal), 3.0);
+                vec3 atmosphere = vec3(0.3, 0.6, 1.0) * fresnel * 0.5;
+                vec3 finalColor = color * (diff + 0.1) + specular + atmosphere;
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+
+      const cloudVertex = `
+            ${noiseFunctions}
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying float vNoise;
+            uniform float uTime;
+            void main() {
+                vUv = uv;
+                vNormal = normalize(normalMatrix * normal);
+                vNoise = fbm(position * 1.2 + vec3(uTime * 0.1, 0.0, 0.0), 4);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+      const cloudFragment = `
+            varying vec3 vNormal;
+            varying float vNoise;
+            uniform vec3 uSunPos;
+            void main() {
+                float alpha = smoothstep(0.2, 0.6, vNoise);
+                vec3 sunDir = normalize(uSunPos);
+                float diff = max(dot(vNormal, sunDir), 0.0);
+                vec3 color = vec3(1.0) * (diff + 0.3);
+                gl_FragColor = vec4(color, alpha * 0.8); 
+            }
+        `;
+
+      // --- Create Objects ---
+      const geometry = new THREE.IcosahedronGeometry(3.5, 80);
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          uSunPos: { value: CONFIG.sunPosition },
+          uColorDeep: { value: CONFIG.colors.waterDeep },
+          uColorShallow: { value: CONFIG.colors.waterShallow },
+          uColorSand: { value: CONFIG.colors.sand },
+          uColorGrass: { value: CONFIG.colors.grass },
+          uColorForest: { value: CONFIG.colors.forest },
+          uColorMountain: { value: CONFIG.colors.mountain },
+          uColorSnow: { value: CONFIG.colors.snow },
+        },
+        vertexShader: terrainVertex,
+        fragmentShader: terrainFragment,
+      });
+      const planet = new THREE.Mesh(geometry, material);
+      scene.add(planet);
+
+      const cloudGeometry = new THREE.IcosahedronGeometry(3.58, 40);
+      const cloudMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uSunPos: { value: CONFIG.sunPosition },
+        },
+        vertexShader: cloudVertex,
+        fragmentShader: cloudFragment,
+        transparent: true,
+        blending: THREE.NormalBlending,
+        depthWrite: false,
+      });
+      const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+      scene.add(clouds);
+
+      const glowGeometry = new THREE.IcosahedronGeometry(3.8, 40);
+      const glowMaterial = new THREE.ShaderMaterial({
+        uniforms: { uSunPos: { value: CONFIG.sunPosition } },
+        vertexShader: `varying vec3 vNormal; varying vec3 vPosition; void main() { vNormal = normalize(normalMatrix * normal); vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+        fragmentShader: `varying vec3 vNormal; varying vec3 vPosition; uniform vec3 uSunPos; void main() { vec3 viewDir = normalize(-vPosition); float fresnel = pow(1.0 - dot(vNormal, viewDir), 3.0); vec3 sunDir = normalize(uSunPos); float sunDot = max(dot(vNormal, sunDir), 0.0); gl_FragColor = vec4(0.2, 0.5, 1.0, 1.0) * fresnel * (sunDot + 0.2); }`,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
+      });
+      const atmosphere = new THREE.Mesh(glowGeometry, glowMaterial);
+      scene.add(atmosphere);
+
+      const starsGeo = new THREE.BufferGeometry();
+      const starsCount = 3000;
+      const posArray = new Float32Array(starsCount * 3);
+      const sizeArray = new Float32Array(starsCount);
+      for (let i = 0; i < starsCount * 3; i++) {
+        posArray[i] = (Math.random() - 0.5) * 60;
+        if (i % 3 === 0) sizeArray[i / 3] = Math.random();
+      }
+      starsGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+      starsGeo.setAttribute("size", new THREE.BufferAttribute(sizeArray, 1));
+      const starsMat = new THREE.PointsMaterial({
+        size: 0.05,
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.8,
+      });
+      const starField = new THREE.Points(starsGeo, starsMat);
+      scene.add(starField);
+
+      // --- Post Processing ---
+      const renderScene = new RenderPass(scene, camera);
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        1.5,
+        0.4,
+        0.85
+      );
+      bloomPass.threshold = 0.5;
+      bloomPass.strength = 0.6;
+      bloomPass.radius = 0.3;
+      const composer = new EffectComposer(renderer);
+      composer.addPass(renderScene);
+      composer.addPass(bloomPass);
+
+      // --- Logic & Animation ---
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+      });
+
+      function update(time) {
+        lenis.raf(time * 1000);
+        ScrollTrigger.update();
+      }
+
+      gsap.ticker.add((time) => {
+        update(time);
+      });
+
+      // Turn off GSAP internal ticker to sync with Lenis?
+      // Actually for simple setups, independent is fine, but we link Lenis to ScrollTrigger:
+      lenis.on("scroll", ScrollTrigger.update);
+
+      // --- ANIMATION TIMELINES (GSAP) ---
+
+      // 1. Initial Load Animation
+      const tlLoad = gsap.timeline();
+      tlLoad
+        .to("#loader", {
+          opacity: 0,
+          duration: 1,
+          delay: 1,
+          pointerEvents: "none",
+        })
+        .from(".hero-sub", { y: 20, opacity: 0, duration: 1 }, "-=0.5")
+        .from(
+          ".hero-title",
+          { y: 50, opacity: 0, duration: 1.5, ease: "power3.out" },
+          "-=0.8"
+        )
+        .from(".hero-desc", { y: 20, opacity: 0, duration: 1 }, "-=0.8");
+
+      // 2. Text Reveals
+      gsap.utils.toArray(".text-split").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+          y: 50,
+          opacity: 0,
+          duration: 1.2,
+          ease: "power3.out",
+        });
+      });
+
+      gsap.utils.toArray(".fade-up").forEach((el, i) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+          y: 40,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
+      });
+
+      // 3. Horizontal Scroll Section
+      let horizontalSection = document.querySelector(".h-scroll-wrapper");
+
+      gsap.to(horizontalSection, {
+        xPercent: -75, // Move left by 3 sections (100% * 3 / 4 total width = 75%)
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#horizontal-scroll",
+          pin: true,
+          scrub: 1,
+          end: "+=3000", // Length of scroll duration
+        },
+      });
+
+      // 4. Parallax Text
+      gsap.to(".parallax-text h2", {
+        yPercent: 50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".parallax-text",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // 5. Planet Scroll Rotation (Sync with ScrollTrigger)
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) => {
+          const r = self.progress * Math.PI * 4; // Rotate 2 full times
+          planet.rotation.y = r;
+          clouds.rotation.y = r * 1.1;
+          starField.rotation.y = r * 0.05;
+        },
+      });
+
+      // --- Render Loop ---
+      const clock = new THREE.Clock();
+      function animate() {
+        const elapsed = clock.getElapsedTime();
+        planet.rotation.y += CONFIG.autoRotateSpeed;
+        clouds.rotation.y += CONFIG.autoRotateSpeed * 1.15;
+        clouds.material.uniforms.uTime.value = elapsed;
+
+        composer.render();
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // Resize
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
+</html>

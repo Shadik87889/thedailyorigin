@@ -6,20 +6,17 @@
 
     <!-- 
       ======================================================================
-      NEW: "WORLD-BEST" SEO FOR E-E-A-T (TRUSTWORTHINESS)
+      SEO & METADATA (Preserved from your previous file)
       ======================================================================
     -->
-
-    <!-- 1. Primary Metadata -->
     <title>About Us | The Daily Origin</title>
     <meta
       name="description"
       content="Learn about The Daily Origin's mission to rebuild trust in media. Meet our founder, Shadik Hossain Shakib, and discover our core principles: Unbiased, Unfiltered, Uncompromising."
     />
-    <!-- The canonical URL tells Google this is the one true "About Us" page -->
     <link rel="canonical" href="https://www.thedailyorigin.com/about-us.html" />
 
-    <!-- 2. Open Graph (Facebook, LinkedIn, etc.) -->
+    <!-- Open Graph -->
     <meta property="og:title" content="About Us | The Daily Origin" />
     <meta
       property="og:description"
@@ -31,36 +28,24 @@
     />
     <meta property="og:site_name" content="The Daily Origin" />
     <meta property="og:type" content="website" />
-    <!-- This image will be used when sharing the link. TODO: Replace placeholder. -->
     <meta
       property="og:image"
       content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
     />
-    <meta
-      property="og:image:alt"
-      content="The Daily Origin - Unbiased, Unfiltered, Uncompromising."
-    />
 
-    <!-- 3. Twitter Card -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <!-- <meta name="twitter:site" content="@YourTwitterHandle"> -->
-    <!-- TODO: Add your Twitter handle -->
     <meta name="twitter:title" content="About Us | The Daily Origin" />
     <meta
       name="twitter:description"
       content="Learn about our mission to rebuild trust in media and meet our founder."
     />
-    <!-- TODO: Replace placeholder. -->
     <meta
       name="twitter:image"
       content="https://www.thedailyorigin.com/the_daily_origin_social_preview.png"
     />
-    <meta
-      name="twitter:image:alt"
-      content="The Daily Origin - Unbiased, Unfiltered, Uncompromising."
-    />
 
-    <!-- 4. GAME-CHANGING: Linked JSON-LD Schema for E-E-A-T -->
+    <!-- JSON-LD Schema for E-E-A-T -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -69,15 +54,12 @@
             "@type": "Organization",
             "name": "The Daily Origin",
             "url": "https://www.thedailyorigin.com",
-            /* TODO: Upload your logo and use the absolute URL here */
             "logo": "https://www.thedailyorigin.com/the_daily_origin_logo.png",
             "description": "The future of information, delivered today. Unbiased, unfiltered, and uncompromising.",
-            /* This 'founder' property links to the 'Person' schema below */
             "founder": {
               "@type": "Person",
-              "@id": "#founder-shakib" /* Internal page ID */
+              "@id": "#founder-shakib"
             },
-            /* TODO: Add your real social media URLs */
             "sameAs": [
               "https://www.facebook.com/YourFacebookPage",
               "https://www.twitter.com/YourTwitterHandle",
@@ -89,20 +71,17 @@
             "@id": "#founder-shakib",
             "name": "Shadik Hossain Shakib",
             "jobTitle": "Founder, Chief Editor & Lead Developer",
-            /* TODO: Upload your founder's photo (absolute URL) */
             "image": "https://www.thedailyorigin.com/the_daily_origin_founder.jpg",
-            "description": "Professional web and software developer, founder of Rural Peace Non-Profit Org and CashShilpo POS Software. Creator of The Daily Origin, a platform built on technological excellence and human integrity.",
-            /* This links the person back to the organization */
+            "description": "Professional web and software developer, founder of Rural Peace Non-Profit Org and CashShilpo POS Software. Creator of The Daily Origin.",
             "worksFor": {
               "@type": "Organization",
               "name": "The Daily Origin"
             }
           },
           {
-            "@type": "AboutPage" /* Explicitly state this is an About Page */,
+            "@type": "AboutPage",
             "url": "https://www.thedailyorigin.com/about-us.html",
             "name": "About The Daily Origin",
-            /* This links the page itself to the main organization */
             "mainEntity": {
               "@type": "Organization",
               "name": "The Daily Origin"
@@ -112,671 +91,450 @@
       }
     </script>
 
-    <!-- 
-      ======================================================================
-      END OF NEW SEO SECTION
-      ======================================================================
-    -->
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Font: Inter -->
+    <!-- Google Fonts: Inter (UI), Merriweather (Headlines), Playfair Display (Hero) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Google Font for Logo -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Elegant Sans-Serif Font -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap"
       rel="stylesheet"
     />
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Custom Styles (Copied from index.html for consistency) -->
+    <!-- Shared Styles (Matches index.html) -->
     <style>
+      :root {
+        --font-sans: "Inter", sans-serif;
+        --font-serif: "Merriweather", serif;
+        --font-display: "Playfair Display", serif;
+        --color-brand: #000000;
+        --color-accent: #c90000;
+        --color-bg: #ffffff;
+      }
       body {
-        font-family: "Inter", sans-serif;
-        background-color: #020617; /* slate-950 */
-        color: #d1d5db; /* gray-300 */
+        font-family: var(--font-serif);
+        background-color: var(--color-bg);
+        color: #111;
         overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        border-top: 5px solid var(--color-accent);
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+      }
+      .font-sans {
+        font-family: var(--font-sans);
+      }
+      .font-serif {
+        font-family: var(--font-serif);
+      }
+      .font-display {
+        font-family: var(--font-display);
       }
 
-      /* Glassmorphism effect for header */
-      .header-glass {
-        background-color: rgba(2, 6, 23, 0.6); /* slate-950 with 60% opacity */
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid #1e293b; /* slate-800 */
+      /* Match Index Styles */
+      .masthead {
+        border-bottom: 1px solid #111;
       }
-
-      .logo-artisan {
-        font-family: "Caveat", cursive;
+      .nav-strip {
+        border-top: 1px solid #111;
+        border-bottom: 1px solid #111;
       }
-
-      .logo-main {
-        font-family: "Oswald", sans-serif;
+      .nav-link {
+        position: relative;
+        color: #111;
+        font-family: var(--font-sans);
         font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.5rem 0;
+        transition: color 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--color-accent);
       }
 
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
+      /* About Specific */
+      .editorial-line {
+        width: 80px;
+        height: 6px;
+        background-color: var(--color-accent);
+        margin: 2rem 0;
       }
-      ::-webkit-scrollbar-track {
-        background: #0f172a;
-      } /* slate-900 */
-      ::-webkit-scrollbar-thumb {
-        background: #0891b2;
-        border-radius: 4px;
-      } /* cyan-700 */
-      ::-webkit-scrollbar-thumb:hover {
-        background: #22d3ee;
-      } /* cyan-400 */
-
-      /* Section Title Style */
-      .section-title {
-        position: relative;
-        padding-bottom: 0.75rem; /* 12px */
-        margin-bottom: 2rem; /* 32px */
-        border-bottom: 1px solid #1e293b; /* slate-800 */
+      .profile-card img {
+        transition: filter 0.5s ease;
+        filter: grayscale(100%);
       }
-      .section-title::after {
-        content: "";
-        position: absolute;
-        bottom: -1px; /* sits on top of the border */
-        left: 0;
-        width: 100px; /* fixed width for the gradient line */
-        height: 2px;
-        background: linear-gradient(
-          to right,
-          #22d3ee,
-          #0891b2
-        ); /* cyan-400 to cyan-700 */
-      }
-
-      /* Gradient text */
-      .text-gradient {
-        background: linear-gradient(
-          to right,
-          #22d3ee,
-          #60a5fa
-        ); /* cyan-400 to blue-400 */
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-      }
-
-      /* Text ellipsis utility classes */
-      .text-ellipsis-lines-2 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      /* Search Modal Styles */
-      .search-modal-hidden {
-        visibility: hidden;
-        opacity: 0;
-        transform: scale(0.95);
-        transition: opacity 0.2s ease-out, transform 0.2s ease-out,
-          visibility 0.2s;
-      }
-      .search-modal-visible {
-        visibility: visible;
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      /* Premium Desktop Nav Link Hover Effect */
-      .desktop-nav-link {
-        position: relative;
-        padding-bottom: 4px;
-      }
-      .desktop-nav-link::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(to right, #22d3ee, #60a5fa);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-      }
-      .desktop-nav-link:hover::after {
-        transform: scaleX(1);
-      }
-      .desktop-nav-link:hover {
-        color: #e5e7eb;
-      } /* gray-200 */
-
-      /* Advanced Mobile Menu Animations */
-      #mobile-menu nav a {
-        opacity: 0;
-        transform: translateX(20px);
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-      }
-      #mobile-menu.menu-open nav a {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      #mobile-menu.menu-open nav a:nth-child(1) {
-        transition-delay: 0.1s;
-      }
-      #mobile-menu.menu-open nav a:nth-child(2) {
-        transition-delay: 0.15s;
-      }
-      #mobile-menu.menu-open nav a:nth-child(3) {
-        transition-delay: 0.2s;
-      }
-      #mobile-menu.menu-open nav a:nth-child(4) {
-        transition-delay: 0.25s;
-      }
-      #mobile-menu.menu-open nav a:nth-child(5) {
-        transition-delay: 0.3s;
-      }
-      #mobile-menu.menu-open nav a:nth-child(6) {
-        transition-delay: 0.35s;
-      }
-      #mobile-menu.menu-open nav a:nth-child(7) {
-        transition-delay: 0.4s;
-      }
-      /* NEW: Added delay for 'Others' */
-      #mobile-menu.menu-open nav a:nth-child(8) {
-        transition-delay: 0.45s;
-      }
-      #mobile-menu .mobile-social-links {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        /* NEW: Delayed to fire after 'Others' */
-        transition-delay: 0.55s;
-      }
-      #mobile-menu.menu-open .mobile-social-links {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* NEW: Feature Card Icon BG */
-      .feature-icon-bg {
-        background: radial-gradient(
-          circle,
-          rgba(8, 145, 178, 0.3) 0%,
-          rgba(8, 145, 178, 0) 70%
-        );
+      .profile-card:hover img {
+        filter: grayscale(0%);
       }
     </style>
   </head>
-  <body class="antialiased">
-    <!-- Note: Removed the Loading Overlay as this is a static page -->
+  <body class="bg-white selection:bg-[#E90606] selection:text-white">
+    <!-- Top Bar -->
+    <div class="bg-black text-white text-xs py-2 relative z-50">
+      <div
+        class="container mx-auto px-4 lg:px-8 flex items-center justify-between"
+      >
+        <div class="flex items-center">
+          <span
+            class="text-[#E90606] font-bold uppercase tracking-widest mr-4 flex-shrink-0 text-[10px] font-sans"
+            >The Daily Origin</span
+          >
+        </div>
+        <div
+          class="hidden lg:flex items-center space-x-6 ml-6 font-sans text-[11px] font-bold uppercase tracking-widest"
+        >
+          <a
+            href="./home"
+            class="text-white hover:text-[#E90606] transition-colors"
+            >Return to Home</a
+          >
+        </div>
+      </div>
+    </div>
 
-    <!-- Header (Copied from index.html) -->
-    <header class="header-glass sticky top-0 z-40 w-full">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
-          <!-- Logo -->
-          <!-- UPDATED: Link to home.html -->
-          <a href="./home.html" class="flex items-baseline space-x-2">
-            <span class="text-3xl text-white logo-main">The Daily</span>
-            <span class="relative">
-              <span class="text-4xl font-bold text-cyan-400 logo-artisan"
-                >Origin</span
+    <!-- Navigation Header -->
+    <header
+      class="masthead bg-white sticky top-0 z-40 w-full border-b border-black md:border-none shadow-sm md:shadow-none"
+      id="main-header"
+    >
+      <div class="container mx-auto px-4 lg:px-8 py-3 md:pt-6 md:pb-4">
+        <!-- Logo Row -->
+        <div class="flex justify-between items-center md:mb-6">
+          <button
+            id="mobile-menu-btn"
+            class="lg:hidden text-black hover:text-[#E90606] transition-colors -ml-1"
+          >
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+
+          <a href="./home" class="flex-1 flex justify-center group px-2">
+            <div class="flex flex-col items-center">
+              <h1
+                class="font-display font-black text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-black tracking-tight leading-none group-hover:scale-[1.01] transition-transform duration-300 text-center"
               >
-              <svg
-                class="absolute left-0 w-full h-4 -bottom-1 text-cyan-500"
-                viewBox="0 0 100 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="none"
-              >
-                <path
-                  d="M2 12 C 30 22 70 22 98 12"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-              </svg>
+                The Daily Origin
+              </h1>
               <span
-                class="absolute top-0 -right-5 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
+                class="hidden md:block font-sans text-[10px] uppercase tracking-[0.3em] text-gray-500 mt-2 font-bold"
+                >Unbiased • Unfiltered • Uncompromising</span
               >
-                BETA
-              </span>
-            </span>
+            </div>
           </a>
 
-          <!-- Desktop Navigation -->
-          <!-- NEW: Added 'Others' category -->
-          <nav class="hidden md:flex space-x-8">
-            <a
-              href="./category.html?category=World"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >World</a
-            >
-            <a
-              href="./category.html?category=Tech"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Tech</a
-            >
-            <a
-              href="./category.html?category=Politics"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Politics</a
-            >
-            <a
-              href="./category.html?category=Culture"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Culture</a
-            >
-            <a
-              href="./category.html?category=Science"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Science</a
-            >
-            <a
-              href="./category.html?category=Sports"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Sports</a
-            >
-            <a
-              href="./category.html?category=Education"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Education</a
-            >
-            <a
-              href="./category.html?category=Others"
-              class="text-sm font-medium text-gray-300 transition-colors desktop-nav-link"
-              >Others</a
-            >
-          </nav>
+          <div class="w-5"></div>
+          <!-- Spacer for balance -->
+        </div>
 
-          <!-- Search and Mobile Menu Button -->
-          <div class="flex items-center space-x-4">
-            <button
-              id="search-open-btn"
-              class="text-gray-400 hover:text-cyan-400 transition-colors"
-            >
-              <i data-lucide="search" class="w-6 h-6"></i>
-            </button>
-            <button
-              class="md:hidden text-gray-400 hover:text-cyan-400 transition-colors"
-              id="mobile-menu-btn"
-            >
-              <i
-                data-lucide="menu"
-                class="w-6 h-6"
-                id="mobile-menu-open-icon"
-              ></i>
-              <i
-                data-lucide="x"
-                class="w-6 h-6 hidden"
-                id="mobile-menu-close-icon"
-              ></i>
-            </button>
-          </div>
+        <!-- Desktop Navigation Strip -->
+        <div class="hidden lg:block nav-strip py-3">
+          <nav class="flex justify-center items-center space-x-10">
+            <a href="./home" class="nav-link">Home</a>
+            <a href="./about" class="nav-link text-[#E90606]">About Us</a>
+            <a href="./category?category=World" class="nav-link">World</a>
+            <a href="./category?category=Tech" class="nav-link">Tech</a>
+            <a href="./category?category=Politics" class="nav-link">Politics</a>
+            <a href="./category?category=Science" class="nav-link">Science</a>
+            <a href="#" class="nav-link">Ethics Policy</a>
+          </nav>
         </div>
       </div>
     </header>
 
-    <!-- Mobile Menu Overlay (Copied from index.html) -->
+    <!-- Mobile Menu Drawer -->
     <div
       id="mobile-menu-overlay"
-      class="fixed inset-0 bg-black/70 z-40 opacity-0 invisible transition-opacity duration-300 ease-in-out md:hidden"
+      class="fixed inset-0 bg-black/50 z-40 hidden backdrop-blur-sm opacity-0 transition-opacity duration-300"
     ></div>
-
-    <!-- Advanced Mobile Menu (Copied from index.html) -->
     <div
       id="mobile-menu"
-      class="fixed top-0 right-0 h-full w-80 max-w-full bg-slate-950 z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden shadow-2xl shadow-black flex flex-col"
+      class="fixed top-0 left-0 h-full w-[280px] bg-white z-50 transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col border-r-4 border-[#E90606]"
     >
-      <!-- Menu Header -->
       <div
-        class="flex-shrink-0 flex justify-between items-center p-6 border-b border-slate-800"
+        class="p-6 border-b border-gray-100 flex justify-between items-center bg-black text-white"
       >
-        <span class="text-xl font-bold text-white">Menu</span>
+        <span class="font-sans font-bold text-lg uppercase tracking-wider"
+          >Menu</span
+        >
         <button
-          class="text-gray-400 hover:text-cyan-400"
           id="mobile-menu-close-btn"
+          class="text-white hover:text-gray-300"
         >
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
-
-      <!-- Menu Links -->
-      <!-- NEW: Added 'Others' category -->
-      <nav class="flex-grow flex flex-col p-6 overflow-y-auto">
+      <nav class="flex-grow overflow-y-auto py-6 px-4 space-y-2">
         <a
-          href="./category.html?category=World"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
+          href="./home"
+          class="block py-2 text-xl font-display font-bold text-black border-b border-gray-100 hover:text-[#E90606]"
+          >Home</a
+        >
+        <a
+          href="./about"
+          class="block py-2 text-xl font-display font-bold text-[#E90606] border-b border-gray-100"
+          >About Us</a
+        >
+        <a
+          href="./category?category=World"
+          class="block py-2 text-xl font-display font-bold text-black border-b border-gray-100 hover:text-[#E90606]"
           >World</a
         >
         <a
-          href="./category.html?category=Tech"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
+          href="./category?category=Tech"
+          class="block py-2 text-xl font-display font-bold text-black border-b border-gray-100 hover:text-[#E90606]"
           >Tech</a
         >
-        <a
-          href="./category.html?category=Politics"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
-          >Politics</a
-        >
-        <a
-          href="./category.html?category=Culture"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
-          >Culture</a
-        >
-        <a
-          href="./category.html?category=Science"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
-          >Science</a
-        >
-        <a
-          href="./category.html?category=Sports"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
-          >Sports</a
-        >
-        <a
-          href="./category.html?category=Education"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
-          >Education</a
-        >
-        <a
-          href="./category.html?category=Others"
-          class="block px-4 py-3 text-base font-medium text-gray-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors border-b border-slate-800"
-          >Others</a
-        >
       </nav>
-
-      <!-- Social Links -->
-      <div
-        class="flex-shrink-0 p-6 border-t border-slate-800 mobile-social-links"
-      >
-        <div class="flex space-x-6 justify-center">
-          <a
-            href="#"
-            class="text-gray-400 hover:text-cyan-400 transition-colors"
-            aria-label="Twitter"
-            ><i data-lucide="twitter" class="w-6 h-6"></i
-          ></a>
-          <a
-            href="#"
-            class="text-gray-400 hover:text-cyan-400 transition-colors"
-            aria-label="Facebook"
-            ><i data-lucide="facebook" class="w-6 h-6"></i
-          ></a>
-          <a
-            href="#"
-            class="text-gray-400 hover:text-cyan-400 transition-colors"
-            aria-label="Instagram"
-            ><i data-lucide="instagram" class="w-6 h-6"></i
-          ></a>
-        </div>
-      </div>
     </div>
-    <!-- Note: Removed the Breaking News Ticker -->
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-      <!-- Page Hero Section -->
-      <section class="text-center mb-16 md:mb-24">
-        <!-- UPDATED: Replaced simple text with the full logo HTML structure, adapted for a large heading -->
-        <h1
-          class="text-4xl md:text-6xl font-black tracking-tight text-white mb-4 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center sm:items-baseline sm:space-x-3"
-        >
-          <span class="logo-main">About The Daily</span>
-          <span class="relative">
-            <!-- Make Origin slightly larger than the rest of the h1 -->
+    <main>
+      <!-- Hero Section -->
+      <section class="py-20 md:py-32 border-b border-gray-100">
+        <div class="container mx-auto px-4 lg:px-8 max-w-5xl text-center">
+          <span
+            class="font-sans font-bold text-[#E90606] uppercase tracking-[0.3em] text-xs mb-8 block"
+            >Who We Are</span
+          >
+          <h1
+            class="font-display font-black text-5xl md:text-7xl mb-10 leading-[0.9] tracking-tight text-black"
+          >
+            Rebuilding Trust in Media.<br />One Story at a Time.
+          </h1>
+          <p
+            class="text-xl md:text-2xl text-gray-500 leading-relaxed font-serif max-w-3xl mx-auto italic"
+          >
+            "In an age of information overload, clarity is our currency."
+          </p>
+          <div class="flex justify-center mt-10">
+            <div class="editorial-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mission & Vision -->
+      <section class="py-20">
+        <div class="container mx-auto px-4 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <!-- Left: Text -->
+            <div
+              class="lg:col-span-6 font-serif text-lg leading-loose text-gray-800 space-y-6"
+            >
+              <h2 class="font-display text-4xl font-bold text-black mb-4">
+                Our Mission
+              </h2>
+              <p>
+                In an age of information overload and echo chambers, finding the
+                truth has become a digital battlefield. The Daily Origin was
+                founded on a simple, radical principle: to deliver essential,
+                fact-driven news without the noise.
+              </p>
+              <p>
+                We believe in empowering our readers, not influencing them. Our
+                journalism is a tool for understanding, built on a foundation of
+                rigorous ethics, technological innovation, and a deep-seated
+                respect for your intelligence.
+              </p>
+              <div class="pt-6">
+                <a
+                  href="#"
+                  class="font-sans font-bold uppercase text-xs tracking-widest text-[#E90606] border-b-2 border-[#E90606] pb-1 hover:text-black hover:border-black transition-all"
+                  >Read Ethics Policy</a
+                >
+              </div>
+            </div>
+
+            <!-- Right: Image -->
+            <div class="lg:col-span-6">
+              <div
+                class="relative h-[500px] w-full bg-gray-100 overflow-hidden shadow-lg group"
+              >
+                <img
+                  src="https://images.pexels.com/photos/163172/office-building-cloud-enterprise-163172.jpeg"
+                  alt="Architecture"
+                  class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div
+                  class="absolute inset-0 border-[10px] border-white/90"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Core Principles -->
+      <section class="bg-gray-50 py-24 border-y border-black">
+        <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+          <div class="text-center mb-16">
             <span
-              class="text-5xl md:text-7xl font-bold text-cyan-400 logo-artisan"
-              >Origin</span
+              class="font-sans font-bold text-gray-400 uppercase tracking-[0.2em] text-xs mb-4 block"
+              >Our DNA</span
             >
-            <!-- Scale the underline -->
-            <svg
-              class="absolute left-0 w-full h-5 -bottom-1 text-cyan-500"
-              viewBox="0 0 100 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M2 12 C 30 22 70 22 98 12"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-              />
-            </svg>
-            <!-- Beta Tag -- REMOVED -->
-            <!--
-                    <span class="absolute top-0 -right-4 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded-sm md:text-xs md:px-2 md:-right-6">
-                        BETA
-                    </span>
-                    -->
-          </span>
-        </h1>
-        <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-          We're rebuilding trust in media by prioritizing clarity over chaos.
-          Unbiased, unfiltered, and uncompromisingly human-centric.
-        </p>
-      </section>
-
-      <!-- Our Mission Section -->
-      <section class="mb-16 md:mb-24">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 class="text-3xl font-bold text-white section-title">
-              Our Mission
+            <h2 class="font-display text-4xl font-bold mb-4">
+              Core Principles
             </h2>
-            <p class="text-lg text-gray-300 mb-6">
-              In an age of information overload and echo chambers, finding the
-              truth has become a digital battlefield. The Daily Origin was
-              founded on a simple, radical principle: to deliver essential,
-              fact-driven news without the noise.
-            </p>
-            <p class="text-gray-400 mb-6">
-              We believe in empowering our readers, not influencing them. Our
-              journalism is a tool for understanding, built on a foundation of
-              rigorous ethics, technological innovation, and a deep-seated
-              respect for your intelligence.
-            </p>
-            <a
-              href="#"
-              class="inline-flex items-center text-cyan-400 font-medium hover:text-cyan-300 transition-colors"
-            >
-              Read Our Full Ethics Policy
-              <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-            </a>
           </div>
-          <div class="order-first lg:order-last">
-            <!-- UPDATED: Replaced dynamic Unsplash link with a static, reliable one -->
-            <img
-              src="https://images.pexels.com/photos/163172/office-building-cloud-enterprise-163172.jpeg"
-              alt="Modern glass architecture reflecting the sky, representing clarity and transparency"
-              class="rounded-lg shadow-2xl shadow-cyan-900/20 border border-slate-800 object-cover w-full h-full"
-            />
-          </div>
-        </div>
-      </section>
 
-      <!-- Core Principles Section -->
-      <section class="mb-16 md:mb-24">
-        <h2
-          class="text-3xl font-bold text-white section-title text-center max-w-lg mx-auto"
-        >
-          Our Core Principles
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <!-- Principle 1: Unbiased -->
-          <div
-            class="bg-slate-900 p-8 rounded-lg border border-slate-800 shadow-xl shadow-slate-950/50 text-center"
-          >
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <!-- Unbiased -->
             <div
-              class="w-20 h-20 feature-icon-bg rounded-full flex items-center justify-center mx-auto mb-6"
+              class="text-center group p-10 bg-white border border-gray-100 hover:border-[#E90606] hover:shadow-xl transition-all duration-300"
             >
-              <i data-lucide="scale" class="w-10 h-10 text-cyan-400"></i>
+              <div
+                class="mb-6 inline-flex p-4 bg-gray-50 rounded-full group-hover:bg-[#E90606] transition-colors duration-300"
+              >
+                <i
+                  data-lucide="scale"
+                  class="w-8 h-8 text-black group-hover:text-white transition-colors"
+                ></i>
+              </div>
+              <h4 class="font-display font-bold text-2xl mb-4">Unbiased</h4>
+              <p class="text-sm text-gray-600 font-serif leading-relaxed">
+                We present the facts, context, and diverse perspectives,
+                allowing you to form your own opinions. We are non-partisan by
+                design.
+              </p>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-3">Unbiased</h3>
-            <p class="text-gray-400">
-              We present the facts, context, and diverse perspectives, allowing
-              you to form your own opinions. We are non-partisan by design.
-            </p>
-          </div>
-          <!-- Principle 2: Unfiltered -->
-          <div
-            class="bg-slate-900 p-8 rounded-lg border border-slate-800 shadow-xl shadow-slate-950/50 text-center"
-          >
+
+            <!-- Unfiltered -->
             <div
-              class="w-20 h-20 feature-icon-bg rounded-full flex items-center justify-center mx-auto mb-6"
+              class="text-center group p-10 bg-white border border-gray-100 hover:border-[#E90606] hover:shadow-xl transition-all duration-300"
             >
-              <i data-lucide="filter-x" class="w-10 h-10 text-cyan-400"></i>
+              <div
+                class="mb-6 inline-flex p-4 bg-gray-50 rounded-full group-hover:bg-[#E90606] transition-colors duration-300"
+              >
+                <i
+                  data-lucide="filter-x"
+                  class="w-8 h-8 text-black group-hover:text-white transition-colors"
+                ></i>
+              </div>
+              <h4 class="font-display font-bold text-2xl mb-4">Unfiltered</h4>
+              <p class="text-sm text-gray-600 font-serif leading-relaxed">
+                No clickbait. No rage-farming. No algorithmic manipulation. We
+                deliver the signal, not the static, focusing on what's truly
+                important.
+              </p>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-3">Unfiltered</h3>
-            <p class="text-gray-400">
-              No clickbait. No rage-farming. No algorithmic manipulation. We
-              deliver the signal, not the static, focusing on what's truly
-              important.
-            </p>
-          </div>
-          <!-- Principle 3: Uncompromising -->
-          <div
-            class="bg-slate-900 p-8 rounded-lg border border-slate-800 shadow-xl shadow-slate-950/50 text-center"
-          >
+
+            <!-- Uncompromising -->
             <div
-              class="w-20 h-20 feature-icon-bg rounded-full flex items-center justify-center mx-auto mb-6"
+              class="text-center group p-10 bg-white border border-gray-100 hover:border-[#E90606] hover:shadow-xl transition-all duration-300"
             >
-              <i data-lucide="shield-check" class="w-10 h-10 text-cyan-400"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-3">Uncompromising</h3>
-            <p class="text-gray-400">
-              Our integrity is not for sale. We are independently owned and
-              operated, funded by our readers—not by agendas.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Meet the Founder Section -->
-      <section class="mb-16 md:mb-24">
-        <h2 class="text-3xl font-bold text-white section-title">
-          Meet the Founder
-        </h2>
-        <div
-          class="bg-slate-900 rounded-lg border border-slate-800 shadow-2xl shadow-slate-950/50 overflow-hidden"
-        >
-          <div class="grid grid-cols-1 md:grid-cols-3">
-            <!-- Founder Image -->
-            <div class="md:col-span-1">
-              <!-- UPDATED: Replaced placeholder with your image -->
-              <!-- NEW: Added fallback image -->
-              <img
-                src="./the_daily_origin_founder.jpg"
-                alt="Portrait of Shadik Hossain Shakib, Founder of The Daily Origin"
-                class="w-full h-full object-cover object-center"
-                onerror="this.src='https://placehold.co/600x800/0f172a/334155?text=Shadik+Hossain+Shakib'; this.onerror=null;"
-              />
-            </div>
-
-            <!-- Founder Bio -->
-            <div class="md:col-span-2 p-8 md:p-12">
-              <!-- USER: Name updated as requested! -->
-              <h3 class="text-3xl font-bold text-white">
-                Shadik Hossain Shakib
-              </h3>
-              <p class="text-lg font-medium text-gradient mb-6">
-                Founder, Chief Editor & Lead Developer
-              </p>
-
-              <p class="text-gray-300 text-lg mb-6">
-                As a professional web and software developer, I've spent my
-                career building complex systems and solving intricate problems.
-                I've seen firsthand how technology can both connect and divide
-                us.
-              </p>
-              <p class="text-gray-400 mb-8">
-                I created The Daily Origin to solve a problem I felt personally:
-                the erosion of trust in public information. This platform is the
-                intersection of my two greatest passions—technological
-                excellence and human integrity. It's more than a news site; it's
-                an engineered solution for a more informed public.
-              </p>
-
-              <h4 class="text-xl font-semibold text-white mb-6">
-                A Legacy of Innovation & Service
+              <div
+                class="mb-6 inline-flex p-4 bg-gray-50 rounded-full group-hover:bg-[#E90606] transition-colors duration-300"
+              >
+                <i
+                  data-lucide="shield-check"
+                  class="w-8 h-8 text-black group-hover:text-white transition-colors"
+                ></i>
+              </div>
+              <h4 class="font-display font-bold text-2xl mb-4">
+                Uncompromising
               </h4>
-              <div class="space-y-6">
-                <!-- Project 1: Rural Peace -->
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center"
-                  >
+              <p class="text-sm text-gray-600 font-serif leading-relaxed">
+                Our integrity is not for sale. We are independently owned and
+                operated, funded by our readers—not by agendas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Meet the Founder -->
+      <section class="py-24">
+        <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
+          <h2 class="font-display text-4xl font-bold mb-12 text-center">
+            Meet The Founder
+          </h2>
+
+          <div class="bg-white border border-gray-200 p-8 md:p-12 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+              <!-- Image -->
+              <div class="md:col-span-1 profile-card">
+                <div
+                  class="relative w-full h-[400px] md:h-full bg-gray-100 overflow-hidden"
+                >
+                  <img
+                    src="./the_daily_origin_founder.jpg"
+                    onerror="this.src='https://placehold.co/600x800/eeeeee/111111?text=Shadik+Hossain+Shakib'"
+                    alt="Shadik Hossain Shakib"
+                    class="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-500"
+                  />
+                </div>
+              </div>
+
+              <!-- Text -->
+              <div class="md:col-span-2 flex flex-col justify-center">
+                <h3 class="font-display font-black text-3xl md:text-4xl mb-2">
+                  Shadik Hossain Shakib
+                </h3>
+                <p
+                  class="font-sans font-bold text-[#E90606] uppercase tracking-widest text-xs mb-8"
+                >
+                  Founder, Chief Editor & Lead Developer
+                </p>
+
+                <div
+                  class="font-serif text-lg text-gray-700 space-y-6 leading-relaxed mb-8"
+                >
+                  <p>
+                    As a professional web and software developer, I've spent my
+                    career building complex systems and solving intricate
+                    problems. I've seen firsthand how technology can both
+                    connect and divide us.
+                  </p>
+                  <p>
+                    I created The Daily Origin to solve a problem I felt
+                    personally: the erosion of trust in public information. This
+                    platform is the intersection of my two greatest
+                    passions—technological excellence and human integrity.
+                  </p>
+                </div>
+
+                <div class="border-t border-gray-200 pt-8 mt-4 space-y-6">
+                  <!-- Project 1 -->
+                  <div class="flex items-start">
                     <i
                       data-lucide="heart-handshake"
-                      class="w-6 h-6 text-cyan-400"
+                      class="w-6 h-6 text-[#E90606] mt-1 mr-4 flex-shrink-0"
                     ></i>
+                    <div>
+                      <h5 class="font-bold font-display text-lg">
+                        Rural Peace Non-Profit Org
+                      </h5>
+                      <p class="text-sm text-gray-500 font-serif mt-1">
+                        Founder. Empowering rural communities through technology
+                        and sustainable development.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h5 class="font-bold text-white">
-                      Rural Peace Non-Profit Org
-                    </h5>
-                    <p class="text-sm text-gray-400">
-                      Founder of a non-profit organization dedicated to
-                      empowering rural communities through technology,
-                      education, and sustainable development.
-                    </p>
-                  </div>
-                </div>
-                <!-- Project 2: CashShilpo -->
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center"
-                  >
+                  <!-- Project 2 -->
+                  <div class="flex items-start">
                     <i
                       data-lucide="shopping-cart"
-                      class="w-6 h-6 text-cyan-400"
+                      class="w-6 h-6 text-[#E90606] mt-1 mr-4 flex-shrink-0"
                     ></i>
-                  </div>
-                  <div>
-                    <h5 class="font-bold text-white">
-                      CashShilpo POS Software
-                    </h5>
-                    <p class="text-sm text-gray-400">
-                      Creator of a cutting-edge Point-of-Sale software solution,
-                      simplifying commerce and empowering small businesses to
-                      thrive in the digital economy.
-                    </p>
-                  </div>
-                </div>
-                <!-- Project 3: The Daily Origin -->
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="flex-shrink-0 w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center"
-                  >
-                    <i
-                      data-lucide="newspaper"
-                      class="w-6 h-6 text-cyan-400"
-                    ></i>
-                  </div>
-                  <div>
-                    <h5 class="font-bold text-white">The Daily Origin</h5>
-                    <p class="text-sm text-gray-400">
-                      The culmination of a career in tech and a passion for
-                      truth—a platform built from the ground up to be the future
-                      of information.
-                    </p>
+                    <div>
+                      <h5 class="font-bold font-display text-lg">
+                        CashShilpo POS Software
+                      </h5>
+                      <p class="text-sm text-gray-500 font-serif mt-1">
+                        Creator. Simplifying commerce and empowering small
+                        businesses in the digital economy.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -785,363 +543,103 @@
         </div>
       </section>
 
-      <!-- Join Us CTA -->
-      <section
-        class="text-center bg-slate-900 border border-slate-800 rounded-lg p-12 shadow-xl shadow-slate-950/50"
-      >
-        <h2 class="text-3xl font-bold text-white mb-4">Join Our Journey</h2>
-        <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-          We're just getting started. If you believe in a future where news is
-          clear, honest, and empowering, we invite you to join us.
-        </p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <a
-            href="#"
-            class="inline-block bg-cyan-600 text-white font-medium py-3 px-8 rounded-lg shadow-lg hover:bg-cyan-500 transition-colors"
+      <!-- CTA -->
+      <section class="bg-black text-white py-24 text-center">
+        <div class="container mx-auto px-4 max-w-3xl">
+          <h2 class="font-display font-bold text-4xl mb-6">Join Our Journey</h2>
+          <p class="font-serif text-lg text-gray-400 mb-10 leading-relaxed">
+            We're just getting started. If you believe in a future where news is
+            clear, honest, and empowering, we invite you to support our mission.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row justify-center gap-6 font-sans font-bold uppercase tracking-[0.2em] text-xs"
           >
-            Support Our Mission
-          </a>
-          <a
-            href="#"
-            class="inline-block bg-slate-800 text-gray-300 font-medium py-3 px-8 rounded-lg hover:bg-slate-700 transition-colors"
-          >
-            Contact The Team
-          </a>
+            <a
+              href="#"
+              class="bg-[#E90606] text-white px-8 py-4 hover:bg-white hover:text-black transition-colors"
+              >Support Mission</a
+            >
+            <a
+              href="#"
+              class="border border-white px-8 py-4 hover:bg-white hover:text-black transition-colors"
+              >Contact Team</a
+            >
+          </div>
         </div>
       </section>
     </main>
 
-    <!-- Footer (Copied from index.html) -->
-    <footer class="bg-slate-900 border-t border-slate-800 mt-16">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
-          <!-- Logo & About -->
-          <div class="col-span-2 lg:col-span-2">
-            <!-- UPDATED: Link to home.html -->
-            <a href="./home.html" class="flex items-baseline space-x-2 mb-4">
-              <span class="text-2xl text-white logo-main">The Daily</span>
-              <span class="relative">
-                <span class="text-3xl font-bold text-cyan-400 logo-artisan"
-                  >Origin</span
-                >
-                <svg
-                  class="absolute left-0 w-full h-3 -bottom-1 text-cyan-500"
-                  viewBox="0 0 100 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M2 12 C 30 22 70 22 98 12"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                  />
-                </svg>
-                <span
-                  class="absolute top-0 -right-4 transform -translate-y-1/2 rotate-12 bg-yellow-400 text-yellow-900 text-[9px] font-bold px-1.5 py-0.5 rounded-sm"
-                >
-                  BETA
-                </span>
-              </span>
-            </a>
-            <p class="text-sm text-gray-400 max-w-xs">
-              The future of information, delivered today. Unbiased, unfiltered,
-              and uncompromising.
-            </p>
-          </div>
-
-          <!-- Quick Links -->
-          <!-- NEW: Added 'Others' category -->
-          <div>
-            <h3
-              class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
+    <!-- Footer -->
+    <footer class="bg-black text-white border-t-[6px] border-[#E90606]">
+      <div class="container mx-auto px-4 lg:px-8 py-20">
+        <div
+          class="flex flex-col md:flex-row justify-between items-start mb-16"
+        >
+          <div class="mb-10 md:mb-0">
+            <h2 class="font-display font-black text-5xl mb-6 tracking-tight">
+              The Daily Origin
+            </h2>
+            <div
+              class="flex space-x-8 text-xs font-sans font-bold uppercase tracking-widest text-gray-500"
             >
-              Categories
-            </h3>
-            <ul class="mt-4 space-y-2">
-              <li>
-                <a
-                  href="./category.html?category=World"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >World</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Tech"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Tech</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Politics"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Politics</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Science"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Science</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Culture"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Culture</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Sports"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Sports</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Education"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Education</a
-                >
-              </li>
-              <li>
-                <a
-                  href="./category.html?category=Others"
-                  class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Others</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <!-- Company -->
-          <div>
-            <h3
-              class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
-            >
-              Company
-            </h3>
-            <ul class="mt-4 space-y-2">
-              <li>
-                <a
-                  href="./about-us.html"
-                  class="text-sm text-cyan-400 font-medium"
-                  >About Us</a
-                >
-              </li>
-              <!-- UPDATED: Current page -->
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Careers</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Ethics Policy</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Contact</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <!-- Legal -->
-          <div>
-            <h3
-              class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
-            >
-              Legal
-            </h3>
-            <ul class="mt-4 space-y-2">
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Privacy Policy</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-cyan-400"
-                  >Terms of Service</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <!-- App -->
-          <div>
-            <h3
-              class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
-            >
-              Get the App
-            </h3>
-            <div class="mt-4 space-y-3">
-              <a
-                href="#"
-                class="flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white py-2 px-3 rounded-lg text-sm"
-                ><span>App Store</span></a
-              >
-              <a
-                href="#"
-                class="flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white py-2 px-3 rounded-lg text-sm"
-                ><span>Google Play</span></a
-              >
+              <a href="./about" class="text-white transition-colors">About</a>
+              <a href="#" class="hover:text-white transition-colors">Contact</a>
+              <a href="#" class="hover:text-white transition-colors">Careers</a>
             </div>
           </div>
-        </div>
-
-        <!-- Bottom Bar -->
-        <div
-          class="mt-8 border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center"
-        >
-          <p class="text-sm text-gray-400">
-            &copy; 2025 The Daily Origin. All rights reserved.
-          </p>
-          <div class="flex space-x-6 mt-4 md:mt-0">
+          <div class="flex space-x-4">
             <a
               href="#"
-              class="text-gray-400 hover:text-cyan-400 transition-colors"
+              class="w-12 h-12 border border-gray-800 flex items-center justify-center hover:bg-[#E90606] hover:border-[#E90606] transition-all"
               ><i data-lucide="twitter" class="w-5 h-5"></i
             ></a>
             <a
               href="#"
-              class="text-gray-400 hover:text-cyan-400 transition-colors"
+              class="w-12 h-12 border border-gray-800 flex items-center justify-center hover:bg-[#E90606] hover:border-[#E90606] transition-all"
               ><i data-lucide="facebook" class="w-5 h-5"></i
             ></a>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-cyan-400 transition-colors"
-              ><i data-lucide="instagram" class="w-5 h-5"></i
-            ></a>
           </div>
+        </div>
+
+        <div
+          class="border-t border-gray-900 pt-8 flex justify-between items-center"
+        >
+          <p
+            class="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-gray-500"
+          >
+            © 2025 The Daily Origin
+          </p>
         </div>
       </div>
     </footer>
 
-    <!-- Search Modal (Copied from index.html) -->
-    <div
-      id="search-overlay"
-      class="search-modal-hidden fixed inset-0 bg-black/80 z-40 transition-opacity"
-      aria-hidden="true"
-    ></div>
-    <div
-      id="search-modal"
-      class="search-modal-hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl p-4"
-    >
-      <div
-        class="bg-slate-900 border border-slate-800 rounded-lg shadow-2xl shadow-cyan-900/50 flex flex-col"
-      >
-        <!-- Search Input -->
-        <div class="flex items-center p-4 border-b border-slate-800">
-          <i
-            data-lucide="search"
-            class="w-6 h-6 text-cyan-400 flex-shrink-0 mr-4"
-          ></i>
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Search articles by title, summary, or category..."
-            class="w-full bg-transparent text-white text-lg placeholder-gray-500 focus:outline-none"
-          />
-          <button
-            id="search-close-btn"
-            class="text-gray-400 hover:text-white transition-colors ml-4"
-          >
-            <i data-lucide="x" class="w-6 h-6"></i>
-          </button>
-        </div>
-        <!-- Search Results -->
-        <div
-          id="search-results-list"
-          class="max-h-[60vh] overflow-y-auto p-4 space-y-3"
-        >
-          <!-- Note: Search logic is not included on this static page. -->
-          <p class="text-gray-500 text-center">
-            Search is available from the homepage.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- App Logic (UI Interactions Only) -->
-    <script type="module">
-      // --- UI Element References ---
+    <script>
+      lucide.createIcons();
+      // Mobile Menu Logic
       const mobileMenu = document.getElementById("mobile-menu");
-      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
       const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
-      const mobileMenuOpenIcon = document.getElementById(
-        "mobile-menu-open-icon"
-      );
-      const mobileMenuCloseIcon = document.getElementById(
-        "mobile-menu-close-icon"
-      );
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
       const mobileMenuCloseBtn = document.getElementById(
         "mobile-menu-close-btn"
       );
-      const searchIconBtn = document.getElementById("search-open-btn");
-      const searchOverlay = document.getElementById("search-overlay");
-      const searchModal = document.getElementById("search-modal");
-      const searchInput = document.getElementById("search-input");
-      const searchResultsList = document.getElementById("search-results-list");
-      const searchCloseBtn = document.getElementById("search-close-btn");
 
-      // --- Advanced Mobile Menu Functions ---
-      function openMenu() {
-        mobileMenu.classList.remove("translate-x-full");
-        mobileMenu.classList.add("menu-open");
-        mobileMenuOverlay.classList.remove("opacity-0", "invisible");
-        mobileMenuOpenIcon.classList.add("hidden");
-        mobileMenuCloseIcon.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
+      function toggleMenu(show) {
+        if (show) {
+          mobileMenu.classList.remove("-translate-x-full");
+          mobileMenuOverlay.classList.remove("hidden");
+          setTimeout(() => mobileMenuOverlay.classList.remove("opacity-0"), 10);
+          document.body.style.overflow = "hidden";
+        } else {
+          mobileMenu.classList.add("-translate-x-full");
+          mobileMenuOverlay.classList.add("opacity-0");
+          setTimeout(() => mobileMenuOverlay.classList.add("hidden"), 300);
+          document.body.style.overflow = "";
+        }
       }
 
-      function closeMenu() {
-        mobileMenu.classList.add("translate-x-full");
-        mobileMenu.classList.remove("menu-open");
-        mobileMenuOverlay.classList.add("opacity-0", "invisible");
-        mobileMenuOpenIcon.classList.remove("hidden");
-        mobileMenuCloseIcon.classList.add("hidden");
-        document.body.style.overflow = "";
-      }
-
-      // Mobile Menu Event Listeners
-      mobileMenuBtn.addEventListener("click", openMenu);
-      mobileMenuCloseBtn.addEventListener("click", closeMenu);
-      mobileMenuOverlay.addEventListener("click", closeMenu);
-
-      // --- Search Modal Toggle Functions ---
-      function showSearchModal() {
-        searchOverlay.classList.remove("search-modal-hidden");
-        searchOverlay.classList.add("search-modal-visible");
-        searchModal.classList.remove("search-modal-hidden");
-        searchModal.classList.add("search-modal-visible");
-        searchInput.focus();
-      }
-
-      function hideSearchModal() {
-        searchOverlay.classList.remove("search-modal-visible");
-        searchOverlay.classList.add("search-modal-hidden");
-        searchModal.classList.remove("search-modal-visible");
-        searchModal.classList.add("search-modal-hidden");
-        searchInput.value = ""; // Clear input
-      }
-
-      // Search Event Listeners
-      searchIconBtn.addEventListener("click", showSearchModal);
-      searchCloseBtn.addEventListener("click", hideSearchModal);
-      searchOverlay.addEventListener("click", hideSearchModal);
-
-      // --- App Entry Point ---
-      document.addEventListener("DOMContentLoaded", () => {
-        // Initialize Lucide icons
-        lucide.createIcons();
-      });
+      mobileMenuBtn.addEventListener("click", () => toggleMenu(true));
+      mobileMenuCloseBtn.addEventListener("click", () => toggleMenu(false));
+      mobileMenuOverlay.addEventListener("click", () => toggleMenu(false));
     </script>
   </body>
 </html>
