@@ -307,6 +307,7 @@
     <div id="admin-dashboard" class="hidden flex h-full">
       <!-- Sidebar Navigation -->
       <aside
+        id="main-sidebar"
         class="w-64 bg-black text-white hidden md:flex flex-col flex-shrink-0 z-20"
       >
         <div
@@ -719,8 +720,34 @@
           else btn.classList.remove("active");
         });
 
+        // Close sidebar on mobile after clicking
+        if (window.innerWidth < 768) {
+          toggleSidebar(false);
+        }
+
         // Render
         renderContent(viewName);
+      }
+
+      function toggleSidebar(forceState) {
+        const sidebar = document.getElementById("main-sidebar");
+        if (typeof forceState !== "undefined") {
+          if (forceState) {
+            sidebar.classList.remove("hidden");
+            sidebar.classList.add("flex", "absolute", "h-full", "w-64");
+          } else {
+            sidebar.classList.add("hidden");
+            sidebar.classList.remove("flex", "absolute", "h-full", "w-64");
+          }
+        } else {
+          if (sidebar.classList.contains("hidden")) {
+            sidebar.classList.remove("hidden");
+            sidebar.classList.add("flex", "absolute", "h-full", "w-64");
+          } else {
+            sidebar.classList.add("hidden");
+            sidebar.classList.remove("flex", "absolute", "h-full", "w-64");
+          }
+        }
       }
 
       function renderContent(view) {
@@ -778,8 +805,18 @@
                     </button>
                 </div>
 
-                <!-- Table -->
-                <div class="bg-white border border-gray-200 overflow-hidden overflow-x-auto">
+                <!-- Mobile List (Visible < md) -->
+                <div id="articles-mobile-list" class="md:hidden space-y-4">
+                     ${
+                       articlesCache.length === 0
+                         ? '<div class="text-center py-8 text-gray-500 italic">No articles found. Start writing!</div>'
+                         : ""
+                     }
+                </div>
+
+                <!-- Desktop Table (Hidden < md) -->
+                <!-- Removed overflow-x-auto to fix dropdown clipping -->
+                <div class="hidden md:block bg-white border border-gray-200 min-h-[400px]">
                     <table class="w-full text-left cms-table">
                         <thead>
                             <tr>
@@ -821,61 +858,158 @@
       }
 
       function renderArticleRows(articles) {
+        // Dropdown actions HTML generator
+        const getActionMenu = (id, context) => `
+            <div class="relative inline-block text-left">
+                <button class="action-dropdown-btn p-2 hover:bg-gray-100 rounded-full transition-colors" data-menu-id="menu-${context}-${id}">
+                    <i data-lucide="more-vertical" class="w-4 h-4 text-gray-500"></i>
+                </button>
+                <div id="menu-${context}-${id}" class="action-dropdown-menu hidden absolute right-0 mt-2 w-32 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                    <div class="py-1">
+                        <button class="edit-article-btn group flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-id="${id}">
+                            <i data-lucide="edit-2" class="mr-3 h-4 w-4 text-gray-400 group-hover:text-gray-500"></i>
+                            Edit
+                        </button>
+                    </div>
+                    <div class="py-1">
+                        <button class="delete-article-btn group flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50" data-id="${id}">
+                            <i data-lucide="trash-2" class="mr-3 h-4 w-4 text-red-400 group-hover:text-red-500"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 1. Desktop Table Render
         const tbody = document.getElementById("articles-tbody");
-        if (!tbody) return;
+        if (tbody) {
+          tbody.innerHTML = articles
+            .map(
+              (a) => `
+                <tr class="group transition-colors border-b border-gray-50 hover:bg-gray-50/50">
+                    <td class="font-bold text-gray-900 font-display text-lg py-4">
+                        ${a.title}
+                        ${
+                          a.isBreaking
+                            ? '<span class="ml-2 text-[10px] text-red-600 font-sans uppercase tracking-widest border border-red-200 px-1">Breaking</span>'
+                            : ""
+                        }
+                    </td>
+                    <td>
+                        <span class="badge ${
+                          a.publishedAt ? "badge-success" : "badge-warning"
+                        }">
+                            ${a.publishedAt ? "Published" : "Draft"}
+                        </span>
+                    </td>
+                    <td><span class="text-xs font-bold uppercase text-gray-500 tracking-wider">${
+                      a.category
+                    }</span></td>
+                    <td class="text-sm text-gray-600">${
+                      a.authorName || "Unknown"
+                    }</td>
+                    <td class="text-xs text-gray-400 font-mono">${
+                      a.updatedAt
+                        ? new Date(
+                            a.updatedAt.seconds * 1000
+                          ).toLocaleDateString()
+                        : "N/A"
+                    }</td>
+                    <td class="text-right">
+                        ${getActionMenu(a.id, "desktop")}
+                    </td>
+                </tr>
+            `
+            )
+            .join("");
+        }
 
-        tbody.innerHTML = articles
-          .map(
-            (a) => `
-            <tr class="group transition-colors">
-                <td class="font-bold text-gray-900 font-display text-lg">
-                    ${a.title}
-                    ${
-                      a.isBreaking
-                        ? '<span class="ml-2 text-[10px] text-red-600 font-sans uppercase tracking-widest border border-red-200 px-1">Breaking</span>'
-                        : ""
-                    }
-                </td>
-                <td>
-                    <span class="badge ${
-                      a.publishedAt ? "badge-success" : "badge-warning"
-                    }">
-                        ${a.publishedAt ? "Published" : "Draft"}
-                    </span>
-                </td>
-                <td><span class="text-xs font-bold uppercase text-gray-500 tracking-wider">${
-                  a.category
-                }</span></td>
-                <td class="text-sm text-gray-600">${
-                  a.authorName || "Unknown"
-                }</td>
-                <td class="text-xs text-gray-400 font-mono">${
-                  a.updatedAt
-                    ? new Date(a.updatedAt.seconds * 1000).toLocaleDateString()
-                    : "N/A"
-                }</td>
-                <td class="text-right space-x-2">
-                    <button class="btn-outline py-1 px-3 text-xs border-gray-300 hover:border-black edit-article-btn" data-id="${
-                      a.id
-                    }">Edit</button>
-                    <button class="text-red-400 hover:text-red-600 p-1 delete-article-btn" data-id="${
-                      a.id
-                    }"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                </td>
-            </tr>
-          `
-          )
-          .join("");
+        // 2. Mobile List Render
+        const mobileList = document.getElementById("articles-mobile-list");
+        if (mobileList && articles.length > 0) {
+          mobileList.innerHTML = articles
+            .map(
+              (a) => `
+                <div class="bg-white p-5 border border-gray-200 shadow-sm flex flex-col gap-3 relative">
+                    <div class="flex justify-between items-start">
+                         <span class="badge ${
+                           a.publishedAt ? "badge-success" : "badge-warning"
+                         } mb-1">
+                            ${a.publishedAt ? "Published" : "Draft"}
+                        </span>
+                        <div class="absolute top-4 right-4">
+                            ${getActionMenu(a.id, "mobile")}
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-display font-bold text-lg leading-snug text-gray-900 pr-8">${
+                      a.title
+                    }</h3>
+                    
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500 uppercase tracking-wider font-bold">
+                        <span class="text-blue-600">${a.category}</span>
+                        <span>${a.authorName || "Unknown"}</span>
+                    </div>
 
-        // Re-attach listeners for dynamic buttons
+                    <div class="pt-3 border-t border-gray-100 flex justify-between items-center mt-1">
+                         <span class="text-xs text-gray-400 font-mono">
+                            ${
+                              a.updatedAt
+                                ? new Date(
+                                    a.updatedAt.seconds * 1000
+                                  ).toLocaleDateString()
+                                : "N/A"
+                            }
+                         </span>
+                         ${
+                           a.isBreaking
+                             ? '<span class="text-[10px] text-red-600 font-bold border border-red-200 px-1">BREAKING</span>'
+                             : ""
+                         }
+                    </div>
+                </div>
+            `
+            )
+            .join("");
+        } else if (mobileList) {
+          mobileList.innerHTML =
+            '<div class="text-center py-8 text-gray-500 italic">No articles found.</div>';
+        }
+
+        // Refresh icons for new elements
+        lucide.createIcons();
+
+        // Attach Dropdown Listeners
+        document.querySelectorAll(".action-dropdown-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const menuId = btn.dataset.menuId;
+            const menu = document.getElementById(menuId);
+
+            // Close all other menus
+            document.querySelectorAll(".action-dropdown-menu").forEach((m) => {
+              if (m.id !== menuId) m.classList.add("hidden");
+            });
+
+            // Toggle current
+            if (menu) menu.classList.toggle("hidden");
+          });
+        });
+
+        // Attach Action Listeners
         document.querySelectorAll(".edit-article-btn").forEach((b) =>
           b.addEventListener("click", () => {
+            // Close menu first
+            b.closest(".action-dropdown-menu").classList.add("hidden");
             const art = articlesCache.find((x) => x.id === b.dataset.id);
             openArticleModal(art);
           })
         );
         document.querySelectorAll(".delete-article-btn").forEach((b) =>
           b.addEventListener("click", () => {
+            // Close menu first
+            b.closest(".action-dropdown-menu").classList.add("hidden");
             openDeleteModal(b.dataset.id, "article");
           })
         );
@@ -889,12 +1023,17 @@
                      <div class="flex justify-between items-center mb-4">
                         <h2 class="text-2xl font-bold font-display">Author Roster</h2>
                     </div>
-                    <div class="bg-white border border-gray-200">
+                    
+                    <!-- Desktop Table -->
+                    <div class="hidden md:block bg-white border border-gray-200">
                         <table class="w-full text-left cms-table">
                             <thead><tr><th>Profile</th><th>Name</th><th>Bio Excerpt</th><th class="text-right">Actions</th></tr></thead>
                             <tbody id="authors-tbody"></tbody>
                         </table>
                     </div>
+
+                    <!-- Mobile List -->
+                    <div id="authors-mobile-list" class="md:hidden space-y-4"></div>
                 </div>
 
                 <!-- Form -->
@@ -964,32 +1103,74 @@
       }
 
       function renderAuthorRows() {
+        // Desktop Render
         const tbody = document.getElementById("authors-tbody");
-        if (!tbody) return;
+        if (tbody) {
+          tbody.innerHTML = authorsCache
+            .map(
+              (a) => `
+                <tr>
+                    <td class="w-16"><img src="${
+                      a.imageUrl || "https://placehold.co/40"
+                    }" class="w-10 h-10 rounded-full object-cover bg-gray-100"></td>
+                    <td class="font-bold">${a.name}</td>
+                    <td class="text-sm text-gray-500 truncate max-w-[150px]">${
+                      a.bio || ""
+                    }</td>
+                    <td class="text-right space-x-1">
+                        <button class="text-blue-600 hover:text-blue-800 p-1 edit-author-btn" data-id="${
+                          a.id
+                        }"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                        <button class="text-red-400 hover:text-red-600 p-1 delete-author-btn" data-id="${
+                          a.id
+                        }"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            `
+            )
+            .join("");
+        }
 
-        tbody.innerHTML = authorsCache
-          .map(
-            (a) => `
-            <tr>
-                <td class="w-16"><img src="${
-                  a.imageUrl || "https://placehold.co/40"
-                }" class="w-10 h-10 rounded-full object-cover bg-gray-100"></td>
-                <td class="font-bold">${a.name}</td>
-                <td class="text-sm text-gray-500 truncate max-w-[150px]">${
-                  a.bio || ""
-                }</td>
-                <td class="text-right space-x-1">
-                    <button class="text-blue-600 hover:text-blue-800 p-1 edit-author-btn" data-id="${
-                      a.id
-                    }"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                    <button class="text-red-400 hover:text-red-600 p-1 delete-author-btn" data-id="${
-                      a.id
-                    }"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                </td>
-            </tr>
-          `
-          )
-          .join("");
+        // Mobile Render
+        const mobileList = document.getElementById("authors-mobile-list");
+        if (mobileList) {
+          if (authorsCache.length === 0) {
+            mobileList.innerHTML =
+              '<div class="text-center py-8 text-gray-500 italic">No authors found.</div>';
+          } else {
+            mobileList.innerHTML = authorsCache
+              .map(
+                (a) => `
+                    <div class="bg-white p-4 border border-gray-200 shadow-sm rounded flex items-start gap-4">
+                        <img src="${
+                          a.imageUrl || "https://placehold.co/40"
+                        }" class="w-12 h-12 rounded-full object-cover bg-gray-100 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-gray-900 truncate">${
+                              a.name
+                            }</h3>
+                            <p class="text-xs text-gray-500 line-clamp-2 mt-1">${
+                              a.bio || "No bio available"
+                            }</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                             <button class="text-blue-600 hover:text-blue-800 p-1 edit-author-btn" data-id="${
+                               a.id
+                             }">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                             </button>
+                             <button class="text-red-400 hover:text-red-600 p-1 delete-author-btn" data-id="${
+                               a.id
+                             }">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                             </button>
+                        </div>
+                    </div>
+                `
+              )
+              .join("");
+          }
+        }
 
         document.querySelectorAll(".edit-author-btn").forEach((b) =>
           b.addEventListener("click", () => {
@@ -1001,6 +1182,13 @@
             document.getElementById("author-form-title").textContent =
               "Edit Author";
             document.getElementById("author-cancel").classList.remove("hidden");
+
+            // Scroll to form on mobile
+            if (window.innerWidth < 1024) {
+              document
+                .getElementById("author-form")
+                .scrollIntoView({ behavior: "smooth" });
+            }
           })
         );
 
@@ -1015,6 +1203,8 @@
             else openDeleteModal(b.dataset.id, "author");
           })
         );
+
+        lucide.createIcons();
       }
 
       function renderUsersView(container) {
@@ -1029,29 +1219,26 @@
                     <p class="text-sm text-blue-800">Users must first register via Firebase Auth. Here you assign their CMS role. <br><strong>Superadmins</strong> have full access. <strong>Writers</strong> can only edit articles.</p>
                 </div>
 
-                <div class="bg-white border border-gray-200 shadow-sm">
+                <!-- Desktop Table -->
+                <div class="hidden md:block bg-white border border-gray-200 shadow-sm">
                     <table class="w-full text-left cms-table">
                         <thead><tr><th>User ID / Email Reference</th><th>Current Role</th><th class="text-right">Action</th></tr></thead>
                         <tbody id="users-tbody"></tbody>
                     </table>
                 </div>
+
+                <!-- Mobile List -->
+                <div id="users-mobile-list" class="md:hidden space-y-4"></div>
              </div>
           `;
 
-        const tbody = document.getElementById("users-tbody");
-
-        // In a real app, you'd list all users. Firestore roles collection usually contains UIDs.
-        // Since we can't list Auth users from client SDK easily without a cloud function,
-        // we only list roles we know about in the DB.
-        tbody.innerHTML = usersCache
-          .map(
-            (u) => `
+        const renderUserRow = (u) => `
              <tr>
                 <td class="font-mono text-xs text-gray-600">${u.id} ${
-              u.id === currentUser.uid
-                ? '<span class="ml-2 badge badge-gray">You</span>'
-                : ""
-            }</td>
+          u.id === currentUser.uid
+            ? '<span class="ml-2 badge badge-gray">You</span>'
+            : ""
+        }</td>
                 <td>
                     <select class="input-field py-1 text-sm w-40 role-select" data-id="${
                       u.id
@@ -1068,13 +1255,52 @@
                     <button class="text-red-400 hover:text-red-600 user-delete-btn" data-id="${
                       u.id
                     }" ${
-              u.id === currentUser.uid ? "disabled" : ""
-            }>Revoke</button>
+          u.id === currentUser.uid ? "disabled" : ""
+        }>Revoke</button>
                 </td>
              </tr>
-          `
-          )
-          .join("");
+          `;
+
+        const renderUserCard = (u) => `
+             <div class="bg-white p-4 border border-gray-200 shadow-sm rounded flex flex-col gap-3">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span class="font-mono text-xs text-gray-500 truncate max-w-[200px]">${
+                      u.id
+                    }</span>
+                    ${
+                      u.id === currentUser.uid
+                        ? '<span class="badge badge-gray">You</span>'
+                        : ""
+                    }
+                </div>
+                <div class="flex items-center gap-2">
+                     <select class="input-field py-2 text-sm flex-1 role-select" data-id="${
+                       u.id
+                     }" ${u.id === currentUser.uid ? "disabled" : ""}>
+                        <option value="writer" ${
+                          u.role === "writer" ? "selected" : ""
+                        }>Writer</option>
+                        <option value="superadmin" ${
+                          u.role === "superadmin" ? "selected" : ""
+                        }>Superadmin</option>
+                    </select>
+                     <button class="text-red-500 border border-red-200 p-2 rounded hover:bg-red-50 user-delete-btn" data-id="${
+                       u.id
+                     }" ${
+          u.id === currentUser.uid ? "disabled" : ""
+        }><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+             </div>
+          `;
+
+        // Desktop Render
+        const tbody = document.getElementById("users-tbody");
+        if (tbody) tbody.innerHTML = usersCache.map(renderUserRow).join("");
+
+        // Mobile Render
+        const mobileList = document.getElementById("users-mobile-list");
+        if (mobileList)
+          mobileList.innerHTML = usersCache.map(renderUserCard).join("");
 
         document.querySelectorAll(".role-select").forEach((s) =>
           s.addEventListener("change", async (e) => {
@@ -1096,6 +1322,8 @@
             openDeleteModal(b.dataset.id, "user");
           })
         );
+
+        lucide.createIcons();
       }
 
       // --- Logic: Article Modal ---
@@ -1301,14 +1529,25 @@
         });
 
         // Mobile Menu
-        document.getElementById("mobile-menu-toggle").onclick = () => {
-          const sidebar = document.querySelector("aside");
-          sidebar.classList.toggle("hidden");
-          sidebar.classList.toggle("flex");
-          sidebar.classList.toggle("absolute");
-          sidebar.classList.toggle("h-full");
-          sidebar.classList.toggle("w-64");
+        document.getElementById("mobile-menu-toggle").onclick = (e) => {
+          e.stopPropagation();
+          toggleSidebar();
         };
+
+        // Close sidebar when clicking outside
+        document.addEventListener("click", (e) => {
+          const sidebar = document.getElementById("main-sidebar");
+          const toggleBtn = document.getElementById("mobile-menu-toggle");
+          // Only if visible on mobile
+          if (
+            window.innerWidth < 768 &&
+            !sidebar.classList.contains("hidden")
+          ) {
+            if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+              toggleSidebar(false);
+            }
+          }
+        });
       }
 
       function startListeners() {
@@ -1348,6 +1587,18 @@
         document
           .getElementById("logout-button")
           .addEventListener("click", () => signOut(auth));
+
+        // Global Click Listener for closing dropdowns
+        document.addEventListener("click", (e) => {
+          if (
+            !e.target.closest(".action-dropdown-btn") &&
+            !e.target.closest(".action-dropdown-menu")
+          ) {
+            document
+              .querySelectorAll(".action-dropdown-menu")
+              .forEach((m) => m.classList.add("hidden"));
+          }
+        });
       }
 
       // Login Handler
