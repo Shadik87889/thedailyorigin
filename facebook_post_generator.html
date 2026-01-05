@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Multi-Template Post Generator</title>
+    <title>The Publisher Suite - Bilingual</title>
 
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,29 +11,100 @@
     <!-- Load html2canvas library for downloading the poster -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <!-- Load Google Fonts: Inter (UI), Oswald (Headlines), Caveat (Logo), Playfair Display (Editorial), and Bebas Neue (Sport) -->
+    <!-- Load Fonts (English & Bangla) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- MODIFIED: Added Bebas Neue -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&family=Caveat:wght@700&family=Playfair+Display:wght@700;900&family=Bebas+Neue&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;700&family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Bebas+Neue&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Chakra+Petch:wght@600;700&family=Cinzel:wght@700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;700;900&family=Baloo+Da+2:wght@500;700;800&family=Galada&display=swap"
       rel="stylesheet"
     />
 
     <style>
       body {
-        font-family: "Inter", sans-serif;
-        background-color: #111827; /* gray-900 */
+        font-family: "Inter", "Hind Siliguri", sans-serif;
+        background-color: #0f172a; /* slate-900 */
       }
 
-      /* --- Base Poster Font Styles (used across templates) --- */
+      /* --- Typography Utilities (English Base) --- */
+      .font-oswald {
+        font-family: "Oswald", sans-serif;
+      }
+      .font-playfair {
+        font-family: "Playfair Display", serif;
+      }
+      .font-bebas {
+        font-family: "Bebas Neue", sans-serif;
+      }
+      .font-merriweather {
+        font-family: "Merriweather", serif;
+      }
+      .font-chakra {
+        font-family: "Chakra Petch", sans-serif;
+      }
+      .font-cinzel {
+        font-family: "Cinzel", serif;
+      }
+      .font-caveat {
+        font-family: "Caveat", cursive;
+      }
+
+      /* --- Bangla Overrides (Applied via Body Class) --- */
+      body.lang-bangla .font-oswald,
+      body.lang-bangla .poster-headline-text,
+      body.lang-bangla .poster-brand-text,
+      body.lang-bangla .poster-category-text,
+      body.lang-bangla .poster-attribution-text {
+        font-family: "Hind Siliguri", sans-serif;
+      }
+
+      body.lang-bangla .font-playfair,
+      body.lang-bangla .font-merriweather,
+      body.lang-bangla .font-cinzel {
+        font-family: "Noto Serif Bengali", serif;
+      }
+
+      body.lang-bangla .font-bebas,
+      body.lang-bangla .font-chakra {
+        font-family: "Baloo Da 2", sans-serif;
+      }
+
+      body.lang-bangla .font-caveat {
+        font-family: "Galada", cursive;
+      }
+
+      /* --- CSS Variables for Transforms --- */
+      :root {
+        --text-scale: 1;
+        --text-lh: 1.4; /* Default Fallback */
+        --text-spacing: 0em;
+        --text-x: 0px;
+        --text-y: 0px;
+        --text-align: inherit;
+      }
+
+      /* --- Base Poster Font Styles (Defaults) --- */
       .poster-headline-text {
         font-family: "Oswald", sans-serif;
         font-weight: 700;
         text-transform: uppercase;
-        font-size: clamp(1.5rem, 5vw, 2.5rem);
-        /* MODIFIED: Increased line-height from 1.2 to 1.4 for better spacing */
-        line-height: 1.4;
+
+        /* Apply dynamic variables */
+        font-size: calc(clamp(1.5rem, 5vw, 2.5rem) * var(--text-scale));
+        line-height: var(--text-lh);
+        letter-spacing: var(--text-spacing);
+        transform: translate(var(--text-x), var(--text-y));
+        text-align: var(--text-align);
+
+        /* Ensure transforms don't break flow unexpectedly */
+        display: block;
+        transform-origin: center center;
+      }
+
+      /* Bangla specific headline adjustments */
+      body.lang-bangla .poster-headline-text {
+        text-transform: none;
+        /* We let user override, but default is slightly looser */
+        font-weight: 700;
       }
 
       .poster-brand-text {
@@ -44,735 +115,826 @@
         line-height: 1;
       }
 
-      /* --- Attribution Text Style --- */
+      body.lang-bangla .poster-brand-text {
+        text-transform: none;
+      }
+
       .poster-attribution-text {
         font-family: "Inter", sans-serif;
         font-style: italic;
-        font-size: clamp(0.875rem, 2.5vw, 1.25rem); /* 14px to 20px */
+        font-size: clamp(0.875rem, 2.5vw, 1.25rem);
         line-height: 1.4;
       }
 
-      /* --- Font styles for the default logo --- */
-      .poster-logo-main {
-        font-family: "Oswald", sans-serif;
-        font-weight: 700;
-      }
-      .poster-logo-artisan {
-        font-family: "Caveat", cursive;
-        font-weight: 700;
+      body.lang-bangla .poster-attribution-text {
+        font-style: normal;
       }
 
-      /* --- Template Selector Styles --- */
+      .poster-category-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      /* --- Selector Styles --- */
       .template-selector {
-        border: 3px solid transparent;
+        border: 2px solid #374151; /* gray-700 */
         transition: all 0.2s ease-in-out;
         cursor: pointer;
       }
+      .template-selector:hover {
+        border-color: #6b7280; /* gray-500 */
+      }
       .template-selector.selected {
         border-color: #3b82f6; /* blue-500 */
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
       }
 
-      /* --- Dynamic Styles (placeholder, will be injected by JS) --- */
-      /*
-        .poster-headline-text .highlight { ... }
-        .poster-headline-text .underline { ... }
-        */
+      /* --- TEMPLATE OVERRIDES WITH VARIABLES --- */
 
-      /* --- NEW: Editorial Template Specific Styles --- */
+      /* TEMPLATE 5: Editorial */
       #template-editorial .poster-headline-text {
         font-family: "Playfair Display", serif;
         font-weight: 900;
-        text-transform: none; /* Override base style */
-        font-size: clamp(2rem, 7vw, 4rem); /* Make it bigger */
-        line-height: 1.1;
+        text-transform: none;
+        font-size: calc(clamp(2rem, 7vw, 4rem) * var(--text-scale));
+        line-height: var(--text-lh, 1.1); /* Default 1.1 if not overridden */
+      }
+      body.lang-bangla #template-editorial .poster-headline-text {
+        font-family: "Noto Serif Bengali", serif;
       }
 
-      #template-editorial .poster-attribution-text {
-        font-family: "Inter", sans-serif;
-        font-style: normal; /* Override base style */
-        text-align: center;
-      }
-
-      #template-editorial .poster-brand-container {
-        justify-content: center; /* Center the brand */
-      }
-
-      /* --- NEW: Football Template Specific Styles --- */
-      #template-football {
-        /* Posh premium look: Dark with Gold */
-        background-color: #0a0a0a; /* Near black */
-      }
-
+      /* TEMPLATE 6: Football */
       #template-football .poster-headline-text {
         font-family: "Bebas Neue", sans-serif;
-        font-weight: 400; /* Bebas Neue is often just 400 */
+        font-weight: 400;
         text-transform: uppercase;
-        font-size: clamp(3rem, 10vw, 6.5rem); /* Make it very big */
-        line-height: 0.9;
-        color: #ffffff;
+        font-size: calc(clamp(3rem, 10vw, 6.5rem) * var(--text-scale));
+        line-height: var(--text-lh, 0.9);
         text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       }
+      body.lang-bangla #template-football .poster-headline-text {
+        font-family: "Baloo Da 2", sans-serif;
+        font-weight: 800;
+        text-transform: none;
+      }
 
-      #template-football .poster-attribution-text {
-        font-family: "Oswald", sans-serif;
+      /* TEMPLATE 7: Broadcast */
+      #template-broadcast .poster-headline-text {
+        font-family: "Chakra Petch", sans-serif;
         font-weight: 700;
         text-transform: uppercase;
-        font-size: clamp(1rem, 3vw, 1.5rem);
-        text-align: center;
-        letter-spacing: 0.1em;
-        color: #d4af37; /* Gold color */
+        font-size: calc(clamp(1.8rem, 5vw, 3.5rem) * var(--text-scale));
+        line-height: var(--text-lh, 1.1);
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 0.2em 0;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        display: inline; /* Special case for box decoration */
+      }
+      body.lang-bangla #template-broadcast .poster-headline-text {
+        font-family: "Hind Siliguri", sans-serif;
+        font-weight: 700;
       }
 
-      #template-football .poster-brand-container {
-        justify-content: center; /* Center the brand */
+      /* TEMPLATE 8: Paper */
+      #template-paper {
+        background-color: #f8f5f2;
+        color: #1a1a1a;
+      }
+      #template-paper .poster-headline-text {
+        font-family: "Merriweather", serif;
+        font-weight: 900;
+        font-style: italic;
+        text-transform: none;
+        font-size: calc(clamp(1.5rem, 4.5vw, 3rem) * var(--text-scale));
+        line-height: var(--text-lh, 1.2);
+        color: #000;
+      }
+      body.lang-bangla #template-paper .poster-headline-text {
+        font-family: "Noto Serif Bengali", serif;
+        font-style: normal;
+      }
+      #template-paper .poster-category-text {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        border-bottom: 2px solid #000;
+        padding-bottom: 4px;
+        margin-bottom: 12px;
+        display: inline-block;
+      }
+      body.lang-bangla #template-paper .poster-category-text {
+        font-family: "Noto Serif Bengali", serif;
       }
 
-      /* Use the accent color for the logo, default to gold */
-      #template-football .poster-logo-artisan {
-        color: #d4af37;
+      /* TEMPLATE 9: Swiss */
+      #template-swiss .poster-headline-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        text-transform: none;
+        letter-spacing: var(--text-spacing, -0.04em);
+        font-size: calc(clamp(2.5rem, 8vw, 5rem) * var(--text-scale));
+        line-height: var(--text-lh, 0.95);
+      }
+      body.lang-bangla #template-swiss .poster-headline-text {
+        font-family: "Hind Siliguri", sans-serif;
+        font-weight: 700;
+        letter-spacing: var(--text-spacing, normal);
+      }
+
+      /* Toggle Switch Styles */
+      .toggle-checkbox:checked {
+        right: 0;
+        border-color: #68d391;
+      }
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: #68d391;
       }
     </style>
   </head>
   <body class="text-gray-300">
-    <div class="container mx-auto p-4 md:p-8">
-      <!-- Main Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-white">
-          Multi-Template Post Generator
-        </h1>
-        <p class="text-lg text-gray-400">
-          Create your own professional-style graphic
-        </p>
+    <div class="container mx-auto p-4 lg:p-8">
+      <!-- Header -->
+      <div
+        class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-gray-800 pb-6"
+      >
+        <div>
+          <h1 class="text-3xl font-bold text-white tracking-tight">
+            The Publisher <span class="text-blue-500">Suite</span>
+          </h1>
+          <p class="text-sm text-gray-500 mt-1">
+            Global Newsroom Edition
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4 mt-4 md:mt-0">
+          <!-- Language Toggle -->
+          <div
+            class="flex items-center bg-gray-800 rounded-full p-1 border border-gray-700"
+          >
+            <button
+              id="lang-en"
+              class="px-4 py-1.5 rounded-full text-xs font-bold transition-colors bg-blue-600 text-white"
+            >
+              ENG
+            </button>
+            <button
+              id="lang-bn"
+              class="px-4 py-1.5 rounded-full text-xs font-bold transition-colors text-gray-400 hover:text-white"
+            >
+              বাংলা
+            </button>
+          </div>
+
+          <div
+            class="px-3 py-1 bg-gray-800 rounded-full text-xs font-mono text-blue-400 border border-blue-500/30"
+          >
+            v2.2 • Layout Controls
+          </div>
+        </div>
       </div>
 
-      <!-- Main Layout: Controls (left) and Preview (right) -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <!-- Controls Panel -->
-        <!-- MODIFIED: Added sticky positioning and vertical scroll for large screens -->
+        <!-- --- CONTROLS PANEL --- -->
         <div
-          class="lg:col-span-4 bg-gray-800 p-6 rounded-lg shadow-lg lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto"
+          class="lg:col-span-4 bg-gray-800/50 p-6 rounded-xl border border-gray-700 backdrop-blur-sm lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto custom-scrollbar"
         >
-          <h2 class="text-2xl font-semibold text-white mb-6">
-            Customize Your Post
-          </h2>
-
-          <!-- --- Template Selector --- -->
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >1. Select Template</label
+          <!-- Template Selection -->
+          <div class="mb-8">
+            <label
+              class="block text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3"
+              >Select Layout</label
             >
-            <!-- *** MODIFIED: Still grid-cols-5 *** -->
             <div class="grid grid-cols-3 gap-3">
-              <!-- Template 1: Classic Headline -->
+              <!-- Original 1: Headline -->
               <div
                 id="select-headline"
-                class="template-selector selected rounded-lg bg-gray-900 p-2 aspect-square flex flex-col items-center justify-between text-center text-white"
+                class="template-selector selected rounded bg-gray-900 p-2 aspect-square flex flex-col justify-between"
                 data-template="headline"
               >
-                <div class="text-xs font-bold">HEADLINE</div>
-                <canvas
-                  id="thumb-canvas-headline"
-                  class="w-full h-10 rounded-sm border-2 border-cyan-400"
-                ></canvas>
-                <div class="text-[8px] font-bold self-end">BRAND</div>
+                <div class="w-full h-1 bg-gray-700"></div>
+                <div
+                  class="w-3/4 h-16 bg-gray-800 rounded mx-auto border border-gray-700"
+                ></div>
+                <div class="text-[9px] text-center font-bold text-gray-500">
+                  CLASSIC
+                </div>
               </div>
-              <!-- Template 2: Modern Overlay -->
+
+              <!-- Original 2: Overlay -->
               <div
                 id="select-overlay"
-                class="template-selector rounded-lg bg-gray-900 p-2 aspect-square flex flex-col items-center justify-end text-center text-white relative overflow-hidden"
+                class="template-selector rounded bg-gray-900 aspect-square relative overflow-hidden"
                 data-template="overlay"
               >
-                <canvas
-                  id="thumb-canvas-overlay"
-                  class="absolute inset-0 w-full h-full"
-                ></canvas>
-                <div class="w-full bg-black/75 p-1.5 relative z-10">
-                  <div class="text-xs font-bold">OVERLAY</div>
-                  <div class="text-[8px] font-bold mt-1">BRAND</div>
-                </div>
-              </div>
-              <!-- Template 3: Asymmetric Split -->
-              <div
-                id="select-card"
-                class="template-selector rounded-lg bg-gray-900 p-2 aspect-square flex flex-row items-center justify-center text-center text-white"
-                data-template="card"
-              >
+                <div class="absolute inset-0 bg-gray-800"></div>
                 <div
-                  class="w-2/5 h-full flex flex-col justify-between items-center py-2"
+                  class="absolute bottom-0 w-full h-1/2 bg-black/60 flex items-end p-2"
                 >
-                  <div
-                    class="text-xs font-bold"
-                    style="
-                      writing-mode: vertical-rl;
-                      transform: rotate(180deg);
-                    "
-                  >
-                    CARD
-                  </div>
-                  <div
-                    class="text-[8px] font-bold"
-                    style="
-                      writing-mode: vertical-rl;
-                      transform: rotate(180deg);
-                    "
-                  >
-                    BRAND
-                  </div>
+                  <div class="w-full h-1 bg-white/50 mb-1"></div>
                 </div>
-                <canvas
-                  id="thumb-canvas-card"
-                  class="w-3/5 h-full rounded-sm"
-                ></canvas>
-              </div>
-
-              <!-- Template 4: Quote -->
-              <div
-                id="select-quote"
-                class="template-selector rounded-lg bg-gray-900 p-2 aspect-square flex flex-col items-center justify-center text-center text-white relative overflow-hidden"
-                data-template="quote"
-              >
-                <canvas
-                  id="thumb-canvas-quote"
-                  class="absolute inset-0 w-full h-full"
-                ></canvas>
-                <div class="absolute inset-0 bg-black/50 z-10"></div>
                 <div
-                  class="relative z-20 flex flex-col items-center justify-center"
+                  class="absolute top-2 left-2 text-[9px] font-bold text-white z-10"
                 >
-                  <span class="font-serif text-2xl -mb-2">“</span>
-                  <div class="text-xs font-bold italic">QUOTE</div>
-                  <div class="text-[8px] font-bold self-end mt-1 opacity-70">
-                    - Author
-                  </div>
-                  <div class="text-[8px] font-bold mt-2">BRAND</div>
+                  OVERLAY
                 </div>
               </div>
 
-              <!-- *** REPLACED: Template 5: Editorial *** -->
+              <!-- Original 3: Editorial -->
               <div
                 id="select-editorial"
-                class="template-selector rounded-lg bg-gray-900 p-2 aspect-square flex flex-col items-center justify-center text-center text-white relative overflow-hidden"
+                class="template-selector rounded bg-gray-900 p-2 aspect-square flex flex-col items-center justify-center relative overflow-hidden"
                 data-template="editorial"
               >
-                <canvas
-                  id="thumb-canvas-editorial"
-                  class="absolute inset-0 w-full h-full"
-                ></canvas>
-                <div class="absolute inset-0 bg-black/50 z-10"></div>
-                <div
-                  class="relative z-20 flex flex-col items-center justify-center"
-                >
-                  <div
-                    class="text-sm font-bold"
-                    style="font-family: 'Playfair Display', serif;"
-                  >
-                    Editorial
-                  </div>
-                  <div class="text-[8px] font-bold mt-2">BRAND</div>
+                <div class="text-[20px] font-serif font-bold text-gray-600">
+                  Ed.
+                </div>
+                <div class="text-[9px] font-bold text-gray-500 mt-1">
+                  EDITORIAL
                 </div>
               </div>
 
-              <!-- *** NEW: Template 6: Football *** -->
+              <!-- Original 4: Football -->
               <div
                 id="select-football"
-                class="template-selector rounded-lg bg-gray-900 p-2 aspect-square flex flex-col items-center justify-center text-center text-white relative overflow-hidden"
+                class="template-selector rounded bg-gray-900 aspect-square flex flex-col items-center justify-center relative overflow-hidden"
                 data-template="football"
               >
-                <canvas
-                  id="thumb-canvas-football"
-                  class="absolute inset-0 w-full h-full"
-                ></canvas>
-                <div class="absolute inset-0 bg-black/50 z-10"></div>
                 <div
-                  class="relative z-20 flex flex-col items-center justify-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                    class="w-6 h-6 mb-1 text-white"
-                    fill="currentColor"
-                  >
-                    <!-- Simple Football Icon -->
-                    <path
-                      d="M480.1 190.4C447.8 141.4 402.1 100.8 351.1 69.3C300 37.8 245.5 15.6 189.3 4.2C133.2-7.2 76.5 2.1 23.3 32.5C14.3 38.5 7.1 47.1 3.2 57.1C-0.7 67.1-0.9 77.9 2.5 88.2L31.8 178.1C34.4 186.2 40.1 193 47.4 197.6C54.8 202.2 63.5 204.3 72.2 203.6L166.3 195.9C173.8 195.3 181.1 192.5 187.3 187.9C193.6 183.2 198.6 176.9 201.7 169.6L216.6 130.4C220.1 122 227.1 115.8 235.6 112.9C244.1 110 253.2 110.6 261.3 114.6C291.6 129.5 319.4 148.6 344.4 171.4C369.4 194.2 391.2 220.4 409.2 249.4C412.3 254.3 416.3 258.7 420.9 262.5C425.5 266.3 430.6 269.4 436.1 271.7C442.2 274.2 448.6 275.6 455.1 275.7C461.6 275.9 468 274.7 474.1 272.3L502.9 261.7C510.6 258.8 516.9 252.8 520.6 245C524.3 237.2 525.1 228.1 522.9 219.5L496.2 201.8C493.6 199.9 490.8 198.3 487.9 197.1C485 195.9 481.9 194.9 478.8 194.3L480.1 190.4zM283.3 203.4L268.4 242.6C265.3 249.9 258.3 256.1 249.8 259C241.3 261.9 232.2 261.3 224.1 257.3C193.8 242.4 166 223.3 141 200.5C116 177.7 94.2 151.5 76.2 122.5C73.1 117.6 69.1 113.2 64.5 109.4C59.9 105.6 54.8 102.5 49.3 100.2C43.2 97.7 36.8 96.3 30.3 96.2C23.8 96 17.4 97.2 11.3 99.6L-17.5 110.2C-25.2 113.1 -31.5 119.1 -35.2 126.9C-38.9 134.7 -39.7 143.8 -37.5 152.4L-10.8 170.1C-8.2 172 -5.4 173.6 -2.5 174.8C0.4 176 3.5 177 6.6 177.6L5.3 181.5C8.6 230.5 24.2 278.2 51.5 321.8C78.8 365.4 117.3 404 164.1 435.5C210.9 467 265 490.6 322.2 505.2C379.5 519.8 438.3 525.1 495.8 520.6L507.2 519.6C515.1 519.1 522.6 515.9 528.6 510.6C534.6 505.3 538.8 498.2 540.6 490.3L560.6 420.7C562.9 411.6 562.3 402.1 558.9 393.4C555.5 384.7 549.5 377.3 541.9 372.4L447.8 316.3C440.3 311.9 431.6 309.9 422.9 310.6C414.2 311.3 406 314.7 399.6 320.2L370.1 345.2C366 348.6 360.7 350.7 355.2 351.2C349.7 351.7 344.2 350.5 339.3 347.8C305.8 331 275.6 310.2 249.3 286C223 261.8 200.8 234.3 183.4 204.3C182.2 202.3 181.3 200.2 180.8 198.1L283.3 203.4z"
-                    />
-                  </svg>
-                  <div
-                    class="text-sm font-bold"
-                    style="font-family: 'Bebas Neue', sans-serif;"
-                  >
-                    FOOTBALL
-                  </div>
-                  <div
-                    class="text-[8px] font-bold mt-1"
-                    style="color: #d4af37;"
-                  >
-                    PREMIUM
-                  </div>
+                  class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-50"
+                ></div>
+                <div class="relative z-10 font-bebas text-xl text-yellow-500">
+                  SPORT
                 </div>
+              </div>
+
+              <!-- NEW 5: The Broadcast -->
+              <div
+                id="select-broadcast"
+                class="template-selector rounded bg-gray-900 aspect-square flex flex-col justify-end relative overflow-hidden group"
+                data-template="broadcast"
+              >
+                <div
+                  class="absolute top-2 left-2 bg-red-600 w-2 h-2 rounded-full animate-pulse"
+                ></div>
+                <div class="bg-red-600 h-2 w-1/3 mb-1 ml-1"></div>
+                <div class="bg-white h-4 w-full opacity-10"></div>
+                <div
+                  class="absolute top-2 right-2 text-[9px] font-bold text-white"
+                >
+                  NEWS
+                </div>
+              </div>
+
+              <!-- NEW 6: The Paper -->
+              <div
+                id="select-paper"
+                class="template-selector rounded bg-[#f8f5f2] aspect-square flex flex-col p-2 items-center text-center justify-center"
+                data-template="paper"
+              >
+                <div class="w-full h-px bg-black mb-1"></div>
+                <div
+                  class="font-serif text-black text-xs font-bold leading-tight"
+                >
+                  The<br />Times
+                </div>
+                <div class="w-full h-px bg-black mt-1"></div>
+              </div>
+
+              <!-- NEW 7: Swiss -->
+              <div
+                id="select-swiss"
+                class="template-selector rounded bg-blue-600 aspect-square flex flex-col p-2 justify-between"
+                data-template="swiss"
+              >
+                <div
+                  class="text-white font-bold text-2xl leading-none tracking-tighter"
+                >
+                  Aa
+                </div>
+                <div class="text-[9px] font-bold text-white self-end">
+                  SWISS
+                </div>
+              </div>
+
+              <!-- Original Card (Moved to end) -->
+              <div
+                id="select-card"
+                class="template-selector rounded bg-gray-900 p-2 aspect-square flex flex-row items-center"
+                data-template="card"
+              >
+                <div class="w-1/3 h-full border-r border-gray-700"></div>
+                <div class="w-2/3 h-full bg-gray-800"></div>
+              </div>
+
+              <!-- Original Quote (Moved to end) -->
+              <div
+                id="select-quote"
+                class="template-selector rounded bg-gray-900 aspect-square flex items-center justify-center"
+                data-template="quote"
+              >
+                <span class="font-serif text-2xl text-gray-600">“</span>
               </div>
             </div>
           </div>
 
-          <div class="space-y-6">
-            <!-- Headline Input -->
+          <!-- Input Fields -->
+          <div class="space-y-5">
+            <!-- Category Tag (NEW) -->
             <div>
-              <label
-                for="headline-input"
-                class="block text-sm font-medium text-gray-300 mb-2"
-                >2. Headline</label
+              <label class="block text-xs font-medium text-gray-400 mb-1"
+                >Category / Tag</label
+              >
+              <input
+                type="text"
+                id="category-input"
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                placeholder="e.g. BREAKING NEWS"
+              />
+            </div>
+
+            <!-- Headline -->
+            <div>
+              <label class="block text-xs font-medium text-gray-400 mb-1"
+                >Headline</label
               >
               <textarea
                 id="headline-input"
                 rows="3"
-                class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your post headline here..."
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors font-medium"
+                placeholder="Enter your main headline..."
               ></textarea>
 
-              <!-- Headline Effects Controls -->
-              <div class="bg-gray-700/50 p-4 rounded-b-lg -mt-1">
-                <label class="block text-xs font-medium text-gray-300 mb-3"
-                  >Headline Effects</label
-                >
-
-                <!-- Highlight Controls -->
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label
-                      for="highlight-words-input"
-                      class="block text-xs font-medium text-gray-400 mb-1"
-                      >Words to Highlight</label
-                    >
-                    <input
-                      type="text"
-                      id="highlight-words-input"
-                      class="w-full p-2 bg-gray-600 border border-gray-500 rounded-lg text-white text-sm"
-                      placeholder="e.g., word1, word2"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      for="highlight-color-input"
-                      class="block text-xs font-medium text-gray-400 mb-1"
-                      >Highlight Color</label
-                    >
-                    <input
-                      type="color"
-                      id="highlight-color-input"
-                      value="#FFFF00"
-                      class="w-full h-9 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                <!-- Underline Controls -->
-                <div class="grid grid-cols-2 gap-3 mt-4">
-                  <div>
-                    <label
-                      for="underline-words-input"
-                      class="block text-xs font-medium text-gray-400 mb-1"
-                      >Words to Underline</label
-                    >
-                    <input
-                      type="text"
-                      id="underline-words-input"
-                      class="w-full p-2 bg-gray-600 border border-gray-500 rounded-lg text-white text-sm"
-                      placeholder="e.g., word1, word2"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      for="underline-color-input"
-                      class="block text-xs font-medium text-gray-400 mb-1"
-                      >Underline Color</label
-                    >
-                    <input
-                      type="color"
-                      id="underline-color-input"
-                      value="#FF0000"
-                      class="w-full h-9 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                <!-- Color Controls -->
-                <div class="grid grid-cols-2 gap-3 mt-4">
-                  <div>
-                    <label
-                      for="color-words-input"
-                      class="block text-xs font-medium text-gray-400 mb-1"
-                      >Words to Color</label
-                    >
-                    <input
-                      type="text"
-                      id="color-words-input"
-                      class="w-full p-2 bg-gray-600 border border-gray-500 rounded-lg text-white text-sm"
-                      placeholder="e.g., word1, word2"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      for="color-color-input"
-                      class="block text-xs font-medium text-gray-400 mb-1"
-                      >Text Color</label
-                    >
-                    <input
-                      type="color"
-                      id="color-color-input"
-                      value="#3B82F6"
-                      class="w-full h-9 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                <!-- Line Height Control -->
-                <div class="mt-4">
-                  <label
-                    for="line-height-input"
-                    class="block text-xs font-medium text-gray-400 mb-1"
-                    >Line Height (<span id="line-height-value">1.4</span
-                    >)</label
-                  >
-                  <input
-                    type="range"
-                    id="line-height-input"
-                    min="0.8"
-                    max="2.5"
-                    step="0.1"
-                    value="1.4"
-                    class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Attribution Input -->
-            <div>
-              <label
-                for="attribution-input"
-                class="block text-sm font-medium text-gray-300 mb-2"
-                >3. Attribution / Author</label
-              >
-              <input
-                type="text"
-                id="attribution-input"
-                class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., A. Person, Party Leader"
-              />
-            </div>
-
-            <!-- Brand Text Input -->
-            <div>
-              <label
-                for="brand-input"
-                class="block text-sm font-medium text-gray-300 mb-2"
-                >4. Brand Text (Optional)</label
-              >
-              <input
-                type="text"
-                id="brand-input"
-                class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., Your Brand Name"
-              />
-            </div>
-
-            <!-- Image Upload -->
-            <div>
-              <label
-                for="image-upload"
-                class="block text-sm font-medium text-gray-300 mb-2"
-                >5. Upload Image</label
-              >
-              <input
-                type="file"
-                id="image-upload"
-                class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
-                accept="image/*"
-              />
-            </div>
-
-            <!-- Image Adjustment Controls -->
-            <div
-              id="image-adjust-controls"
-              class="space-y-4 bg-gray-700/50 p-4 rounded-lg hidden"
-            >
-              <div>
-                <label
-                  for="image-zoom-input"
-                  class="block text-xs font-medium text-gray-400 mb-1"
-                  >Image Zoom (<span id="image-zoom-value">1</span>x)</label
-                >
-                <input
-                  type="range"
-                  id="image-zoom-input"
-                  min="1"
-                  max="5"
-                  step="0.1"
-                  value="1"
-                  class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-              <div>
-                <label
-                  for="image-pos-x-input"
-                  class="block text-xs font-medium text-gray-400 mb-1"
-                  >Horizontal Position (<span id="image-pos-x-value">0</span
-                  >%)</label
-                >
-                <input
-                  type="range"
-                  id="image-pos-x-input"
-                  min="-100"
-                  max="100"
-                  step="1"
-                  value="0"
-                  class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-              <div>
-                <label
-                  for="image-pos-y-input"
-                  class="block text-xs font-medium text-gray-400 mb-1"
-                  >Vertical Position (<span id="image-pos-y-value">0</span
-                  >%)</label
-                >
-                <input
-                  type="range"
-                  id="image-pos-y-input"
-                  min="-100"
-                  max="100"
-                  step="1"
-                  value="0"
-                  class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-            </div>
-
-            <!-- Color Pickers -->
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2"
-                >6. Customize Colors</label
-              >
-              <div class="grid grid-cols-3 gap-4">
-                <div>
-                  <label
-                    for="bg-color-input"
-                    class="block text-xs font-medium text-gray-400 mb-1"
-                    >Background</label
-                  >
+              <!-- Mini Toolbar -->
+              <div class="flex gap-2 mt-2">
+                <div class="relative flex-1">
                   <input
                     type="color"
-                    id="bg-color-input"
-                    value="#111827"
-                    class="w-full h-10 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
+                    id="highlight-color-input"
+                    value="#FFFF00"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                </div>
-                <div>
-                  <label
-                    for="text-color-input"
-                    class="block text-xs font-medium text-gray-400 mb-1"
-                    >Text</label
+                  <button
+                    class="w-full bg-gray-700 hover:bg-gray-600 text-[10px] py-1 rounded text-gray-300"
                   >
+                    Highlight Color
+                  </button>
+                </div>
+                <div class="relative flex-1">
                   <input
                     type="color"
                     id="text-color-input"
                     value="#FFFFFF"
-                    class="w-full h-10 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <button
+                    class="w-full bg-gray-700 hover:bg-gray-600 text-[10px] py-1 rounded text-gray-300"
+                  >
+                    Text Color
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW: Typography & Layout Controls -->
+            <div
+              class="bg-gray-900/50 rounded border border-gray-700/50 p-3 space-y-4"
+            >
+              <div
+                class="flex items-center justify-between border-b border-gray-700 pb-2"
+              >
+                <span class="text-xs font-bold text-blue-400 uppercase"
+                  >Typography & Layout</span
+                >
+                <button
+                  id="reset-typography-btn"
+                  class="text-[9px] text-gray-500 hover:text-white uppercase"
+                >
+                  Reset
+                </button>
+              </div>
+
+              <!-- Font Size & Line Height -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-[9px] text-gray-500 uppercase block mb-1"
+                    >Font Size</label
+                  >
+                  <input
+                    type="range"
+                    id="text-scale-input"
+                    min="0.5"
+                    max="2.0"
+                    step="0.05"
+                    value="1"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
                 <div>
-                  <label
-                    for="accent-color-input"
-                    class="block text-xs font-medium text-gray-400 mb-1"
-                    >Accent</label
+                  <label class="text-[9px] text-gray-500 uppercase block mb-1"
+                    >Line Height</label
                   >
                   <input
-                    type="color"
-                    id="accent-color-input"
-                    value="#d4af37"
-                    class="w-full h-10 p-1 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer"
+                    type="range"
+                    id="text-lh-input"
+                    min="0.8"
+                    max="2.0"
+                    step="0.05"
+                    value="1.2"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <!-- Spacing & Alignment -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-[9px] text-gray-500 uppercase block mb-1"
+                    >Letter Spacing</label
+                  >
+                  <input
+                    type="range"
+                    id="text-spacing-input"
+                    min="-0.1"
+                    max="0.5"
+                    step="0.01"
+                    value="0"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <label class="text-[9px] text-gray-500 uppercase block mb-1"
+                    >Alignment</label
+                  >
+                  <div class="flex bg-gray-800 rounded">
+                    <button
+                      class="flex-1 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-xs"
+                      data-align="left"
+                      onclick="setTextAlign('left')"
+                    >
+                      L
+                    </button>
+                    <button
+                      class="flex-1 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-xs"
+                      data-align="center"
+                      onclick="setTextAlign('center')"
+                    >
+                      C
+                    </button>
+                    <button
+                      class="flex-1 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-xs"
+                      data-align="right"
+                      onclick="setTextAlign('right')"
+                    >
+                      R
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Text Position -->
+              <div>
+                <div class="flex justify-between mb-1">
+                  <label class="text-[9px] text-gray-500 uppercase"
+                    >Move Text (X / Y)</label
+                  >
+                  <span class="text-[9px] text-gray-600">OFFSET</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <input
+                    type="range"
+                    id="text-x-input"
+                    min="-100"
+                    max="100"
+                    step="1"
+                    value="0"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                    title="Horizontal Move"
+                  />
+                  <input
+                    type="range"
+                    id="text-y-input"
+                    min="-100"
+                    max="100"
+                    step="1"
+                    value="0"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                    title="Vertical Move"
                   />
                 </div>
               </div>
             </div>
 
-            <!-- Download Button -->
-            <button
-              id="download-btn"
-              class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-green-700 transition-colors duration-300 flex items-center justify-center space-x-2"
-            >
-              <span>Download Post as PNG</span>
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            <!-- Attribution -->
+            <div>
+              <label class="block text-xs font-medium text-gray-400 mb-1"
+                >Attribution / Sub-head</label
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                ></path>
-              </svg>
-            </button>
+              <input
+                type="text"
+                id="attribution-input"
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-sm focus:border-blue-500 outline-none"
+                placeholder="Author Name or Sub-headline"
+              />
+            </div>
 
-            <!-- Reset Button -->
-            <button
-              id="reset-btn"
-              class="w-full bg-red-600 text-white font-semibold py-2 px-6 rounded-lg text-sm hover:bg-red-700 transition-colors duration-300 flex items-center justify-center space-x-2 mt-3"
-            >
-              <span>Reset All</span>
-              <svg
-                class="w-4 h-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+            <!-- Brand -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1"
+                  >Brand Name</label
+                >
+                <input
+                  type="text"
+                  id="brand-input"
+                  class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white text-sm outline-none"
+                  placeholder="Default"
                 />
-              </svg>
-            </button>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-gray-400 mb-1"
+                  >Accent Color</label
+                >
+                <div class="flex items-center space-x-2">
+                  <input
+                    type="color"
+                    id="accent-color-input"
+                    value="#3b82f6"
+                    class="h-9 w-12 bg-gray-900 border border-gray-700 rounded cursor-pointer p-0.5"
+                  />
+                  <input
+                    type="color"
+                    id="bg-color-input"
+                    value="#111827"
+                    class="h-9 w-12 bg-gray-900 border border-gray-700 rounded cursor-pointer p-0.5"
+                    title="Background Color"
+                  />
+                </div>
+              </div>
+            </div>
 
+            <!-- Effect Controls (Collapsible-ish feel) -->
+            <div
+              class="bg-gray-900/50 rounded border border-gray-700/50 p-3 space-y-3"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-400 uppercase"
+                  >Text Automation</span
+                >
+              </div>
+              <div>
+                <label class="text-[10px] text-gray-500 uppercase"
+                  >Highlight Words</label
+                >
+                <input
+                  type="text"
+                  id="highlight-words-input"
+                  class="w-full bg-gray-800 border-none rounded h-7 text-xs px-2 text-gray-300 placeholder-gray-600"
+                  placeholder="word1, word2"
+                />
+              </div>
+              <div>
+                <label class="text-[10px] text-gray-500 uppercase"
+                  >Underline Words</label
+                >
+                <input
+                  type="text"
+                  id="underline-words-input"
+                  class="w-full bg-gray-800 border-none rounded h-7 text-xs px-2 text-gray-300 placeholder-gray-600"
+                  placeholder="word1, word2"
+                />
+              </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="pt-2 border-t border-gray-700">
+              <label
+                class="flex items-center justify-center w-full h-24 border-2 border-gray-700 border-dashed rounded-lg cursor-pointer bg-gray-800/30 hover:bg-gray-800 transition-colors group"
+              >
+                <div
+                  class="flex flex-col items-center justify-center pt-5 pb-6"
+                >
+                  <svg
+                    class="w-6 h-6 mb-2 text-gray-500 group-hover:text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                  <p class="text-xs text-gray-400 group-hover:text-gray-300">
+                    Click to upload image
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  id="image-upload"
+                  class="hidden"
+                  accept="image/*"
+                />
+              </label>
+
+              <!-- Image Controls -->
+              <div
+                id="image-adjust-controls"
+                class="hidden mt-3 grid grid-cols-3 gap-2 bg-gray-900/50 p-2 rounded border border-gray-700"
+              >
+                <div
+                  class="col-span-3 text-[10px] text-blue-400 font-bold uppercase mb-1"
+                >
+                  Image Controls
+                </div>
+                <div>
+                  <label
+                    class="text-[9px] text-gray-500 uppercase block text-center"
+                    >Zoom</label
+                  >
+                  <input
+                    type="range"
+                    id="image-zoom-input"
+                    min="1"
+                    max="3"
+                    step="0.1"
+                    value="1"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="text-[9px] text-gray-500 uppercase block text-center"
+                    >Pan X</label
+                  >
+                  <input
+                    type="range"
+                    id="image-pos-x-input"
+                    min="-100"
+                    max="100"
+                    step="1"
+                    value="0"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="text-[9px] text-gray-500 uppercase block text-center"
+                    >Pan Y</label
+                  >
+                  <input
+                    type="range"
+                    id="image-pos-y-input"
+                    min="-100"
+                    max="100"
+                    step="1"
+                    value="0"
+                    class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex space-x-3 pt-4">
+              <button
+                id="reset-btn"
+                class="flex-1 px-4 py-3 bg-gray-700 text-gray-300 text-sm font-bold rounded hover:bg-gray-600 transition-colors"
+              >
+                Reset
+              </button>
+              <button
+                id="download-btn"
+                class="flex-[2] px-4 py-3 bg-blue-600 text-white text-sm font-bold rounded hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/50 flex justify-center items-center gap-2"
+              >
+                <span>Download PNG</span>
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
             <p
               id="loading-message"
-              class="text-sm text-center text-blue-400 hidden"
+              class="text-center text-xs text-blue-400 hidden animate-pulse"
             >
-              Generating image, please wait...
+              Rendering high-res output...
             </p>
           </div>
         </div>
 
-        <!-- Poster Preview Area -->
-        <div class="lg:col-span-8 flex flex-col items-center">
-          <h2
-            class="text-2xl font-semibold text-white mb-6 text-center lg:text-left"
-          >
-            Live Preview
-          </h2>
-
-          <!-- This is the container that will be downloaded -->
+        <!-- --- PREVIEW AREA --- -->
+        <div
+          class="lg:col-span-8 flex items-start justify-center bg-gray-900/50 rounded-xl border border-gray-800 p-4 lg:p-12 min-h-[600px]"
+        >
+          <!-- The Stage (Square) -->
           <div
             id="poster-container"
-            class="w-full max-w-2xl aspect-[1/1] shadow-2xl rounded-lg overflow-hidden"
+            class="relative w-full max-w-[600px] aspect-square shadow-2xl overflow-hidden bg-gray-900 ring-1 ring-gray-800"
           >
-            <!-- TEMPLATE 1: Classic Headline (REDESIGNED) -->
+            <!-- TEMPLATE 1: Classic Headline -->
             <div
               id="template-headline"
-              class="w-full h-full bg-gray-900 text-white p-8 md:p-10 flex-col"
+              class="w-full h-full bg-gray-900 text-white p-8 flex flex-col"
             >
-              <div class="flex flex-col h-full">
-                <!-- Headline Text -->
-                <h1 class="poster-headline-text text-white mb-6 flex-shrink-0">
-                  TYPE YOUR HEADLINE IN THE BOX ON THE LEFT
-                </h1>
-
-                <!-- Attribution Text -->
-                <p
-                  class="poster-attribution-text text-white/80 mb-4 hidden"
-                ></p>
-
-                <!-- Main Image Container (NEW FRAMED LOOK) -->
+              <div class="flex justify-between items-start mb-6">
                 <div
-                  id="template-headline-frame"
-                  class="w-full flex-grow min-h-0 mb-6 p-2 border-4 border-cyan-400 rounded-lg"
+                  class="poster-category-text text-xs text-blue-500 tracking-widest hidden"
                 >
+                  CATEGORY
+                </div>
+                <div class="w-full h-px bg-gray-800 my-auto"></div>
+              </div>
+
+              <h1 class="poster-headline-text text-white mb-6 flex-shrink-0">
+                TYPE YOUR HEADLINE
+              </h1>
+
+              <!-- Frame for Image -->
+              <div
+                id="template-headline-frame"
+                class="w-full flex-grow min-h-0 mb-6 p-1 border border-gray-600"
+              >
+                <div class="w-full h-full bg-gray-800 overflow-hidden relative">
                   <canvas
-                    class="poster-image-canvas w-full h-full rounded-md shadow-md"
+                    class="poster-image-canvas w-full h-full object-cover"
                   ></canvas>
                 </div>
+              </div>
 
-                <!-- Brand/Logo Text (MOVED TO BOTTOM RIGHT) -->
-                <div
-                  class="flex-shrink-0 poster-brand-container flex justify-end"
-                >
-                  <!-- Default Logo (from site) -->
-                  <div
-                    class="poster-brand-logo flex items-end space-x-1"
-                    style="display: flex;"
-                  >
-                    <span class="text-2xl text-white/90 poster-logo-main"
+              <div class="flex justify-between items-end">
+                <p
+                  class="poster-attribution-text text-gray-400 text-sm max-w-[60%] hidden"
+                ></p>
+
+                <!-- Brand -->
+                <div class="poster-brand-container text-right">
+                  <div class="poster-brand-logo flex items-end space-x-1">
+                    <span class="text-xl font-oswald text-gray-200"
                       >The Daily</span
                     >
-                    <span class="relative">
-                      <span
-                        class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
-                        >Origin</span
-                      >
-                      <canvas
-                        id="underline-canvas-1"
-                        class="absolute left-0 w-full h-3 -bottom-1"
-                        width="100"
-                        height="20"
-                      ></canvas>
-                    </span>
+                    <span class="text-2xl font-bold text-blue-500 font-oswald"
+                      >Origin</span
+                    >
                   </div>
-                  <!-- Custom User Text (hidden by default) -->
-                  <span class="poster-brand-text text-white/80 hidden"
+                  <span class="poster-brand-text text-gray-300 hidden"
                     >BRAND</span
                   >
                 </div>
               </div>
             </div>
 
-            <!-- TEMPLATE 2: Modern Overlay (NOW A CANVAS) -->
+            <!-- TEMPLATE 2: Overlay -->
             <div
               id="template-overlay"
-              class="w-full h-full bg-gray-900 text-white hidden relative"
+              class="w-full h-full bg-gray-900 text-white hidden relative group"
             >
-              <!-- Canvas is the background -->
               <canvas
                 class="poster-image-canvas absolute inset-0 w-full h-full"
               ></canvas>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"
+              ></div>
 
-              <!-- Content container: flex-col to push content to bottom -->
-              <div class="relative z-10 flex flex-col h-full justify-end">
-                <!-- Solid block container -->
-                <div class="bg-black/75 p-8 md:p-10">
-                  <!-- Headline (at top) -->
-                  <h1 class="poster-headline-text text-white mb-6">
-                    TYPE YOUR HEADLINE IN THE BOX ON THE LEFT
-                  </h1>
+              <div
+                class="absolute inset-x-0 bottom-0 p-10 flex flex-col justify-end h-full"
+              >
+                <div class="mb-auto pt-4">
+                  <span
+                    class="poster-category-text px-3 py-1 bg-blue-600 text-white text-xs font-bold hidden"
+                    >CATEGORY</span
+                  >
+                </div>
 
-                  <!-- Attribution Text -->
-                  <p
-                    class="poster-attribution-text text-white/80 mb-6 -mt-2 hidden"
-                  ></p>
+                <h1 class="poster-headline-text text-white mb-4 drop-shadow-lg">
+                  TYPE YOUR HEADLINE
+                </h1>
 
-                  <!-- Brand (at bottom) -->
-                  <div class="poster-brand-container flex justify-end">
-                    <!-- Default Logo (from site) -->
-                    <div
-                      class="poster-brand-logo flex items-end space-x-1"
-                      style="display: flex;"
-                    >
-                      <span class="text-2xl text-white/90 poster-logo-main"
-                        >The Daily</span
+                <div class="w-16 h-1 bg-blue-500 mb-4"></div>
+
+                <div class="flex justify-between items-center">
+                  <p class="poster-attribution-text text-gray-300 hidden"></p>
+
+                  <div class="poster-brand-container">
+                    <div class="poster-brand-logo">
+                      <span
+                        class="text-xl font-bold font-oswald tracking-widest text-white border-2 border-white px-2 py-0.5"
+                        >THE DAILY ORIGIN</span
                       >
-                      <span class="relative">
-                        <span
-                          class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
-                          >Origin</span
-                        >
-                        <canvas
-                          id="underline-canvas-2"
-                          class="absolute left-0 w-full h-3 -bottom-1"
-                          width="100"
-                          height="20"
-                        ></canvas>
-                      </span>
                     </div>
-                    <!-- Custom User Text (hidden by default) -->
-                    <span
-                      class="poster-brand-text text-white/80 shadow-lg hidden"
+                    <span class="poster-brand-text text-white hidden"
                       >BRAND</span
                     >
                   </div>
@@ -780,289 +942,459 @@
               </div>
             </div>
 
-            <!-- TEMPLATE 3: Asymmetric Split (NEW DESIGN) -->
+            <!-- TEMPLATE 3: Card Split -->
             <div
               id="template-card"
-              class="w-full h-full bg-gray-900 text-white flex-row hidden"
+              class="w-full h-full bg-gray-900 hidden flex-row"
             >
-              <!-- Text Column (40%) -->
               <div
-                class="w-2/5 h-full p-8 md:p-10 flex flex-col justify-between overflow-hidden"
+                class="w-[40%] h-full p-8 flex flex-col justify-between border-r border-gray-800 z-10 bg-inherit"
               >
                 <div>
-                  <!-- NEW: Grouping div for top content -->
-                  <!-- Headline -->
-                  <h1 class="poster-headline-text text-white">
-                    TYPE YOUR HEADLINE IN THE BOX ON THE LEFT
+                  <div
+                    class="poster-category-text text-[10px] text-gray-500 mb-4 hidden"
+                  >
+                    CATEGORY
+                  </div>
+                  <h1
+                    class="poster-headline-text text-inherit text-2xl lg:text-3xl"
+                  >
+                    HEADLINE GOES HERE
                   </h1>
-
-                  <!-- Attribution Text -->
-                  <p
-                    class="poster-attribution-text text-white/80 mt-4 hidden"
-                  ></p>
+                  <div
+                    class="w-8 h-8 mt-6 rounded-full border border-gray-600 flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-3 h-3 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      ></path>
+                    </svg>
+                  </div>
                 </div>
 
-                <!-- Brand (Vertical) -->
-                <div class="poster-brand-container relative h-32">
-                  <!-- Container to help position rotated text -->
-                  <!-- Default Logo (from site) -->
-                  <div
-                    class="poster-brand-logo flex items-end space-x-1 absolute bottom-0 left-0"
-                    style="
-                      display: flex;
-                      transform: rotate(-90deg) translateY(100%);
-                      transform-origin: bottom left;
-                    "
-                  >
-                    <span class="text-2xl text-white/90 poster-logo-main"
-                      >The Daily</span
+                <div class="poster-brand-container">
+                  <div class="poster-brand-logo flex flex-col">
+                    <span
+                      class="text-xs font-oswald text-gray-500 uppercase tracking-widest"
+                      >Published By</span
                     >
-                    <span class="relative">
-                      <span
-                        class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
-                        >Origin</span
-                      >
-                      <canvas
-                        id="underline-canvas-3"
-                        class="absolute left-0 w-full h-3 -bottom-1"
-                        width="100"
-                        height="20"
-                      ></canvas>
-                    </span>
+                    <span class="text-xl font-bold text-blue-500 font-oswald"
+                      >The Daily Origin</span
+                    >
                   </div>
-                  <!-- Custom User Text (hidden by default) -->
-                  <span
-                    class="poster-brand-text text-white/80 hidden absolute bottom-0 left-0"
-                    style="
-                      display: none;
-                      transform: rotate(-90deg) translateY(100%);
-                      transform-origin: bottom left;
-                    "
+                  <span class="poster-brand-text text-inherit hidden"
                     >BRAND</span
                   >
                 </div>
               </div>
-              <!-- Image Column (60%) (NOW A CANVAS) -->
-              <div class="w-3/5 h-full">
-                <canvas class="poster-image-canvas w-full h-full"></canvas>
+              <div class="w-[60%] h-full relative overflow-hidden">
+                <canvas
+                  class="poster-image-canvas w-full h-full object-cover"
+                ></canvas>
+                <div
+                  class="absolute bottom-6 left-6 bg-black/70 backdrop-blur-md px-4 py-2 rounded hidden attribution-container"
+                >
+                  <p
+                    class="poster-attribution-text text-white text-xs font-medium"
+                  ></p>
+                </div>
               </div>
             </div>
 
             <!-- TEMPLATE 4: Quote -->
             <div
               id="template-quote"
-              class="w-full h-full bg-gray-900 text-white hidden relative"
+              class="w-full h-full bg-gray-900 hidden relative text-center flex flex-col justify-center items-center p-12"
             >
-              <!-- Canvas is the background -->
               <canvas
-                class="poster-image-canvas absolute inset-0 w-full h-full"
+                class="poster-image-canvas absolute inset-0 w-full h-full opacity-30"
               ></canvas>
-
-              <!-- Dark overlay for readability (MOVED to canvas drawing) -->
-
-              <!-- Content container -->
               <div
-                class="relative z-10 flex flex-col h-full p-8 md:p-12 text-center justify-between"
-              >
-                <!-- Main Quote Block -->
-                <div
-                  class="flex-grow flex flex-col justify-center items-center"
-                >
-                  <!-- Decorative Quote Mark -->
-                  <span
-                    class="font-serif text-8xl text-white/50 leading-none -mb-4"
-                    style="font-family: 'Times New Roman', serif;"
-                    >&ldquo;</span
-                  >
-
-                  <!-- Headline (as the quote) -->
-                  <h1
-                    class="poster-headline-text text-white italic"
-                    style="line-height: 1.5;"
-                  >
-                    TYPE YOUR HEADLINE IN THE BOX ON THE LEFT
-                  </h1>
-
-                  <!-- Attribution Text (as the author) -->
-                  <p
-                    class="poster-attribution-text text-white/80 mt-6 hidden"
-                    style="font-style: normal;"
-                  ></p>
-                </div>
-
-                <!-- Brand (at bottom) -->
-                <div
-                  class="poster-brand-container flex justify-center flex-shrink-0"
-                >
-                  <!-- Default Logo (from site) -->
-                  <div
-                    class="poster-brand-logo flex items-end space-x-1"
-                    style="display: flex;"
-                  >
-                    <span class="text-2xl text-white/90 poster-logo-main"
-                      >The Daily</span
-                    >
-                    <span class="relative">
-                      <span
-                        class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
-                        >Origin</span
-                      >
-                      <canvas
-                        id="underline-canvas-4"
-                        class="absolute left-0 w-full h-3 -bottom-1"
-                        width="100"
-                        height="20"
-                      ></canvas>
-                    </span>
-                  </div>
-                  <!-- Custom User Text (hidden by default) -->
-                  <span class="poster-brand-text text-white/80 shadow-lg hidden"
-                    >BRAND</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- *** REPLACED: TEMPLATE 5: Editorial *** -->
-            <div
-              id="template-editorial"
-              class="w-full h-full bg-gray-900 text-white hidden relative"
-            >
-              <!-- Canvas is the background -->
-              <canvas
-                class="poster-image-canvas absolute inset-0 w-full h-full"
-              ></canvas>
-
-              <!-- Dark overlay for readability -->
-              <div class="absolute inset-0 bg-black/50"></div>
-
-              <!-- Content container -->
-              <div
-                class="relative z-10 flex flex-col h-full p-8 md:p-12 text-center justify-between"
-              >
-                <!-- Main Text Block (centered) -->
-                <div
-                  class="flex-grow flex flex-col justify-center items-center"
-                >
-                  <!-- Headline (with new font) -->
-                  <h1 class="poster-headline-text text-white">
-                    TYPE YOUR HEADLINE IN THE BOX ON THE LEFT
-                  </h1>
-
-                  <!-- Attribution Text (centered) -->
-                  <p
-                    class="poster-attribution-text text-white/80 mt-6 hidden"
-                  ></p>
-                </div>
-
-                <!-- Brand (at bottom center) -->
-                <div
-                  class="poster-brand-container flex justify-center flex-shrink-0"
-                >
-                  <!-- Default Logo (from site) -->
-                  <div
-                    class="poster-brand-logo flex items-end space-x-1"
-                    style="display: flex;"
-                  >
-                    <span class="text-2xl text-white/90 poster-logo-main"
-                      >The Daily</span
-                    >
-                    <span class="relative">
-                      <span
-                        class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
-                        >Origin</span
-                      >
-                      <canvas
-                        id="underline-canvas-5"
-                        class="absolute left-0 w-full h-3 -bottom-1"
-                        width="100"
-                        height="20"
-                      ></canvas>
-                    </span>
-                  </div>
-                  <!-- Custom User Text (hidden by default) -->
-                  <span class="poster-brand-text text-white/80 shadow-lg hidden"
-                    >BRAND</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- *** NEW: TEMPLATE 6: Football *** -->
-            <div
-              id="template-football"
-              class="w-full h-full bg-gray-900 text-white hidden relative"
-            >
-              <!-- Canvas is the background -->
-              <canvas
-                class="poster-image-canvas absolute inset-0 w-full h-full"
-              ></canvas>
-
-              <!-- Vignette overlay for premium feel -->
-              <div
-                class="absolute inset-0"
-                style="
-                  background: radial-gradient(
-                    circle,
-                    rgba(0, 0, 0, 0.1) 0%,
-                    rgba(0, 0, 0, 0.8) 100%
-                  );
-                "
+                class="absolute inset-0 bg-gray-900/60 backdrop-blur-[2px]"
               ></div>
 
-              <!-- Content container -->
+              <div class="relative z-10 max-w-md">
+                <div class="text-6xl text-blue-500 font-serif mb-4 opacity-80">
+                  “
+                </div>
+                <h1
+                  class="poster-headline-text text-white italic font-light tracking-wide leading-relaxed"
+                >
+                  Your quote text will appear here.
+                </h1>
+                <div class="w-24 h-px bg-gray-500 mx-auto my-8"></div>
+                <p
+                  class="poster-attribution-text text-blue-400 font-bold tracking-widest uppercase text-sm hidden"
+                ></p>
+              </div>
+
+              <div class="absolute bottom-8 poster-brand-container">
+                <div class="poster-brand-logo">
+                  <span
+                    class="text-xs font-oswald text-gray-500 tracking-[0.3em]"
+                    >THE DAILY ORIGIN</span
+                  >
+                </div>
+                <span
+                  class="poster-brand-text text-gray-500 text-xs tracking-widest hidden"
+                  >BRAND</span
+                >
+              </div>
+            </div>
+
+            <!-- TEMPLATE 5: Editorial -->
+            <div
+              id="template-editorial"
+              class="w-full h-full bg-gray-900 hidden relative"
+            >
+              <canvas
+                class="poster-image-canvas absolute inset-0 w-full h-full"
+              ></canvas>
+              <div class="absolute inset-0 bg-black/40"></div>
+
+              <!-- Border Frame -->
               <div
-                class="relative z-10 flex flex-col h-full p-8 md:p-10 text-center justify-between"
+                class="absolute inset-4 border border-white/30 z-20 pointer-events-none"
+              ></div>
+
+              <div
+                class="relative z-10 h-full flex flex-col items-center justify-center p-12 text-center"
               >
-                <!-- Top content block -->
-                <div class="flex-shrink-0">
-                  <!-- Headline (with new font) -->
-                  <h1 class="poster-headline-text text-white">
-                    TYPE YOUR HEADLINE
-                  </h1>
+                <div
+                  class="poster-category-text text-xs font-serif italic text-white/80 mb-4 tracking-widest border-b border-white/30 pb-1 px-4 hidden"
+                >
+                  Category
                 </div>
 
-                <!-- Spacer -->
-                <div class="flex-grow"></div>
+                <h1 class="poster-headline-text text-white mb-6 drop-shadow-xl">
+                  Editorial Headline
+                </h1>
 
-                <!-- Bottom content block -->
-                <div class="flex-shrink-0">
-                  <!-- Attribution Text (as match/event) -->
+                <p
+                  class="poster-attribution-text text-white/90 font-serif text-lg hidden"
+                ></p>
+
+                <div class="absolute bottom-10 poster-brand-container">
+                  <div
+                    class="poster-brand-logo font-playfair font-bold text-2xl text-white"
+                  >
+                    The Daily Origin.
+                  </div>
+                  <span
+                    class="poster-brand-text text-white font-playfair font-bold hidden"
+                    >BRAND</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- TEMPLATE 6: Football -->
+            <div
+              id="template-football"
+              class="w-full h-full bg-black hidden relative overflow-hidden"
+            >
+              <!-- Background Graphic -->
+              <canvas
+                class="poster-image-canvas absolute inset-0 w-full h-full object-cover opacity-80"
+                style="mix-blend-mode: luminosity;"
+              ></canvas>
+
+              <!-- Gold Overlay/Vignette -->
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"
+              ></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"
+              ></div>
+
+              <div class="relative z-10 h-full flex flex-col p-8">
+                <!-- Top Bar -->
+                <div
+                  class="flex justify-between items-center border-b border-white/20 pb-4 mb-auto"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span
+                      class="text-xs font-bold text-white tracking-widest uppercase"
+                      >Match Day</span
+                    >
+                  </div>
+                  <span
+                    class="poster-category-text text-yellow-500 font-bebas text-xl hidden"
+                    >LEAGUE</span
+                  >
+                </div>
+
+                <!-- Main Content -->
+                <div class="text-center py-8">
+                  <h1
+                    class="poster-headline-text text-white italic transform -skew-x-6"
+                  >
+                    MATCH RESULT
+                  </h1>
+                  <div
+                    class="w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent mt-2"
+                  ></div>
+                </div>
+
+                <!-- Bottom Stats/Attribution -->
+                <div class="mt-auto flex flex-col items-center">
                   <p
-                    class="poster-attribution-text text-white/80 mb-6 hidden"
+                    class="poster-attribution-text text-gray-300 font-oswald text-xl uppercase tracking-widest mb-6 hidden"
                   ></p>
 
-                  <!-- Brand (at bottom center) -->
-                  <div
-                    class="poster-brand-container flex justify-center flex-shrink-0"
-                  >
-                    <!-- Default Logo (from site) -->
+                  <div class="poster-brand-container">
                     <div
-                      class="poster-brand-logo flex items-end space-x-1"
-                      style="display: flex;"
+                      class="poster-brand-logo bg-white text-black px-4 py-1 font-bebas text-2xl transform -skew-x-12"
                     >
-                      <span class="text-2xl text-white/90 poster-logo-main"
-                        >The Daily</Lspan
-                      >
-                      <span class="relative">
-                        <span
-                          class="text-3xl font-bold text-cyan-400 poster-logo-artisan"
-                          >Origin</span
-                        >
-                        <canvas
-                          id="underline-canvas-6"
-                          class="absolute left-0 w-full h-3 -bottom-1"
-                          width="100"
-                          height="20"
-                        ></canvas>
-                      </span>
+                      THE DAILY ORIGIN
                     </div>
-                    <!-- Custom User Text (hidden by default) -->
                     <span
-                      class="poster-brand-text text-white/80 shadow-lg hidden"
+                      class="poster-brand-text text-white font-bebas text-2xl hidden"
                       >BRAND</span
                     >
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW TEMPLATE 7: The Broadcast (CNN Style) -->
+            <div
+              id="template-broadcast"
+              class="w-full h-full bg-gray-900 hidden relative overflow-hidden"
+            >
+              <canvas
+                class="poster-image-canvas absolute inset-0 w-full h-full object-cover"
+              ></canvas>
+
+              <!-- "Live" Badge -->
+              <div
+                class="absolute top-8 left-8 bg-white/90 px-3 py-1 flex items-center gap-2 z-20 shadow-lg"
+              >
+                <div
+                  class="w-3 h-3 bg-red-600 rounded-full animate-pulse"
+                ></div>
+                <span
+                  class="text-red-700 font-bold text-sm uppercase font-oswald tracking-wide"
+                  >LIVE</span
+                >
+              </div>
+              <div
+                class="poster-category-text absolute top-8 right-8 bg-red-600 text-white px-3 py-1 text-sm font-bold uppercase shadow-lg hidden"
+              >
+                BREAKING
+              </div>
+
+              <!-- Lower Third Complex -->
+              <div class="absolute bottom-0 left-0 right-0 z-20">
+                <!-- Headline Bar -->
+                <div
+                  class="bg-red-700/90 backdrop-blur-sm px-8 py-2 w-fit min-w-[30%] skew-x-12 -ml-4 border-r-4 border-white"
+                >
+                  <span
+                    class="text-white font-bold uppercase text-xs tracking-widest -skew-x-12 block ml-4"
+                    >Breaking News</span
+                  >
+                </div>
+
+                <div
+                  class="bg-white/95 text-black p-6 pl-8 border-l-8 border-red-600 shadow-2xl relative"
+                >
+                  <h1 class="poster-headline-text text-black mb-2">
+                    HEADLINE TEXT
+                  </h1>
+                  <div class="flex items-center gap-3 mt-2">
+                    <span
+                      class="bg-black text-white px-2 py-0.5 text-xs font-bold uppercase"
+                      >UPDATED</span
+                    >
+                    <p
+                      class="poster-attribution-text text-gray-800 font-bold text-sm uppercase hidden"
+                    ></p>
+                  </div>
+
+                  <!-- Brand Watermark -->
+                  <div class="absolute right-4 bottom-4 opacity-20">
+                    <div class="poster-brand-container">
+                      <div
+                        class="poster-brand-logo text-4xl font-black font-oswald tracking-tighter"
+                      >
+                        THE DAILY ORIGIN
+                      </div>
+                      <span
+                        class="poster-brand-text text-4xl font-black font-oswald hidden"
+                        >BRAND</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Ticker Tape -->
+                <div
+                  class="bg-black text-white py-2 px-8 flex items-center gap-4 overflow-hidden"
+                >
+                  <span
+                    class="text-yellow-400 font-bold text-xs uppercase whitespace-nowrap"
+                    >DEVELOPING STORY</span
+                  >
+                  <span class="text-gray-500">///</span>
+                  <span class="text-xs font-mono uppercase truncate w-full"
+                    >Latest updates coming in from the newsroom...</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW TEMPLATE 8: The Paper (NYT Style) -->
+            <div
+              id="template-paper"
+              class="w-full h-full hidden flex-col p-8 md:p-12 relative border border-gray-200 shadow-inner"
+            >
+              <!-- Header Date Line -->
+              <div
+                class="border-b-2 border-black pb-1 mb-1 flex justify-between items-end"
+              >
+                <div
+                  class="text-[10px] font-bold uppercase font-sans text-gray-500"
+                >
+                  Vol. 124, No. 42
+                </div>
+                <div class="poster-brand-container">
+                  <div
+                    class="poster-brand-logo font-cinzel font-black text-3xl tracking-tight"
+                  >
+                    The Daily Origin
+                  </div>
+                  <span
+                    class="poster-brand-text font-cinzel font-black text-2xl hidden"
+                    >BRAND</span
+                  >
+                </div>
+                <div
+                  class="text-[10px] font-bold uppercase font-sans text-gray-500"
+                >
+                  Late Edition
+                </div>
+              </div>
+              <div class="border-b border-black mb-8"></div>
+
+              <!-- Content Grid -->
+              <div class="flex-grow flex flex-col items-center text-center">
+                <div
+                  class="poster-category-text text-xs tracking-widest mb-4 font-sans font-bold text-gray-800 hidden"
+                >
+                  CATEGORY
+                </div>
+
+                <h1 class="poster-headline-text text-black mb-6 max-w-[90%]">
+                  Headline Text Goes Here
+                </h1>
+
+                <!-- Image Area -->
+                <div
+                  class="w-full flex-grow relative mb-4 border border-gray-300 p-1"
+                >
+                  <canvas
+                    class="poster-image-canvas w-full h-full object-cover filter grayscale contrast-125"
+                  ></canvas>
+                  <div
+                    class="absolute bottom-2 right-2 bg-white px-2 py-1 text-[8px] font-sans text-gray-500 border border-gray-200"
+                  >
+                    Photo: Staff
+                  </div>
+                </div>
+
+                <!-- Caption / Attribution -->
+                <div class="w-full text-left flex gap-4 mt-2">
+                  <p
+                    class="poster-attribution-text text-gray-600 font-serif text-sm italic w-2/3 hidden"
+                  >
+                    By Author Name
+                  </p>
+                  <!-- Fake Article Text lines -->
+                  <div class="w-full space-y-1 opacity-40">
+                    <div class="h-1 bg-gray-400 w-full"></div>
+                    <div class="h-1 bg-gray-400 w-[95%]"></div>
+                    <div class="h-1 bg-gray-400 w-[90%]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW TEMPLATE 9: The Swiss (Modern/Design) -->
+            <div
+              id="template-swiss"
+              class="w-full h-full bg-blue-600 text-white hidden relative p-8 flex flex-col justify-between"
+            >
+              <!-- Background Geometric -->
+              <div class="absolute inset-0 z-0 overflow-hidden">
+                <div
+                  class="absolute -top-[20%] -right-[20%] w-[80%] h-[80%] rounded-full bg-white/10 blur-3xl"
+                ></div>
+                <div
+                  class="absolute -bottom-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-black/10 blur-2xl"
+                ></div>
+              </div>
+
+              <!-- Top Bar -->
+              <div
+                class="relative z-10 flex justify-between items-start border-t-4 border-white pt-4"
+              >
+                <div class="poster-brand-container">
+                  <div
+                    class="poster-brand-logo font-inter font-black text-2xl tracking-tighter"
+                  >
+                    Aa.
+                  </div>
+                  <span
+                    class="poster-brand-text font-inter font-black text-xl hidden"
+                    >BRAND</span
+                  >
+                </div>
+                <span
+                  class="poster-category-text font-mono text-xs bg-white text-blue-600 px-2 py-1 hidden"
+                  >CATEGORY</span
+                >
+              </div>
+
+              <!-- Middle Content -->
+              <div class="relative z-10 my-auto">
+                <h1 class="poster-headline-text text-white mb-8">
+                  Swiss Design Headline
+                </h1>
+
+                <div class="flex items-center gap-6">
+                  <!-- Small circular image -->
+                  <div
+                    class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white/20 flex-shrink-0"
+                  >
+                    <canvas
+                      class="poster-image-canvas w-full h-full object-cover"
+                    ></canvas>
+                  </div>
+                  <div class="h-px bg-white/40 flex-grow"></div>
+                </div>
+              </div>
+
+              <!-- Bottom -->
+              <div
+                class="relative z-10 grid grid-cols-2 gap-4 text-xs font-mono opacity-80"
+              >
+                <div>
+                  <p class="mb-1 uppercase">Author</p>
+                  <p class="poster-attribution-text font-bold hidden">-</p>
+                </div>
+                <div class="text-right">
+                  <p class="mb-1 uppercase">Date</p>
+                  <p class="font-bold">2026</p>
                 </div>
               </div>
             </div>
@@ -1071,86 +1403,20 @@
       </div>
     </div>
 
+    <!-- Script Logic -->
     <script>
-      // --- Get Control Elements ---
+      // --- Element References ---
       const headlineInput = document.getElementById("headline-input");
-      const attributionInput = document.getElementById("attribution-input"); // *** NEW ***
+      const categoryInput = document.getElementById("category-input");
+      const attributionInput = document.getElementById("attribution-input");
       const brandInput = document.getElementById("brand-input");
       const imageUpload = document.getElementById("image-upload");
-      const downloadBtn = document.getElementById("download-btn");
-      const loadingMessage = document.getElementById("loading-message");
       const posterContainer = document.getElementById("poster-container");
 
-      // --- Template Selector Elements ---
-      const templateSelectors = document.querySelectorAll(".template-selector");
-      const templateHeadline = document.getElementById("template-headline");
-      const templateOverlay = document.getElementById("template-overlay");
-      const templateCard = document.getElementById("template-card");
-      const templateQuote = document.getElementById("template-quote");
-      const templateEditorial = document.getElementById("template-editorial"); // *** MODIFIED ***
-      const templateFootball = document.getElementById("template-football"); // *** NEW ***
-      const allTemplates = [
-        templateHeadline,
-        templateOverlay,
-        templateCard,
-        templateQuote,
-        templateEditorial,
-        templateFootball, // *** NEW ***
-      ]; // *** MODIFIED ***
-
-      // --- Get Content Elements (from ALL templates) ---
-      const headlineTextElements = document.querySelectorAll(
-        ".poster-headline-text"
-      );
-      const attributionTextElements = document.querySelectorAll(
-        ".poster-attribution-text"
-      ); // *** NEW ***
-      const brandTextElements = document.querySelectorAll(".poster-brand-text");
-
-      // --- Get Canvas Elements ---
-      const posterImageCanvases = document.querySelectorAll(
-        ".poster-image-canvas"
-      );
-
-      // --- Thumbnail Canvas Elements ---
-      const thumbCanvasHeadline = document.getElementById(
-        "thumb-canvas-headline"
-      );
-      const thumbCanvasOverlay = document.getElementById(
-        "thumb-canvas-overlay"
-      );
-      const thumbCanvasCard = document.getElementById("thumb-canvas-card");
-      const thumbCanvasQuote = document.getElementById("thumb-canvas-quote");
-      const thumbCanvasEditorial = document.getElementById(
-        "thumb-canvas-editorial"
-      ); // *** MODIFIED ***
-      const thumbCanvasFootball = document.getElementById(
-        "thumb-canvas-football"
-      ); // *** NEW ***
-      const allThumbCanvases = [
-        thumbCanvasHeadline,
-        thumbCanvasOverlay,
-        thumbCanvasCard,
-        thumbCanvasQuote,
-        thumbCanvasEditorial,
-        thumbCanvasFootball, // *** NEW ***
-      ]; // *** MODIFIED ***
-
-      // --- Get Brand Logo Elements ---
-      const brandLogoElements = document.querySelectorAll(".poster-brand-logo");
-      const brandLogoMainElements = document.querySelectorAll(
-        ".poster-logo-main"
-      );
-      const brandLogoArtisanElements = document.querySelectorAll(
-        ".poster-logo-artisan"
-      );
-
-      // --- Get Color Control Elements ---
       const bgColorInput = document.getElementById("bg-color-input");
       const textColorInput = document.getElementById("text-color-input");
       const accentColorInput = document.getElementById("accent-color-input");
 
-      // --- Get Headline Effects Elements ---
       const highlightWordsInput = document.getElementById(
         "highlight-words-input"
       );
@@ -1160,865 +1426,599 @@
       const underlineWordsInput = document.getElementById(
         "underline-words-input"
       );
-      const underlineColorInput = document.getElementById(
-        "underline-color-input"
-      );
-      const colorWordsInput = document.getElementById("color-words-input");
-      const colorColorInput = document.getElementById("color-color-input");
 
-      // --- Line Height Elements ---
-      const lineHeightInput = document.getElementById("line-height-input");
-      const lineHeightValue = document.getElementById("line-height-value");
+      // Typography Inputs
+      const textScaleInput = document.getElementById("text-scale-input");
+      const textLhInput = document.getElementById("text-lh-input");
+      const textSpacingInput = document.getElementById("text-spacing-input");
+      const textXInput = document.getElementById("text-x-input");
+      const textYInput = document.getElementById("text-y-input");
+      const resetTypeBtn = document.getElementById("reset-typography-btn");
 
-      // --- Get Image Adjustment Elements ---
       const imageAdjustControls = document.getElementById(
         "image-adjust-controls"
       );
       const imageZoomInput = document.getElementById("image-zoom-input");
-      const imageZoomValue = document.getElementById("image-zoom-value");
       const imagePosXInput = document.getElementById("image-pos-x-input");
-      const imagePosXValue = document.getElementById("image-pos-x-value");
       const imagePosYInput = document.getElementById("image-pos-y-input");
-      const imagePosYValue = document.getElementById("image-pos-y-value");
 
-      // --- Dynamic Style Tags (for html2canvas) ---
-      const highlightStyleTag = document.createElement("style");
-      document.head.appendChild(highlightStyleTag);
+      // Lang Toggles
+      const langEnBtn = document.getElementById("lang-en");
+      const langBnBtn = document.getElementById("lang-bn");
 
-      const underlineStyleTag = document.createElement("style");
-      document.head.appendChild(underlineStyleTag);
+      // Template Selectors
+      const selectors = document.querySelectorAll(".template-selector");
+      const templates = document.querySelectorAll("#poster-container > div");
 
-      // --- Get Template-Specific Elements ---
-      const templateHeadlineFrame = document.getElementById(
-        "template-headline-frame"
+      // Live Elements
+      const headlineEls = document.querySelectorAll(".poster-headline-text");
+      const categoryEls = document.querySelectorAll(".poster-category-text");
+      const attributionEls = document.querySelectorAll(
+        ".poster-attribution-text"
       );
+      const brandEls = document.querySelectorAll(".poster-brand-text");
+      const brandLogos = document.querySelectorAll(".poster-brand-logo");
+      const canvases = document.querySelectorAll(".poster-image-canvas");
 
-      // --- Initial State ---
-      let selectedTemplate = "headline"; // Default template
-      let currentImage = null; // Will store the loaded Image object
-      let currentAccentColor = "#d4af37"; // Default accent color (now gold)
-      // --- Image Adjustment State ---
-      let currentImageZoom = 1;
-      let currentImagePosX = 0;
-      let currentImagePosY = 0;
+      // Styling
+      const styleTag = document.createElement("style");
+      document.head.appendChild(styleTag);
 
-      // --- Default Values Const ---
-      const DEFAULTS = {
-        headline: "",
-        attribution: "", // *** NEW ***
-        brand: "",
-        bgColor: "#111827",
-        textColor: "#FFFFFF",
-        accentColor: "#d4af37", // Default to gold
-        highlightWords: "",
-        highlightColor: "#FFFF00",
-        underlineWords: "",
-        underlineColor: "#FF0000",
-        colorWords: "",
-        colorColor: "#3B82F6",
-        lineHeight: "1.4", // NEW
-        template: "headline",
-        // --- Image Adjustment Defaults ---
-        imageZoom: 1,
-        imagePosX: 0,
-        imagePosY: 0,
+      // State
+      let currentImage = null;
+      let state = {
+        zoom: 1,
+        posX: 0,
+        posY: 0,
+        selectedTemplate: "headline",
+        accentColor: "#3b82f6",
+        lang: "en", // 'en' or 'bn'
       };
 
-      // --- Event Listeners for Live Preview ---
-
-      // 1. Update headline text
-      headlineInput.addEventListener("input", updateHeadlineRender);
-
-      // 2. Update attribution text
-      attributionInput.addEventListener("input", () => {
-        const text = attributionInput.value.trim();
-
-        if (text === "") {
-          attributionTextElements.forEach((el) => {
-            el.classList.add("hidden");
-            el.innerText = "";
-          });
-        } else {
-          attributionTextElements.forEach((el) => {
-            el.classList.remove("hidden");
-            // Add an em-dash for styling (but not for the quote or glitch template)
-            if (el.closest("#template-quote")) {
-              el.innerText = `— ${text} —`;
-            } else if (el.closest("#template-editorial")) {
-              // *** MODIFIED ***
-              el.innerText = `~ ${text} ~`; // Elegant prefix
-            } else if (el.closest("#template-football")) {
-              // *** NEW ***
-              el.innerText = `${text}`; // No prefix for football
-            } else {
-              el.innerText = `— ${text}`;
-            }
-          });
-        }
-      });
-
-      // 3. Update brand text (NEW LOGIC)
-      brandInput.addEventListener("input", () => {
-        const text = brandInput.value.trim();
-
-        if (text === "") {
-          // No custom text, show default logos
-          brandLogoElements.forEach((el) => (el.style.display = "flex"));
-          brandTextElements.forEach((el) => (el.style.display = "none"));
-        } else {
-          // Has custom text, hide default logos and show custom text
-          brandLogoElements.forEach((el) => (el.style.display = "none"));
-          brandTextElements.forEach((el) => {
-            // Check if it's the rotated one
-            if (el.style.transform.includes("rotate")) {
-              el.style.display = "block"; // 'block' for rotated elements
-            } else {
-              el.style.display = "inline-block"; // 'inline-block' for normal flow
-            }
-            el.innerText = text;
-          });
-        }
-      });
-
-      // 3. Update main image
-      imageUpload.addEventListener("change", () => {
-        const file = imageUpload.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              currentImage = img;
-              // --- Reset adjustments on new image ---
-              resetImageAdjustments();
-              redrawAllCanvases();
-              redrawAllThumbCanvases();
-              // --- Show controls ---
-              imageAdjustControls.classList.remove("hidden");
-            };
-            img.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        } else {
-          currentImage = null;
-          redrawAllCanvases();
-          redrawAllThumbCanvases();
-          // --- Hide controls ---
-          imageAdjustControls.classList.add("hidden");
-        }
-      });
-
-      // 4. Template Switching Logic
-      templateSelectors.forEach((selector) => {
-        selector.addEventListener("click", () => {
-          // Get the new template name
-          selectedTemplate = selector.dataset.template;
-
-          // Update visual state for selectors
-          templateSelectors.forEach((s) => s.classList.remove("selected"));
-          selector.classList.add("selected");
-
-          // Show/Hide the correct template
-          allTemplates.forEach((template) => {
-            if (template.id === `template-${selectedTemplate}`) {
-              // All templates use 'flex' for their display
-              template.style.display = "flex";
-            } else {
-              template.style.display = "none";
-            }
-          });
-
-          // *** NEW: Trigger attribution update to get correct prefix ***
-          attributionInput.dispatchEvent(new Event("input"));
-
-          // Redraw canvases on switch
-          redrawAllCanvases();
+      // --- Initialization ---
+      function init() {
+        // Add listener to template selectors
+        selectors.forEach((sel) => {
+          sel.addEventListener("click", () =>
+            switchTemplate(sel.dataset.template)
+          );
         });
-      });
 
-      // --- Color Control Event Listeners ---
+        // Input Listeners
+        headlineInput.addEventListener("input", updateHeadline);
+        categoryInput.addEventListener("input", updateCategory);
+        attributionInput.addEventListener("input", updateAttribution);
+        brandInput.addEventListener("input", updateBrand);
 
-      // 5. Update Background Color
-      bgColorInput.addEventListener("input", (e) => {
-        const color = e.target.value;
-        // Apply to all templates (for Template 2, 5 this is the "under-color")
-        templateHeadline.style.backgroundColor = color;
-        templateOverlay.style.backgroundColor = color;
-        templateCard.style.backgroundColor = color;
-        templateEditorial.style.backgroundColor = color; // *** MODIFIED ***
-        templateFootball.style.backgroundColor = color; // *** NEW ***
-      });
+        // Color Listeners
+        bgColorInput.addEventListener("input", updateColors);
+        textColorInput.addEventListener("input", updateColors);
+        accentColorInput.addEventListener("input", updateColors);
+        highlightColorInput.addEventListener("input", updateHeadline); // Re-render regex
 
-      // 6. Update Text Color
-      textColorInput.addEventListener("input", (e) => {
-        const color = e.target.value;
-        // Apply to all headline elements
-        headlineTextElements.forEach((el) => (el.style.color = color));
+        // Regex Inputs
+        highlightWordsInput.addEventListener("input", updateHeadline);
+        underlineWordsInput.addEventListener("input", updateHeadline);
 
-        // Apply to attribution text
-        attributionTextElements.forEach((el) => (el.style.color = color));
+        // Typography Listeners
+        textScaleInput.addEventListener("input", updateTypography);
+        textLhInput.addEventListener("input", updateTypography);
+        textSpacingInput.addEventListener("input", updateTypography);
+        textXInput.addEventListener("input", updateTypography);
+        textYInput.addEventListener("input", updateTypography);
+        resetTypeBtn.addEventListener("click", resetTypography);
 
-        // Apply to all custom brand text elements
-        brandTextElements.forEach((el) => (el.style.color = color));
-        // Apply to the "The Daily" part of the default logo
-        brandLogoMainElements.forEach((el) => (el.style.color = color));
+        // Language Listeners
+        langEnBtn.addEventListener("click", () => switchLang("en"));
+        langBnBtn.addEventListener("click", () => switchLang("bn"));
 
-        // Must re-render headline to update contrast color
-        updateHeadlineRender();
-      });
+        // Image
+        imageUpload.addEventListener("change", handleImageUpload);
+        imageZoomInput.addEventListener("input", (e) => {
+          state.zoom = parseFloat(e.target.value);
+          drawImages();
+        });
+        imagePosXInput.addEventListener("input", (e) => {
+          state.posX = parseInt(e.target.value);
+          drawImages();
+        });
+        imagePosYInput.addEventListener("input", (e) => {
+          state.posY = parseInt(e.target.value);
+          drawImages();
+        });
 
-      // 7. Update Accent Color
-      accentColorInput.addEventListener("input", (e) => {
-        const color = e.target.value;
-        currentAccentColor = color; // Update global variable for canvas
+        // Reset & Download
+        document
+          .getElementById("reset-btn")
+          .addEventListener("click", resetAll);
+        document
+          .getElementById("download-btn")
+          .addEventListener("click", downloadPoster);
 
-        // Redraw the canvas underlines with the new color
-        drawUnderlines();
+        // Initial Render
+        drawDefaultPlaceholders();
+        updateHeadline();
+      }
 
-        // Update the "Origin" text color
-        brandLogoArtisanElements.forEach((el) => (el.style.color = color));
+      // --- Core Functions ---
 
-        // Update the border color for Template 1
-        templateHeadlineFrame.style.borderColor = color;
+      // Function for alignment buttons to call
+      window.setTextAlign = function (align) {
+        posterContainer.style.setProperty("--text-align", align);
 
-        // *** REMOVED: updateGlitchStyles() call ***
-      });
-
-      // --- Headline Effects Event Listeners ---
-      highlightWordsInput.addEventListener("input", updateHeadlineRender);
-      highlightColorInput.addEventListener("input", updateHeadlineRender);
-      underlineWordsInput.addEventListener("input", updateHeadlineRender);
-      underlineColorInput.addEventListener("input", updateHeadlineRender);
-      colorWordsInput.addEventListener("input", updateHeadlineRender);
-      colorColorInput.addEventListener("input", updateHeadlineRender);
-
-      // --- Line Height Listener ---
-      lineHeightInput.addEventListener("input", () => {
-        const value = lineHeightInput.value;
-        lineHeightValue.innerText = value; // Update the label
-        headlineTextElements.forEach((el) => {
-          // Don't apply custom line height to editorial or football template
-          if (
-            !el.closest("#template-editorial") &&
-            !el.closest("#template-football")
-          ) {
-            el.style.lineHeight = value;
+        // Visual feedback on buttons
+        document.querySelectorAll("[data-align]").forEach((btn) => {
+          if (btn.dataset.align === align) {
+            btn.classList.add("text-white", "bg-gray-700");
+            btn.classList.remove("text-gray-400");
+          } else {
+            btn.classList.remove("text-white", "bg-gray-700");
+            btn.classList.add("text-gray-400");
           }
         });
-      });
+      };
 
-      // --- Image Adjustment Listeners ---
-      imageZoomInput.addEventListener("input", () => {
-        currentImageZoom = parseFloat(imageZoomInput.value);
-        imageZoomValue.innerText = `${currentImageZoom.toFixed(1)}`;
-        redrawAllCanvases();
-        redrawAllThumbCanvases(); // Keep thumbnails in sync
-      });
+      function updateTypography() {
+        const scale = textScaleInput.value;
+        const lh = textLhInput.value;
+        const space = textSpacingInput.value;
+        const x = textXInput.value;
+        const y = textYInput.value;
 
-      imagePosXInput.addEventListener("input", () => {
-        currentImagePosX = parseInt(imagePosXInput.value);
-        imagePosXValue.innerText = `${currentImagePosX}`;
-        redrawAllCanvases();
-        redrawAllThumbCanvases(); // Keep thumbnails in sync
-      });
-
-      imagePosYInput.addEventListener("input", () => {
-        currentImagePosY = parseInt(imagePosYInput.value);
-        imagePosYValue.innerText = `${currentImagePosY}`;
-        redrawAllCanvases();
-        redrawAllThumbCanvases(); // Keep thumbnails in sync
-      });
-
-      // --- Headline Rendering Function ---
-
-      /**
-       * Calculates the contrasting color (white or black) for a given hex color.
-       * @param {string} hex - The hex color code (e.g., "#FFFF00").
-       * @returns {string} - Returns "#FFFFFF" (white) or "#111827" (dark gray).
-       */
-      function getContrastColor(hex) {
-        try {
-          // Remove the hash at the start if it exists
-          hex = hex.replace("#", "");
-
-          // Parse r, g, b values
-          const r = parseInt(hex.substring(0, 2), 16);
-          const g = parseInt(hex.substring(2, 4), 16);
-          const b = parseInt(hex.substring(4, 6), 16);
-
-          // Calculate luminance (YIQ formula)
-          const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-          return yiq >= 128 ? "#111827" : "#FFFFFF"; // 111827 is gray-900
-        } catch (e) {
-          return "#111827"; // Default to dark text on error
-        }
+        posterContainer.style.setProperty("--text-scale", scale);
+        posterContainer.style.setProperty("--text-lh", lh);
+        posterContainer.style.setProperty("--text-spacing", space + "em");
+        posterContainer.style.setProperty("--text-x", x + "px");
+        posterContainer.style.setProperty("--text-y", y + "px");
       }
 
-      /**
-       * Safely escapes a string for use in a regular expression.
-       * @param {string} str - The string to escape.
-       * @returns {string} - The escaped string.
-       */
-      function escapeRegExp(str) {
-        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-      }
+      function resetTypography() {
+        textScaleInput.value = 1;
+        textLhInput.value = 1.2; // Visual reset, actually removing the prop is better
+        textSpacingInput.value = 0;
+        textXInput.value = 0;
+        textYInput.value = 0;
 
-      /**
-       * (Re)Renders the headline with highlights and underlines.
-       */
-      function updateHeadlineRender() {
-        const text =
-          headlineInput.value.trim() === ""
-            ? "TYPE YOUR HEADLINE IN THE BOX ON THE LEFT"
-            : headlineInput.value;
+        posterContainer.style.removeProperty("--text-scale");
+        posterContainer.style.removeProperty("--text-lh");
+        posterContainer.style.removeProperty("--text-spacing");
+        posterContainer.style.removeProperty("--text-x");
+        posterContainer.style.removeProperty("--text-y");
+        posterContainer.style.removeProperty("--text-align");
 
-        // --- Get all effect values ---
-        const highlightWords = highlightWordsInput.value
-          .split(",")
-          .map((w) => w.trim())
-          .filter((w) => w.length > 0)
-          .map((w) => escapeRegExp(w)); // Escape for regex
-
-        const highlightColor = highlightColorInput.value;
-
-        const underlineWords = underlineWordsInput.value
-          .split(",")
-          .map((w) => w.trim())
-          .filter((w) => w.length > 0)
-          .map((w) => escapeRegExp(w)); // Escape for regex
-
-        const underlineColor = underlineColorInput.value;
-        const colorWords = colorWordsInput.value
-          .split(",")
-          .map((w) => w.trim())
-          .filter((w) => w.length > 0)
-          .map((w) => escapeRegExp(w)); // Escape for regex
-
-        const colorColor = colorColorInput.value;
-
-        const mainTextColor = textColorInput.value;
-
-        // --- 1. Update Dynamic Style Tags ---
-
-        // Update highlight style (with smart contrast)
-        const contrastColor = getContrastColor(highlightColor);
-        highlightStyleTag.innerHTML = `
-                .poster-headline-text .highlight {
-                    display: inline-block;
-                    background-color: ${highlightColor};
-                    color: ${contrastColor};
-                    padding: 0.1em 0.25em;
-                    border-radius: 0.125em;
-                    line-height: 1.1;
-                    margin: 0.1em 0;
-                }
-            `;
-
-        // Update underline style
-        underlineStyleTag.innerHTML = `
-                .poster-headline-text .underline {
-                    border-bottom: 4px solid ${underlineColor};
-                    text-shadow: 0 0 0.5px ${mainTextColor}, 0 0 0.5px ${mainTextColor};
-                }
-            `;
-
-        // *** REMOVED: updateGlitchStyles() call ***
-
-        // --- 2. Process the HTML string ---
-        let processedHTML = text;
-
-        // Add underlines first
-        if (underlineWords.length > 0) {
-          const underlineRegex = new RegExp(
-            `(${underlineWords.join("|")})`,
-            "gi"
-          );
-          processedHTML = processedHTML.replace(
-            underlineRegex,
-            `<span class="underline">$1</span>`
-          );
-        }
-
-        // Add highlights second (so they can wrap underlines)
-        if (highlightWords.length > 0) {
-          const highlightRegex = new RegExp(
-            `(${highlightWords.join("|")})`,
-            "gi"
-          );
-          processedHTML = processedHTML.replace(
-            highlightRegex,
-            `<span class="highlight">$1</span>`
-          );
-        }
-
-        // Add custom color third (so it can wrap both)
-        if (colorWords.length > 0) {
-          // We use an inline style here since the color is fully dynamic
-          const colorRegex = new RegExp(`(${colorWords.join("|")})`, "gi");
-          processedHTML = processedHTML.replace(
-            colorRegex,
-            `<span style="color: ${colorColor};">$1</span>`
-          );
-        }
-
-        // --- 3. Apply to all headline elements ---
-        headlineTextElements.forEach((el) => {
-          el.innerHTML = processedHTML;
-          // We must also set the 'base' color in case of re-renders
-          el.style.color = mainTextColor;
+        // Visual feedback on buttons
+        document.querySelectorAll("[data-align]").forEach((btn) => {
+          btn.classList.remove("text-white", "bg-gray-700");
+          btn.classList.add("text-gray-400");
         });
       }
 
-      // --- Initialize default template view ---
-      templateHeadline.style.display = "flex";
-      templateOverlay.style.display = "none";
-      templateCard.style.display = "none";
-      templateQuote.style.display = "none";
-      templateEditorial.style.display = "none"; // *** MODIFIED ***
-      templateFootball.style.display = "none"; // *** NEW ***
+      function switchLang(lang) {
+        state.lang = lang;
 
-      // --- Canvas Drawing Functions ---
+        if (lang === "bn") {
+          // Activate Bangla
+          document.body.classList.add("lang-bangla");
 
-      /**
-       * Helper function to draw the SVG-style curve onto a canvas context.
-       * @param {CanvasRenderingContext2D} ctx - The 2D context of the canvas.
-       * @param {string} color - The hex color code for the stroke.
-       */
-      function drawCurve(ctx, color) {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear first
-        ctx.beginPath();
-        ctx.moveTo(2, 12);
-        ctx.bezierCurveTo(30, 22, 70, 22, 98, 12);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
-        ctx.stroke();
+          // UI Styles
+          langBnBtn.classList.remove("text-gray-400");
+          langBnBtn.classList.add("bg-blue-600", "text-white");
+
+          langEnBtn.classList.remove("bg-blue-600", "text-white");
+          langEnBtn.classList.add("text-gray-400");
+
+          // Defaults
+          if (!headlineInput.value)
+            headlineInput.placeholder = "আপনার শিরোনাম এখানে লিখুন...";
+          if (!categoryInput.value)
+            categoryInput.placeholder = "যেমন: ব্রেকিং নিউজ";
+
+          // Update Brand Defaults
+          document.querySelectorAll(".poster-brand-logo").forEach((el) => {
+            if (el.textContent.includes("Daily"))
+              el.textContent = el.textContent
+                .replace("Daily", "ডেইলি")
+                .replace("Origin", "অরিজিন");
+            if (el.textContent.includes("The"))
+              el.textContent = el.textContent.replace("The", "দ্য");
+            if (el.textContent.includes("News"))
+              el.textContent = el.textContent.replace("News", "নিউজ");
+            if (el.textContent.includes("Match Day"))
+              el.textContent = el.textContent.replace("Match Day", "খেলার দিন");
+          });
+        } else {
+          // Activate English
+          document.body.classList.remove("lang-bangla");
+
+          // UI Styles
+          langEnBtn.classList.remove("text-gray-400");
+          langEnBtn.classList.add("bg-blue-600", "text-white");
+
+          langBnBtn.classList.remove("bg-blue-600", "text-white");
+          langBnBtn.classList.add("text-gray-400");
+
+          // Defaults
+          headlineInput.placeholder = "Enter your main headline...";
+          categoryInput.placeholder = "e.g. BREAKING NEWS";
+
+          // Revert Brand Defaults roughly (simple replace back)
+          document.querySelectorAll(".poster-brand-logo").forEach((el) => {
+            if (el.textContent.includes("ডেইলি"))
+              el.textContent = el.textContent
+                .replace("ডেইলি", "Daily")
+                .replace("অরিজিন", "Origin");
+            if (el.textContent.includes("দ্য"))
+              el.textContent = el.textContent.replace("দ্য", "The");
+          });
+        }
+
+        // Re-trigger updates to apply font classes
+        updateHeadline();
       }
 
-      /**
-       * Finds and draws the underlines on all the underline-canvases.
-       */
-      function drawUnderlines() {
-        try {
-          // Get all 6 canvases
-          const canvases = [
-            document.getElementById("underline-canvas-1"),
-            document.getElementById("underline-canvas-2"),
-            document.getElementById("underline-canvas-3"),
-            document.getElementById("underline-canvas-4"),
-            document.getElementById("underline-canvas-5"), // *** MODIFIED: This is for Editorial's logo now ***
-            document.getElementById("underline-canvas-6"), // *** NEW ***
-          ];
+      function switchTemplate(templateName) {
+        state.selectedTemplate = templateName;
 
-          canvases.forEach((canvas, index) => {
-            if (canvas) {
-              const ctx = canvas.getContext("2d");
-              drawCurve(ctx, currentAccentColor);
-            } else {
-              // console.warn(`Could not find underline-canvas-${index + 1}`);
+        // UI Update
+        selectors.forEach((s) => s.classList.remove("selected"));
+        document
+          .querySelector(`[data-template="${templateName}"]`)
+          .classList.add("selected");
+
+        // View Update
+        templates.forEach((t) => t.classList.add("hidden"));
+        const active = document.getElementById(`template-${templateName}`);
+        if (active) {
+          active.classList.remove("hidden");
+          active.classList.add(
+            templateName === "card"
+              ? "flex"
+              : templateName === "headline"
+              ? "flex"
+              : "block"
+          );
+          // Flex fix for specific templates
+          if (templateName === "paper") active.style.display = "flex";
+          if (templateName === "swiss") active.style.display = "flex";
+        }
+
+        // Redraw images because canvas size might change from display:none
+        setTimeout(drawImages, 50);
+      }
+
+      function updateHeadline() {
+        const rawText =
+          headlineInput.value ||
+          (state.lang === "bn" ? "আপনার শিরোনাম" : "TYPE YOUR HEADLINE");
+        const hlColor = highlightColorInput.value;
+        const txtColor = textColorInput.value;
+
+        // Build CSS for Highlight
+        styleTag.innerHTML = `
+            .poster-headline-text .highlight { 
+                background-color: ${hlColor}; 
+                color: ${getContrastColor(hlColor)};
+                padding: 0 0.2em;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
             }
+            .poster-headline-text .underline {
+                text-decoration: underline;
+                text-decoration-color: ${state.accentColor};
+                text-decoration-thickness: 0.1em;
+                text-underline-offset: 0.1em;
+            }
+          `;
+
+        // Process Text with Regex
+        let html = escapeHtml(rawText);
+
+        // Highlights
+        const hlWords = highlightWordsInput.value
+          .split(",")
+          .map((w) => w.trim())
+          .filter((w) => w);
+        if (hlWords.length) {
+          const regex = new RegExp(`(${hlWords.join("|")})`, "gi");
+          html = html.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Underlines
+        const ulWords = underlineWordsInput.value
+          .split(",")
+          .map((w) => w.trim())
+          .filter((w) => w);
+        if (ulWords.length) {
+          const regex = new RegExp(`(${ulWords.join("|")})`, "gi");
+          html = html.replace(regex, '<span class="underline">$1</span>');
+        }
+
+        headlineEls.forEach((el) => {
+          el.innerHTML = html;
+          el.style.color = txtColor;
+
+          // Specific overrides per template
+          if (el.closest("#template-broadcast")) {
+            el.style.color = "#000000"; // Broadcast always black text on white
+          }
+          if (el.closest("#template-paper")) {
+            el.style.color = "#1a1a1a";
+          }
+          if (
+            el.closest("#template-headline") ||
+            el.closest("#template-overlay") ||
+            el.closest("#template-swiss")
+          ) {
+            el.style.color = txtColor;
+          }
+        });
+      }
+
+      function updateCategory() {
+        const val = categoryInput.value.trim();
+        categoryEls.forEach((el) => {
+          if (!val) {
+            el.classList.add("hidden");
+          } else {
+            el.classList.remove("hidden");
+            el.innerText = val;
+          }
+        });
+      }
+
+      function updateAttribution() {
+        const val = attributionInput.value.trim();
+        attributionEls.forEach((el) => {
+          if (!val) {
+            el.classList.add("hidden");
+          } else {
+            el.classList.remove("hidden");
+            // Formatting based on template
+            if (el.closest("#template-quote")) el.innerText = `— ${val}`;
+            else if (el.closest("#template-paper"))
+              el.innerText =
+                state.lang === "bn" ? `${val} দ্বারা` : `By ${val}`;
+            else el.innerText = val;
+          }
+        });
+      }
+
+      function updateBrand() {
+        const val = brandInput.value.trim();
+        if (val) {
+          brandLogos.forEach((l) => (l.style.display = "none"));
+          brandEls.forEach((b) => {
+            b.classList.remove("hidden");
+            b.innerText = val;
           });
-        } catch (err) {
-          console.error("Error drawing underlines: ", err);
+        } else {
+          brandLogos.forEach((l) => (l.style.display = "flex")); // or block depending on styling
+          brandEls.forEach((b) => b.classList.add("hidden"));
+          // Fix for block-level logos
+          document.querySelector(
+            "#template-paper .poster-brand-logo"
+          ).style.display = "block";
+          document.querySelector(
+            "#template-broadcast .poster-brand-logo"
+          ).style.display = "block";
+          document.querySelector(
+            "#template-swiss .poster-brand-logo"
+          ).style.display = "block";
         }
       }
 
-      /**
-       * Redraws all canvases with the current image or default placeholder.
-       */
-      function redrawAllCanvases() {
-        posterImageCanvases.forEach((canvas) => {
-          // Set canvas resolution to match its display size
-          canvas.width = canvas.offsetWidth;
-          canvas.height = canvas.offsetHeight;
+      function updateColors() {
+        state.accentColor = accentColorInput.value;
+        const bg = bgColorInput.value;
+        const txt = textColorInput.value;
 
+        // Apply BG
+        templates.forEach((t) => {
+          // Paper template keeps its own bg
+          if (
+            t.id !== "template-paper" &&
+            t.id !== "template-swiss" &&
+            t.id !== "template-football"
+          ) {
+            t.style.backgroundColor = bg;
+          }
+          // Swiss uses accent as BG
+          if (t.id === "template-swiss")
+            t.style.backgroundColor = state.accentColor;
+        });
+
+        // Re-trigger headline to update underline color
+        updateHeadline();
+
+        // UI Element Colors
+        document
+          .querySelectorAll(".poster-logo-artisan")
+          .forEach((el) => (el.style.color = state.accentColor));
+
+        // specific elements
+        const overlayLine = document.querySelector(
+          "#template-overlay .bg-blue-500"
+        );
+        if (overlayLine) overlayLine.style.backgroundColor = state.accentColor;
+
+        const broadcastBar = document.querySelector(
+          "#template-broadcast .border-red-600"
+        );
+        if (broadcastBar) broadcastBar.style.borderColor = state.accentColor;
+      }
+
+      // --- Image Logic ---
+
+      function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            currentImage = img;
+            imageAdjustControls.classList.remove("hidden");
+            drawImages();
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function drawImages() {
+        canvases.forEach((canvas) => {
           const ctx = canvas.getContext("2d");
+          // Ensure canvas matches display size (essential for high DPI look)
+          const rect = canvas.getBoundingClientRect();
+          canvas.width = rect.width * 2; // Retina scaling
+          canvas.height = rect.height * 2;
 
           if (currentImage) {
-            drawObjectCover(ctx, currentImage);
-          } else {
-            drawDefaultPlaceholder(ctx);
-          }
-
-          // Special handling for Template 2 (Overlay)
-          if (canvas.parentElement.id === "template-overlay") {
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, "rgba(0,0,0,0.0)");
-            gradient.addColorStop(0.5, "rgba(0,0,0,0.0)");
-            gradient.addColorStop(1, "rgba(0,0,0,0.4)");
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-
-          // Special handling for Template 4 (Quote)
-          if (canvas.parentElement.id === "template-quote") {
-            // Add a solid 60% dark tint for readability
-            ctx.fillStyle = "rgba(17, 24, 39, 0.6)"; // gray-900 at 60%
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-
-          // *** MODIFIED: Special handling for Template 5 (Editorial) ***
-          if (canvas.parentElement.id === "template-editorial") {
-            ctx.fillStyle = "rgba(17, 24, 39, 0.5)"; // gray-900 at 50%
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-
-          // *** NEW: Special handling for Template 6 (Football) ***
-          if (canvas.parentElement.id === "template-football") {
-            // Add a vignette effect
-            const gradient = ctx.createRadialGradient(
-              canvas.width / 2,
-              canvas.height / 2,
-              canvas.height / 4, // Inner radius
-              canvas.width / 2,
-              canvas.height / 2,
-              canvas.height * 0.8 // Outer radius
+            drawImageCover(
+              ctx,
+              currentImage,
+              canvas.width,
+              canvas.height,
+              state.zoom,
+              state.posX,
+              state.posY
             );
-            gradient.addColorStop(0, "rgba(0,0,0,0.1)");
-            gradient.addColorStop(1, "rgba(0,0,0,0.8)");
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          } else {
+            drawDefaultPlaceholder(ctx, canvas.width, canvas.height);
           }
         });
       }
 
-      /**
-       * Draws the default "Upload Your Image" placeholder onto a canvas.
-       * @param {CanvasRenderingContext2D} ctx - The 2D context of the canvas.
-       * @param {boolean} [simple=false] - If true, just draws the background color.
-       */
-      function drawDefaultPlaceholder(ctx, simple = false) {
-        const canvas = ctx.canvas;
-        ctx.fillStyle = "#e2e8f0"; // slate-200
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      function drawImageCover(ctx, img, cw, ch, zoom, px, py) {
+        // Clear
+        ctx.clearRect(0, 0, cw, ch);
 
-        if (simple) return; // Don't draw text for thumbnails
-
-        ctx.fillStyle = "#94a3b8"; // slate-400
-        const fontSize = Math.min(canvas.width / 15, 30);
-        ctx.font = `bold ${fontSize}px Inter`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("Upload Your Image", canvas.width / 2, canvas.height / 2);
-      }
-
-      /**
-       * Draws an image onto a canvas using 'object-cover' logic.
-       * @param {CanvasRenderingContext2D} ctx - The 2D context of the canvas.
-       * @param {Image} img - The image object to draw.
-       */
-      function drawObjectCover(ctx, img) {
-        const canvas = ctx.canvas;
         const imgRatio = img.width / img.height;
-        const canvasRatio = canvas.width / canvas.height;
+        const canvasRatio = cw / ch;
 
-        let base_sWidth, base_sHeight, sWidth, sHeight, sx, sy;
+        let sw, sh; // Source width/height
 
         if (imgRatio > canvasRatio) {
-          // Image is wider than canvas
-          base_sHeight = img.height;
-          base_sWidth = img.height * canvasRatio;
+          sh = img.height;
+          sw = img.height * canvasRatio;
         } else {
-          // Image is taller than canvas
-          base_sWidth = img.width;
-          base_sHeight = img.width / canvasRatio;
+          sw = img.width;
+          sh = img.width / canvasRatio;
         }
 
-        // 1. Apply Zoom
-        sWidth = base_sWidth / currentImageZoom;
-        sHeight = base_sHeight / currentImageZoom;
+        // Apply Zoom (crop area gets smaller)
+        sw /= zoom;
+        sh /= zoom;
 
-        // 2. Clamp to image dimensions
-        if (sWidth > img.width) {
-          sWidth = img.width;
-          sHeight = sWidth / canvasRatio;
-        }
-        if (sHeight > img.height) {
-          sHeight = img.height;
-          sWidth = sHeight * canvasRatio;
-        }
+        // Apply Pan
+        let sx = (img.width - sw) / 2;
+        let sy = (img.height - sh) / 2;
 
-        // 3. Calculate centered start position
-        let sx_center = (img.width - sWidth) / 2;
-        let sy_center = (img.height - sHeight) / 2;
+        // Pan limits
+        const maxPanX = (img.width - sw) / 2;
+        const maxPanY = (img.height - sh) / 2;
 
-        // 4. Calculate movable range
-        let x_movable_range = (img.width - sWidth) / 2;
-        let y_movable_range = (img.height - sHeight) / 2;
+        sx += maxPanX * (px / 100);
+        sy += maxPanY * (py / 100);
 
-        // 5. Calculate offset based on slider percentage
-        let sx_offset = x_movable_range * (currentImagePosX / 100);
-        let sy_offset = y_movable_range * (currentImagePosY / 100);
-
-        // 6. Final position
-        sx = sx_center + sx_offset;
-        sy = sy_center + sy_offset;
-
-        ctx.drawImage(
-          img,
-          sx,
-          sy,
-          sWidth,
-          sHeight,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
       }
 
-      // --- Function to draw on thumbnail canvases ---
+      function drawDefaultPlaceholder(ctx, w, h) {
+        ctx.fillStyle = "#374151"; // gray-700
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#4b5563"; // gray-600
 
-      /**
-       * Redraws all thumbnail canvases with the current image or default placeholder.
-       */
-      function redrawAllThumbCanvases() {
-        allThumbCanvases.forEach((canvas) => {
-          if (!canvas) return; // Safety check
+        // Draw a pattern
+        for (let i = 0; i < w; i += 40) {
+          ctx.fillRect(i, 0, 2, h);
+        }
+      }
 
-          // Set canvas resolution
-          canvas.width = canvas.offsetWidth;
-          canvas.height = canvas.offsetHeight;
+      function drawDefaultPlaceholders() {
+        // Just run drawImages without an image loaded
+        drawImages();
+      }
 
-          const ctx = canvas.getContext("2d");
+      // --- Utilities ---
+      function getContrastColor(hex) {
+        const r = parseInt(hex.substr(1, 2), 16);
+        const g = parseInt(hex.substr(3, 2), 16);
+        const b = parseInt(hex.substr(5, 2), 16);
+        const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+        return yiq >= 128 ? "black" : "white";
+      }
 
-          if (currentImage) {
-            drawObjectCover(ctx, currentImage);
-          } else {
-            drawDefaultPlaceholder(ctx, true); // Pass true for a simple placeholder
-          }
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
 
-          // Special handling for Overlay thumbnail
-          if (canvas.id === "thumb-canvas-overlay") {
-            ctx.fillStyle = "rgba(0,0,0,0.4)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
+      function resetAll() {
+        headlineInput.value = "";
+        categoryInput.value = "";
+        attributionInput.value = "";
+        brandInput.value = "";
+        imageUpload.value = "";
+        currentImage = null;
+        state = {
+          zoom: 1,
+          posX: 0,
+          posY: 0,
+          selectedTemplate: "headline",
+          accentColor: "#3b82f6",
+          lang: "en",
+        };
 
-          // Special handling for Quote thumbnail
-          if (canvas.id === "thumb-canvas-quote") {
-            ctx.fillStyle = "rgba(17, 24, 39, 0.6)"; // gray-900 at 60%
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
+        // Update UI
+        imageAdjustControls.classList.add("hidden");
+        imageZoomInput.value = 1;
+        imagePosXInput.value = 0;
+        imagePosYInput.value = 0;
 
-          // *** MODIFIED: Special handling for Editorial thumbnail ***
-          if (canvas.id === "thumb-canvas-editorial") {
-            ctx.fillStyle = "rgba(17, 24, 39, 0.5)"; // gray-900 at 50%
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
+        switchLang("en"); // Reset to English
+        resetTypography();
 
-          // *** NEW: Special handling for Football thumbnail ***
-          if (canvas.id === "thumb-canvas-football") {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.6)"; // Dark overlay
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
+        switchTemplate("headline");
+        updateHeadline();
+        updateCategory();
+        updateAttribution();
+        updateBrand();
+        updateColors();
+        drawDefaultPlaceholders();
+      }
+
+      function downloadPoster() {
+        const loading = document.getElementById("loading-message");
+        const active = document.getElementById(
+          `template-${state.selectedTemplate}`
+        );
+
+        if (!active) return;
+
+        loading.classList.remove("hidden");
+
+        html2canvas(active, {
+          scale: 2, // Export at 2x
+          useCORS: true,
+          backgroundColor: null, // Transparent logic handled by CSS
+        }).then((canvas) => {
+          const link = document.createElement("a");
+          link.download = `publisher-suite-${Date.now()}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+          loading.classList.add("hidden");
         });
       }
 
-      // --- *** REMOVED: updateGlitchStyles() function *** ---
-
-      // --- Initial Draw on Load ---
-      document.addEventListener("DOMContentLoaded", () => {
-        // 1. Set global accent color from input
-        currentAccentColor = accentColorInput.value;
-
-        // 2. Apply initial BG color
-        const initialBG = bgColorInput.value;
-        templateHeadline.style.backgroundColor = initialBG;
-        templateOverlay.style.backgroundColor = initialBG;
-        templateCard.style.backgroundColor = initialBG;
-        templateEditorial.style.backgroundColor = initialBG; // *** MODIFIED ***
-        templateFootball.style.backgroundColor = initialBG; // *** NEW ***
-
-        // 3. Apply initial Text color
-        const initialText = textColorInput.value;
-        headlineTextElements.forEach((el) => (el.style.color = initialText));
-        attributionTextElements.forEach((el) => (el.style.color = initialText)); // *** NEW ***
-        brandTextElements.forEach((el) => (el.style.color = initialText));
-        brandLogoMainElements.forEach((el) => (el.style.color = initialText));
-
-        // 4. Apply initial Accent color
-        const initialAccent = accentColorInput.value;
-        brandLogoArtisanElements.forEach(
-          (el) => (el.style.color = initialAccent)
-        );
-        templateHeadlineFrame.style.borderColor = initialAccent;
-
-        // 5. Draw underlines with the initial accent color
-        drawUnderlines();
-
-        // 6. Initial render of the headline
-        updateHeadlineRender();
-
-        // 7. Give browser a moment to render layout, then draw placeholders
-        setTimeout(() => {
-          redrawAllCanvases();
-          redrawAllThumbCanvases();
-        }, 100);
-      });
-
-      // Redraw on window resize (for responsiveness)
-      window.addEventListener("resize", () => {
-        redrawAllCanvases();
-        redrawAllThumbCanvases();
-      });
-
-      // --- Reset Functionality ---
-
-      const resetBtn = document.getElementById("reset-btn");
-      const defaultTemplateSelector = document.getElementById(
-        "select-headline"
-      );
-
-      /**
-       * Helper function to reset just image adjustments
-       */
-      function resetImageAdjustments() {
-        // Reset state
-        currentImageZoom = DEFAULTS.imageZoom;
-        currentImagePosX = DEFAULTS.imagePosX;
-        currentImagePosY = DEFAULTS.imagePosY;
-
-        // Reset sliders
-        imageZoomInput.value = DEFAULTS.imageZoom;
-        imagePosXInput.value = DEFAULTS.imagePosX;
-        imagePosYInput.value = DEFAULTS.imagePosY;
-
-        // Reset labels
-        imageZoomValue.innerText = `${DEFAULTS.imageZoom.toFixed(1)}`;
-        imagePosXValue.innerText = `${DEFAULTS.imagePosX}`;
-        imagePosYValue.innerText = `${DEFAULTS.imagePosY}`;
-      }
-
-      /**
-       * Resets all inputs and the preview to the default state.
-       */
-      function resetAll() {
-        // 1. Reset all input values
-        headlineInput.value = DEFAULTS.headline;
-        attributionInput.value = DEFAULTS.attribution;
-        brandInput.value = DEFAULTS.brand;
-        imageUpload.value = ""; // Clear file input
-
-        bgColorInput.value = DEFAULTS.bgColor;
-        textColorInput.value = DEFAULTS.textColor;
-        accentColorInput.value = DEFAULTS.accentColor;
-
-        highlightWordsInput.value = DEFAULTS.highlightWords;
-        highlightColorInput.value = DEFAULTS.highlightColor;
-        underlineWordsInput.value = DEFAULTS.underlineWords;
-        underlineColorInput.value = DEFAULTS.underlineColor;
-        colorWordsInput.value = DEFAULTS.colorWords;
-        colorColorInput.value = DEFAULTS.colorColor;
-        lineHeightInput.value = DEFAULTS.lineHeight;
-
-        // Reset image adjustments
-        resetImageAdjustments();
-        imageAdjustControls.classList.add("hidden"); // Hide the controls
-
-        // 2. Reset state variables
-        currentImage = null;
-        currentAccentColor = DEFAULTS.accentColor; // Reset global accent color
-
-        // 3. Reset template selector (by simulating a click on the default)
-        defaultTemplateSelector.click();
-
-        // 4. Manually trigger all update functions
-        attributionInput.dispatchEvent(new Event("input"));
-        brandInput.dispatchEvent(new Event("input"));
-        bgColorInput.dispatchEvent(new Event("input"));
-        textColorInput.dispatchEvent(new Event("input"));
-        accentColorInput.dispatchEvent(new Event("input"));
-        updateHeadlineRender();
-        lineHeightInput.dispatchEvent(new Event("input"));
-
-        // Redraw canvases (to show placeholder)
-        redrawAllCanvases();
-        redrawAllThumbCanvases();
-      }
-
-      // Add listener to the reset button
-      resetBtn.addEventListener("click", resetAll);
-
-      // --- Download Functionality ---
-      downloadBtn.addEventListener("click", () => {
-        loadingMessage.classList.remove("hidden");
-        loadingMessage.innerText = "Generating image, please wait...";
-        downloadBtn.disabled = true;
-        downloadBtn.classList.add("opacity-50", "cursor-not-allowed");
-
-        // Find the currently active template to download
-        let activeTemplate;
-        // *** MODIFIED: Use selectedTemplate string to find the element ***
-        activeTemplate = document.getElementById(
-          `template-${selectedTemplate}`
-        );
-
-        if (!activeTemplate) {
-          console.error("No active template found!");
-          loadingMessage.innerText = "Error! Please select a template.";
-          downloadBtn.disabled = false;
-          downloadBtn.classList.remove("opacity-50", "cursor-not-allowed");
-          return;
-        }
-
-        html2canvas(activeTemplate, {
-          scale: 3, // 3x scale for high quality
-          useCORS: true,
-          logging: false,
-          allowTaint: true,
-          onclone: (doc) => {
-            // 1. Find all canvases in the *original* active template
-            const originalCanvases = activeTemplate.querySelectorAll("canvas");
-            // 2. Find all canvases in the *cloned* document's template
-            const clonedCanvases = doc
-              .getElementById(activeTemplate.id)
-              .querySelectorAll("canvas");
-
-            if (originalCanvases.length === clonedCanvases.length) {
-              for (let i = 0; i < originalCanvases.length; i++) {
-                const originalCanvas = originalCanvases[i];
-                const clonedCanvas = clonedCanvases[i];
-
-                if (originalCanvas && clonedCanvas) {
-                  // Set dimensions
-                  clonedCanvas.width = originalCanvas.width;
-                  clonedCanvas.height = originalCanvas.height;
-
-                  // Copy content
-                  const clonedCtx = clonedCanvas.getContext("2d");
-                  clonedCtx.drawImage(
-                    originalCanvas,
-                    0,
-                    0,
-                    originalCanvas.width,
-                    originalCanvas.height
-                  );
-                }
-              }
-            } else {
-              console.error(
-                "Mismatch in original and cloned canvases. Download may be incorrect."
-              );
-            }
-          },
-        })
-          .then((canvas) => {
-            const link = document.createElement("a");
-            link.download = "my-social-post.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-
-            loadingMessage.classList.add("hidden");
-            downloadBtn.disabled = false;
-            downloadBtn.classList.remove("opacity-50", "cursor-not-allowed");
-          })
-          .catch((err) => {
-            console.error("Error generating image: ", err);
-            loadingMessage.innerText = "Error! Please try again.";
-            downloadBtn.disabled = false;
-            downloadBtn.classList.remove("opacity-50", "cursor-not-allowed");
-          });
-      });
+      // Run
+      window.onload = init;
+      window.onresize = drawImages;
     </script>
   </body>
 </html>
