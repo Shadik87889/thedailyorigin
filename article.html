@@ -6,19 +6,22 @@
 
     <!-- 
       ======================================================================
-      GAME-CHANGING SEO (DYNAMICALLY POPULATED)
+      SEO & SOCIAL PREVIEW FIX
       ======================================================================
+      NOTE: Facebook/Twitter crawlers DO NOT run JavaScript. 
+      They will see the default values below. 
+      We have replaced "Loading..." with your actual brand info so previews look professional.
     -->
-    <title>Loading Article... | The Daily Origin</title>
+    <title>The Daily Origin | Global News & Perspectives</title>
     <meta
       id="meta-description"
       name="description"
-      content="Loading content..."
+      content="Comprehensive coverage of global events, technology, business, and culture. The Daily Origin delivers unbiased reporting and in-depth analysis for the modern reader."
     />
     <link
       id="canonical-link"
       rel="canonical"
-      href="https://www.thedailyorigin.com/home"
+      href="https://www.thedailyorigin.com/"
     />
     <link
       rel="shortcut icon"
@@ -26,22 +29,59 @@
       type="image/x-icon"
     />
 
-    <!-- Open Graph -->
+    <!-- Open Graph (Facebook/LinkedIn) - DEFAULT STATIC VALUES -->
     <meta property="og:site_name" content="The Daily Origin" />
-    <meta property="og:type" content="article" />
-    <meta id="og-url" property="og:url" content="" />
-    <meta id="og-title" property="og:title" content="" />
-    <meta id="og-description" property="og:description" content="" />
-    <meta id="og-image" property="og:image" content="" />
+    <meta property="og:type" content="website" />
+    <meta
+      id="og-url"
+      property="og:url"
+      content="https://www.thedailyorigin.com/"
+    />
+    <meta
+      id="og-title"
+      property="og:title"
+      content="The Daily Origin | Global News & Perspectives"
+    />
+    <meta
+      id="og-description"
+      property="og:description"
+      content="Essential insight delivered to your inbox. Read the latest on World Politics, Tech, Business, and Culture."
+    />
+    <!-- Replace this href with a 1200x630px image of your logo/brand for best results -->
+    <meta
+      id="og-image"
+      property="og:image"
+      content="https://placehold.co/1200x630/111111/C90000?text=The+Daily+Origin"
+    />
 
-    <!-- Twitter Card -->
+    <!-- Twitter Card - DEFAULT STATIC VALUES -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta id="twitter-title" name="twitter:title" content="" />
-    <meta id="twitter-description" name="twitter:description" content="" />
-    <meta id="twitter-image" name="twitter:image" content="" />
+    <meta
+      id="twitter-title"
+      name="twitter:title"
+      content="The Daily Origin | Global News & Perspectives"
+    />
+    <meta
+      id="twitter-description"
+      name="twitter:description"
+      content="Unbiased reporting for the modern reader. Tech, Politics, and Business news."
+    />
+    <meta
+      id="twitter-image"
+      name="twitter:image"
+      content="https://placehold.co/1200x630/111111/C90000?text=The+Daily+Origin"
+    />
 
     <!-- JSON-LD Schema -->
-    <script type="application/ld+json" id="dynamic-schema-json"></script>
+    <script type="application/ld+json" id="dynamic-schema-json">
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsMediaOrganization",
+        "name": "The Daily Origin",
+        "url": "https://www.thedailyorigin.com",
+        "logo": "https://www.thedailyorigin.com/logo.png"
+      }
+    </script>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
