@@ -39,7 +39,7 @@
         overflow: hidden;
         height: 100vh;
         width: 100vw;
-        touch-action: none;
+        touch-action: none; /* Prevents mobile scrolling/zooming */
       }
 
       /* --- HAPPY EID VISUALS --- */
@@ -102,29 +102,26 @@
         opacity: 0.9;
       }
 
-      /* Screen Shake */
-      @keyframes shake {
+      /* Danger Flash (Replaced Shake) */
+      @keyframes flashRed {
         0%,
         100% {
-          transform: translate(0, 0) rotate(0deg);
-        }
-        25% {
-          transform: translate(-5px, 5px) rotate(-2deg);
+          background: radial-gradient(
+            circle at 50% 20%,
+            #1a2a4c 0%,
+            var(--bg-dark) 100%
+          );
         }
         50% {
-          transform: translate(5px, -5px) rotate(2deg);
-        }
-        75% {
-          transform: translate(-5px, -5px) rotate(-2deg);
+          background: radial-gradient(
+            circle at 50% 50%,
+            #4a0d1a 0%,
+            #1a050a 100%
+          );
         }
       }
-      .shake-screen {
-        animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-        background: radial-gradient(
-          circle at 50% 50%,
-          #4a0d1a 0%,
-          var(--bg-dark) 100%
-        );
+      .flash-screen {
+        animation: flashRed 0.3s ease-out;
       }
 
       /* HUD */
@@ -200,15 +197,15 @@
         );
         border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 30px;
-        padding: 35px;
+        padding: 35px 25px;
         max-width: 90%;
-        width: 400px;
+        width: 420px;
         text-align: center;
         box-shadow: 0 0 50px rgba(255, 215, 0, 0.15);
       }
       h1 {
         font-family: "Space Grotesk", sans-serif;
-        font-size: 42px;
+        font-size: 40px;
         background: linear-gradient(135deg, var(--eid-gold), #ffaa00);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -216,7 +213,7 @@
       }
       .subtitle {
         color: var(--eid-green);
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         margin-bottom: 20px;
         letter-spacing: 1px;
@@ -260,15 +257,35 @@
         transform: scale(0.95);
       }
 
+      /* Modal Creator Badge */
+      .modal-creator {
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 215, 0, 0.2);
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .modal-creator a {
+        color: var(--joy-cyan);
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        transition: color 0.2s;
+      }
+      .modal-creator a:hover {
+        color: var(--eid-green);
+      }
+
       /* Entities */
       #player {
         position: absolute;
-        bottom: 30px;
+        /* Fixed Mobile UX: Moved up significantly to avoid home swipe gestures */
+        bottom: max(100px, 12vh);
         left: 50%;
         transform: translateX(-50%);
         width: 85px;
         height: 85px;
-        font-size: 60px;
+        font-size: 65px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -360,39 +377,6 @@
           opacity: 0;
         }
       }
-
-      /* Creator Badge */
-      .creator-badge {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        padding: 8px 18px;
-        border-radius: 25px;
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        z-index: 200;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      }
-      .creator-badge:hover {
-        background: rgba(255, 215, 0, 0.15);
-        color: #fff;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
-        border-color: var(--eid-gold);
-      }
-      .creator-badge strong {
-        color: var(--eid-gold);
-        font-weight: 800;
-        margin-left: 5px;
-      }
     </style>
   </head>
   <body>
@@ -433,6 +417,12 @@
           will seek you out! Lose up to <b class="bad">-৳1.00</b>.
         </div>
         <button onclick="startGame()">Start Celebration</button>
+        <div class="modal-creator">
+          Eid Salami(FAAAAH) designed by
+          <a href="https://shadik.onrender.com" target="_blank"
+            >Shadik Hossain</a
+          >
+        </div>
       </div>
     </div>
 
@@ -456,18 +446,23 @@
           ৳<span id="final-score">0.00</span>
         </div>
         <button onclick="startGame()">Play Again</button>
+        <div class="modal-creator">
+          Eid Salami(FAAAAH) designed by
+          <a href="https://shadik.onrender.com" target="_blank"
+            >Shadik Hossain</a
+          >
+        </div>
       </div>
     </div>
-
-    <!-- Creator Badge -->
-    <a href="https://shadik.onrender.com" target="_blank" class="creator-badge">
-      Designed by <strong>Shadik Hossain</strong>
-    </a>
 
     <!-- Player Character (Festive Wallet) -->
     <div id="player">👛</div>
 
     <script>
+      /* --- GAME SOUNDS --- */
+      // IMPORTANT: Ensure fahhhhh.mp3 is placed in the exact same folder as this HTML file.
+      const dangerSound = new Audio("fahhhhh.mp3");
+
       /* --- GAME STATE --- */
       let score = 0.0;
       let totalTime = 60;
@@ -498,14 +493,14 @@
         { e: "🍬", v: 0.1, weight: 35 },
         { e: "🪙", v: 0.25, weight: 30 },
         { e: "💵", v: 0.5, weight: 20 },
-        { e: "🧧", v: 0.75, weight: 10 }, // Real Salami Envelope
+        { e: "🧧", v: 0.75, weight: 10 },
         { e: "🎁", v: 1.0, weight: 5 },
       ];
 
       const negativeItems = [
-        { e: "📨", v: 0.25, weight: 40, behavior: "zigzag" }, // Deceptive fake envelope
-        { e: "💸", v: 0.5, weight: 35, behavior: "fast" }, // Aggressive fast fall
-        { e: "🧨", v: 1.0, weight: 25, behavior: "seek" }, // Aggressive homing missile
+        { e: "📨", v: 0.25, weight: 40, behavior: "zigzag" },
+        { e: "💸", v: 0.5, weight: 35, behavior: "fast" },
+        { e: "🧨", v: 1.0, weight: 25, behavior: "seek" },
       ];
 
       const joyWords = [
@@ -531,6 +526,9 @@
 
       /* --- CORE ENGINE --- */
       function startGame() {
+        // Enable audio on first user interaction (bypass browser block)
+        dangerSound.load();
+
         startScreen.classList.add("hidden");
         gameOverScreen.classList.add("hidden");
         document.querySelectorAll(".item").forEach((el) => el.remove());
@@ -571,21 +569,17 @@
         let secondsPlayed = totalTime - timeLeft;
         let isDanger = false;
 
-        // THE DYNAMIC ESCALATION ENGINE
+        // ESCALATION ENGINE
         if (secondsPlayed <= 10) {
-          // First 10s: Joyful and easy (only 5% danger)
-          isDanger = Math.random() < 0.05;
+          isDanger = Math.random() < 0.05; // Calm
         } else {
-          // After 10s: Danger scales up aggressively to 65%
-          let scale = Math.min(0.65, 0.15 + ((secondsPlayed - 10) / 40) * 0.5);
+          let scale = Math.min(0.65, 0.15 + ((secondsPlayed - 10) / 40) * 0.5); // Chaos
           isDanger = Math.random() < scale;
         }
 
-        // Spawn rate becomes insanely fast over time
         currentSpawnDelay = Math.max(200, 700 - secondsPlayed * 10);
 
         let data = isDanger ? pickItem(negativeItems) : pickItem(positiveItems);
-
         const el = document.createElement("div");
         el.className = `item ${isDanger ? "danger-item" : "good-item"}`;
         el.innerText = data.e;
@@ -598,7 +592,7 @@
         document.body.appendChild(el);
 
         let vy = baseSpeed + multiplier * 0.2;
-        if (data.behavior === "fast") vy *= 1.6; // Aggressive fall speed
+        if (data.behavior === "fast") vy *= 1.6;
 
         items.push({
           el,
@@ -609,7 +603,7 @@
           behavior: data.behavior || "normal",
           vy: vy,
           vx: 0,
-          timeOffset: Math.random() * 1000, // For unique zigzag phase
+          timeOffset: Math.random() * 1000,
         });
       }
 
@@ -625,9 +619,13 @@
         multiplier = 1.0;
         updateHUD();
 
-        // Aggressive Feedback
-        document.body.classList.add("shake-screen");
-        setTimeout(() => document.body.classList.remove("shake-screen"), 300);
+        // PLAY DANGER SOUND
+        dangerSound.currentTime = 0;
+        dangerSound.play().catch(() => {}); // Catch error if browser blocks it momentarily
+
+        // Visual Red Flash (Safe for Mobile)
+        document.body.classList.add("flash-screen");
+        setTimeout(() => document.body.classList.remove("flash-screen"), 300);
         showFloatingText(x, y, `-৳${penalty.toFixed(2)}`, "neg");
       }
 
@@ -643,10 +641,8 @@
 
           // ADVANCED DECEPTIVE BEHAVIORS
           if (it.behavior === "zigzag") {
-            // Zig-zag aggressively horizontally
             it.vx = Math.sin((currentTime + it.timeOffset) / 200) * 4;
           } else if (it.behavior === "seek") {
-            // Homing missile effect: gently curves towards player
             if (it.y < pRect.top) {
               let dx = playerX - (it.x + 20);
               it.vx = (dx > 0 ? 1 : -1) * Math.min(Math.abs(dx * 0.05), 3);
@@ -665,7 +661,7 @@
 
           const itRect = it.el.getBoundingClientRect();
 
-          // Hitbox
+          // Generous mobile Hitbox
           const colliding = !(
             itRect.right < pRect.left + 20 ||
             itRect.left > pRect.right - 20 ||
@@ -682,7 +678,6 @@
               score += earned;
               combo++;
 
-              // Joy Streak Multiplier
               if (combo >= 25) multiplier = 3.0;
               else if (combo >= 10) multiplier = 2.0;
               else if (combo >= 4) multiplier = 1.5;
@@ -695,7 +690,6 @@
                 "pos",
               );
 
-              // Random Happy Eid Text
               if (Math.random() < 0.3) {
                 let word =
                   joyWords[Math.floor(Math.random() * joyWords.length)];
@@ -729,7 +723,7 @@
       }
 
       function updateHUD() {
-        if (score < 0) score = 0; // Don't show negative overall balance
+        if (score < 0) score = 0;
         scoreEl.innerText = score.toFixed(2);
         comboEl.innerText = multiplier.toFixed(1) + "x";
         timerEl.innerText = timeLeft + "s";
